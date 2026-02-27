@@ -51,7 +51,7 @@
     "jest": "^30.2.0",
     "nodemon": "^3.0.2",
     "patch-package": "^8.0.0",
-    "pino": "^7.0.0-rc.9",
+    "pino": "^10.3.1",
     "pino-pretty": "^11.0.0",
     "postinstall-postinstall": "^2.1.0",
     "ts-jest": "^29.4.6",

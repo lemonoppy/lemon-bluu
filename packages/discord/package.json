@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "discord.js": "^14.19.3",
-    "pino": "^7.0.0-rc.9",
+    "pino": "^10.3.1",
     "pino-pretty": "^11.0.0"
   },
   "devDependencies": {
