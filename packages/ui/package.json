@@ -15,7 +15,7 @@
   "devDependencies": {
     "@lemon-bluu/eslint-config": "*",
     "@lemon-bluu/tsconfig": "*",
-    "eslint": "^9",
+    "eslint": "^10",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "typescript": "^5"
