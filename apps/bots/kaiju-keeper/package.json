@@ -1,6 +1,7 @@
 {
   "name": "kaiju-keeper",
   "version": "1.1.0",
+  "private": true,
   "main": "index.js",
   "license": "MIT",
   "scripts": {

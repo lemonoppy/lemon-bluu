@@ -1,6 +1,7 @@
 {
   "name": "@lemon-bluu/fetcher-bee",
   "version": "1.0.0",
+  "private": true,
   "main": "index.js",
   "license": "MIT",
   "scripts": {
@@ -12,6 +13,8 @@
     "start:restart": "while true; do npm run start:prod; echo 'Bot crashed, restarting in 5 seconds...'; sleep 5; done",
     "start:prod-watch": "nodemon -r tsconfig-paths/register --files src/index.ts",
     "lint": "eslint src --ext .ts",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
     "format": "prettier --write src",
     "patch-package": "patch-package",
     "postinstall": "patch-package"
@@ -39,6 +42,9 @@
     "eslint": "^8.55.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-import": "^2.29.0",
+    "@types/jest": "^30.0.0",
+    "jest": "^30.2.0",
+    "ts-jest": "^29.4.6",
     "nodemon": "^3.0.2",
     "patch-package": "^8.0.0",
     "pino": "^7.0.0-rc.9",
