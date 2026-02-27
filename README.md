@@ -33,7 +33,7 @@ yarn dev
 ## Apps
 
 ### `apps/web` — Personal Site
-Next.js 15 app with Tailwind CSS. Includes a Spotify now-playing widget, MTG set cube simulator, invoice tracker, and more.
+Next.js 15 app with Tailwind CSS. Includes a Spotify now-playing widget, MTG set cube simulator, and more.
 
 - **Stack:** Next.js, TypeScript, Tailwind CSS, Neon (Postgres)
 - **Deploy:** Vercel
