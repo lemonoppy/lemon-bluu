@@ -5,9 +5,12 @@ updates:
     schedule:
       interval: "weekly"
     groups:
-      dependencies:
-        patterns:
-          - "*"
+      # Group minor + patch updates into one auto-mergeable PR
+      minor-and-patch:
+        update-types:
+          - "minor"
+          - "patch"
+      # Major updates are NOT grouped — each gets its own PR for manual review
     ignore:
       # eslint-plugin-import-x v4 does not support ESLint v10 yet
       - dependency-name: "eslint"
