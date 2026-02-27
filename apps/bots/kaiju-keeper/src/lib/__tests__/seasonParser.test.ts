@@ -1,5 +1,6 @@
-import { getSeasonRecords } from '../seasonParser';
 import { GameStats } from 'typings/db.typings';
+
+import { getSeasonRecords } from '../seasonParser';
 
 const makeGame = (score: number, opponentScore: number): GameStats => ({
   id: 1,

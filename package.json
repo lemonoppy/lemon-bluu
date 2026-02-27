@@ -22,7 +22,6 @@
   },
   "resolutions": {
     "tar": ">=7.5.7",
-    "minimatch": ">=9.0.6",
     "undici": ">=6.23.0"
   }
 }

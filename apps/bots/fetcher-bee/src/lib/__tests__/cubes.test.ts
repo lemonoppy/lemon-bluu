@@ -8,7 +8,7 @@ jest.mock('src/lib/logger', () => ({
   logger: { debug: jest.fn(), error: jest.fn(), info: jest.fn() },
 }));
 
-import { cubes, getCubeByKey, getCubeById, getRandomCube } from '../cubes';
+import { cubes, getCubeById, getCubeByKey, getRandomCube } from '../cubes';
 
 describe('getCubeByKey', () => {
   it('returns the cube for a valid key', () => {

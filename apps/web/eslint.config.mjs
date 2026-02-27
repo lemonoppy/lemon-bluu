@@ -1,35 +1,53 @@
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
+import { createRequire } from 'module';
 
-import { FlatCompat } from '@eslint/eslintrc';
+import nextPlugin from '@next/eslint-plugin-next';
 import importPlugin from 'eslint-plugin-import';
+import reactPlugin from 'eslint-plugin-react';
+import reactHooksPlugin from 'eslint-plugin-react-hooks';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
+const require = createRequire(import.meta.url);
+const tsPlugin = require('@typescript-eslint/eslint-plugin');
+const tsParser = require('@typescript-eslint/parser');
 
 const eslintConfig = [
-  ...compat.extends('next/core-web-vitals', 'next/typescript'),
+  // TypeScript recommended (flat config)
+  ...tsPlugin.configs['flat/recommended'],
+
+  // React flat config (disables react/react-in-jsx-scope for React 17+)
+  reactPlugin.configs.flat['jsx-runtime'],
+
+  // React hooks recommended (flat config)
+  reactHooksPlugin.configs['recommended-latest'],
+
+  // Import ordering + TypeScript-specific rules
   {
+    languageOptions: {
+      parser: tsParser,
+      parserOptions: {
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+        ecmaFeatures: { jsx: true },
+      },
+    },
     plugins: {
       import: importPlugin,
+      '@next/next': nextPlugin,
     },
     rules: {
+      ...nextPlugin.configs.recommended.rules,
+      '@typescript-eslint/no-unused-vars': ['error', { varsIgnorePattern: '^React$', argsIgnorePattern: '^_' }],
       'import/order': [
         'error',
         {
           groups: [
-            'builtin', // Node.js built-in modules
-            'external', // Installed packages
-            'internal', // Paths aliased in tsconfig
-            'parent', // Parent directories
-            'sibling', // Same directory
-            'index', // Current directory index
-            'object', // Object imports
-            'type', // TypeScript type imports
+            'builtin',
+            'external',
+            'internal',
+            'parent',
+            'sibling',
+            'index',
+            'object',
+            'type',
           ],
           'newlines-between': 'always',
           alphabetize: {
@@ -55,17 +73,16 @@ const eslintConfig = [
         'error',
         {
           ignoreCase: true,
-          ignoreDeclarationSort: true, // Let import/order handle declaration sorting
+          ignoreDeclarationSort: true,
           ignoreMemberSort: false,
         },
       ],
     },
   },
-];
 
-// Handle .eslintignore migration
-eslintConfig.push({
-  ignores: ['node_modules/**', '.next/**', 'out/**', 'public/**'],
-});
+  {
+    ignores: ['node_modules/**', '.next/**', 'out/**', 'public/**'],
+  },
+];
 
 export default eslintConfig;

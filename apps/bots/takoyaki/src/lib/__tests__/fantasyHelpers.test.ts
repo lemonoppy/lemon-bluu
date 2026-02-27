@@ -1,4 +1,4 @@
-import { getGroupDisplayName, normalizeGroupSearchKey, formatGroupValue } from '../helpers/fantasyHelpers';
+import { formatGroupValue, getGroupDisplayName, normalizeGroupSearchKey } from '../helpers/fantasyHelpers';
 
 describe('getGroupDisplayName', () => {
   it('returns the special name for group 1', () => {

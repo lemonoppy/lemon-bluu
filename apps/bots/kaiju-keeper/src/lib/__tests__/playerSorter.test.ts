@@ -1,5 +1,6 @@
-import { playerSorter } from '../playerSorter';
 import { PortalPlayer } from 'typings/portal';
+
+import { playerSorter } from '../playerSorter';
 
 const makePlayer = (position: PortalPlayer['position'], totalTPE: number): PortalPlayer =>
   ({ position, totalTPE } as PortalPlayer);

@@ -5,7 +5,7 @@
   "main": "src/index.ts",
   "types": "src/index.ts",
   "scripts": {
-    "lint": "eslint .",
+    "lint": "eslint src --ext .ts",
     "format": "prettier --write ."
   },
   "dependencies": {
@@ -14,7 +14,9 @@
     "pino-pretty": "^11.0.0"
   },
   "devDependencies": {
+    "@lemon-bluu/eslint-config": "*",
     "@lemon-bluu/tsconfig": "*",
+    "eslint": "^8",
     "typescript": "^5"
   }
 }

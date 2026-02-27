@@ -28,8 +28,7 @@ export const getSeasonGameDataDSFL = async (includePostseason: boolean = true): 
     // DSFL Season 58 configuration
     const gpwk = 7; // Games per week
     const wks = 16; // Regular season weeks
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const postseason = 7; // Playoff games
+    // postseason = 7 games (unused but kept for documentation)
 
     // Generate week list
     const wkList: number[] = [];

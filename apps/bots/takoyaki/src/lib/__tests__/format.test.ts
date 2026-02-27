@@ -1,4 +1,4 @@
-import { pluralize, suffix, hexColorToInt } from '@lemon-bluu/discord';
+import { hexColorToInt, pluralize, suffix } from '@lemon-bluu/discord';
 
 describe('pluralize', () => {
   it('appends the default "s" suffix when count is not 1', () => {

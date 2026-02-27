@@ -1,4 +1,4 @@
-import { shortenPosition, formatBalance } from '../helpers/playerHelpers';
+import { formatBalance, shortenPosition } from '../helpers/playerHelpers';
 
 describe('shortenPosition', () => {
   it.each([
