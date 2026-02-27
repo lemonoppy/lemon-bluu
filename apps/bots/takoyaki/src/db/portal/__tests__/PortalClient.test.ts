@@ -265,19 +265,21 @@ describe('PortalClient', () => {
   describe('reload', () => {
     it('should reload all data sources', async () => {
       const mockUserInfo: BasicUserInfo[] = [{ uid: 1, username: 'test' }];
+      const mockPlayers: Partial<Player>[] = [];
       const mockSeason = { season: 78 };
       const mockHeaderInfo: Partial<BankAccountHeaderData>[] = [];
       const mockManagers: Partial<ManagerInfo>[] = [];
 
       (global.fetch as jest.Mock)
         .mockResolvedValueOnce({ ok: true, json: async () => mockUserInfo })
+        .mockResolvedValueOnce({ ok: true, json: async () => mockPlayers })
         .mockResolvedValueOnce({ ok: true, json: async () => mockSeason })
         .mockResolvedValueOnce({ ok: true, json: async () => mockHeaderInfo })
         .mockResolvedValueOnce({ ok: true, json: async () => mockManagers });
 
       await PortalClient.reload();
 
-      expect(global.fetch).toHaveBeenCalledTimes(4);
+      expect(global.fetch).toHaveBeenCalledTimes(5);
     });
   });
 });

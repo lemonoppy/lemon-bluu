@@ -21,6 +21,9 @@
     "lint": {
       "dependsOn": ["^build"]
     },
+    "test": {
+      "outputs": ["coverage/**"]
+    },
     "format": {
       "cache": false
     }
