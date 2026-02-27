@@ -8,6 +8,10 @@ updates:
       dependencies:
         patterns:
           - "*"
+    ignore:
+      # eslint-plugin-import-x v4 does not support ESLint v10 yet
+      - dependency-name: "eslint"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: "github-actions"
     directory: "/"
