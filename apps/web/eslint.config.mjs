@@ -16,8 +16,14 @@ const eslintConfig = [
   // React flat config (disables react/react-in-jsx-scope for React 17+)
   reactPlugin.configs.flat['jsx-runtime'],
 
-  // React hooks recommended (flat config)
-  reactHooksPlugin.configs['recommended-latest'],
+  // React hooks (explicit flat config — avoids relying on recommended-latest key)
+  {
+    plugins: { 'react-hooks': reactHooksPlugin },
+    rules: {
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
+    },
+  },
 
   // Import ordering + TypeScript-specific rules
   {
