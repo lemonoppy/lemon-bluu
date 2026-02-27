@@ -1,7 +1,9 @@
 import { GoogleSpreadsheet } from 'google-spreadsheet';
 
-// Mock GoogleSpreadsheet
-jest.mock('google-spreadsheet');
+// Provide a factory so Jest never loads the real module (avoids ESM-only ky dep)
+jest.mock('google-spreadsheet', () => ({
+  GoogleSpreadsheet: jest.fn(),
+}));
 
 // Mock googleapis
 jest.mock('googleapis', () => ({
