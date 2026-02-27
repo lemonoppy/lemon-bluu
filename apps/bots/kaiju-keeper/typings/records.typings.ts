@@ -1,0 +1,1 @@
+export type AggregateTypes = 'season' | 'franchise' | 'single game' | undefined;

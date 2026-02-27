@@ -1,0 +1,1 @@
+export type LeagueType = 'ISFL' | 'DSFL' | 'WFC';

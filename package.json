@@ -1,0 +1,28 @@
+{
+  "name": "lemon-bluu",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "apps/bots/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "turbo run build --filter=@lemon-bluu/web",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "format": "turbo run format"
+  },
+  "devDependencies": {
+    "prettier": "latest",
+    "turbo": "latest"
+  },
+  "packageManager": "yarn@1.22.22",
+  "engines": {
+    "node": ">=18"
+  },
+  "resolutions": {
+    "tar": ">=7.5.7",
+    "minimatch": ">=9.0.6",
+    "undici": ">=6.23.0"
+  }
+}

@@ -1,0 +1,4 @@
+{
+  "extends": ["@lemon-bluu/eslint-config/bot"],
+  "env": { "jest": true }
+}

@@ -1,0 +1,71 @@
+{
+  "name": "@lemon-bluu/takoyaki",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc && tsc-alias",
+    "start:built": "node -r tsconfig-paths/register build/index.js",
+    "start:dev": "NODE_ENV=development & nodemon -r tsconfig-paths/register --files src/index.ts | pino-pretty -i pid,hostname - t 'yyyy-mm-dd HH:MM:ss'",
+    "start:prod": "ts-node -r tsconfig-paths/register --files src/index.ts",
+    "start:restart": "while true; do npm run start:prod; echo 'Bot crashed, restarting in 5 seconds...'; sleep 5; done",
+    "start:prod-watch": "nodemon -r tsconfig-paths/register --files src/index.ts",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint src --ext .ts",
+    "format": "prettier --write src",
+    "patch-package": "patch-package"
+  },
+  "dependencies": {
+    "@lemon-bluu/discord": "*",
+    "@discordjs/rest": "^2.2.0",
+    "@google-cloud/local-auth": "2.1.0",
+    "@google/genai": "^0.13.0",
+    "@keyv/sqlite": "^4.0.5",
+    "axios": "^1.12.0",
+    "cheerio": "^1.0.0",
+    "cron": "^3.1.7",
+    "csv-parse": "^5.6.0",
+    "discord.js": "^14.19.3",
+    "dotenv": "^16.3.1",
+    "fuzzysort": "^3.0.2",
+    "google-spreadsheet": "^4.1.4",
+    "googleapis": "105",
+    "keyv": "^4.5.4",
+    "keyv-file": "^0.3.1",
+    "lodash": "^4.17.21",
+    "tsc-alias": "^1.8.11"
+  },
+  "devDependencies": {
+    "@lemon-bluu/eslint-config": "*",
+    "@types/jest": "^30.0.0",
+    "@types/lodash": "^4.17.0",
+    "@types/node": "^20.10.2",
+    "@typescript-eslint/eslint-plugin": "^6.13.1",
+    "@typescript-eslint/parser": "^6.13.1",
+    "eslint": "^8.55.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-import": "^2.29.0",
+    "jest": "^30.2.0",
+    "nodemon": "^3.0.2",
+    "patch-package": "^8.0.0",
+    "pino": "^7.0.0-rc.9",
+    "pino-pretty": "^11.0.0",
+    "postinstall-postinstall": "^2.1.0",
+    "ts-jest": "^29.4.6",
+    "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.3.2"
+  },
+  "nodemonConfig": {
+    "execMap": {
+      "ts": "ts-node"
+    },
+    "ignore": [
+      "build/*",
+      ".vscode/*"
+    ],
+    "delay": "2500"
+  }
+}
