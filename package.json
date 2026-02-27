@@ -10,9 +10,12 @@
     "build": "turbo run build --filter=@lemon-bluu/web",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
-    "format": "turbo run format"
+    "format": "turbo run format",
+    "prepare": "husky"
   },
   "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
     "prettier": "latest",
     "turbo": "latest"
   },
@@ -23,5 +26,13 @@
   "resolutions": {
     "tar": ">=7.5.7",
     "undici": ">=6.23.0"
+  },
+  "lint-staged": {
+    "apps/bots/takoyaki/src/**/*.ts": "eslint --fix",
+    "apps/bots/kaiju-keeper/src/**/*.ts": "eslint --fix",
+    "apps/bots/fetcher-bee/src/**/*.ts": "eslint --fix",
+    "packages/discord/src/**/*.ts": "eslint --fix",
+    "packages/ui/src/**/*.{ts,tsx}": "eslint --fix",
+    "apps/web/**/*.{ts,tsx}": "eslint --fix"
   }
 }
