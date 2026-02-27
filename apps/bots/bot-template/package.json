@@ -1,0 +1,47 @@
+{
+  "name": "@lemon-bluu/bot-template",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc && tsc-alias",
+    "start:dev": "NODE_ENV=development nodemon -r tsconfig-paths/register --files src/index.ts | pino-pretty -i pid,hostname -t 'yyyy-mm-dd HH:MM:ss'",
+    "start:prod": "ts-node -r tsconfig-paths/register --files src/index.ts",
+    "start:built": "node build/index.js",
+    "start:restart": "while true; do npm run start:prod; echo 'Bot crashed, restarting in 5 seconds...'; sleep 5; done",
+    "lint": "eslint src --ext .ts",
+    "format": "prettier --write src"
+  },
+  "dependencies": {
+    "@lemon-bluu/discord": "*",
+    "cron": "^3.1.7",
+    "discord.js": "^14.19.3",
+    "dotenv": "^16.3.1",
+    "tsc-alias": "^1.8.11"
+  },
+  "devDependencies": {
+    "@lemon-bluu/eslint-config": "*",
+    "@types/node": "^20.10.2",
+    "@typescript-eslint/eslint-plugin": "^6.13.1",
+    "@typescript-eslint/parser": "^6.13.1",
+    "eslint": "^8.55.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-import": "^2.29.0",
+    "nodemon": "^3.0.2",
+    "pino-pretty": "^11.0.0",
+    "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.3.2"
+  },
+  "nodemonConfig": {
+    "execMap": {
+      "ts": "ts-node"
+    },
+    "ignore": [
+      "build/*",
+      ".vscode/*"
+    ],
+    "delay": "2500"
+  }
+}

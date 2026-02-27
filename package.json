@@ -31,6 +31,7 @@
     "apps/bots/takoyaki/src/**/*.ts": "eslint --fix",
     "apps/bots/kaiju-keeper/src/**/*.ts": "eslint --fix",
     "apps/bots/fetcher-bee/src/**/*.ts": "eslint --fix",
+    "apps/bots/bot-template/src/**/*.ts": "eslint --fix",
     "packages/discord/src/**/*.ts": "eslint --fix",
     "packages/ui/src/**/*.{ts,tsx}": "eslint --fix",
     "apps/web/**/*.{ts,tsx}": "eslint --fix"
