@@ -97,7 +97,7 @@ export async function handleHelpButtons(interaction: ButtonInteraction) {
     }
     if (customId.startsWith('help_league_')) {
       const leagueString = customId.replace('help_league_', '');
-      let leagueType: string = leagueString as string;
+      const leagueType: string = leagueString as string;
 
       const embed = createTeamListEmbed(leagueType);
       const row = getAbbrHelpButtons(leagueString);

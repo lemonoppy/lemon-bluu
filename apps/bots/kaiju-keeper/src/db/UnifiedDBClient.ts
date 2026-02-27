@@ -498,7 +498,7 @@ class UnifiedDBClient {
   /**
    * Create or update a player in the unified system
    */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+   
   async createOrUpdatePlayer(name: string, _teamAbbr?: string, _season?: number): Promise<number | AppError> {
     const normalizedName = name ? name.replace(/[.]/g, '').trim() : '';
     if (!normalizedName || normalizedName === '{{sname}}') {

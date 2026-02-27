@@ -56,7 +56,7 @@ const command: SlashCommand = {
         ? `https://docs.google.com/spreadsheets/d/${process.env.DSFL_SHEET_ID}`
         : 'Google Spreadsheet';
 
-      let resultMessage = [
+      const resultMessage = [
         `✅ **DSFL S58 W${targetWeek} - Appended to Sheet**`,
         `📊 **Records Processed:** ${result.totalRecords}`,
         `📤 **Exported to Sheets:** ${result.exportedCount}`,

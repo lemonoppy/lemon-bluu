@@ -12,9 +12,11 @@ module.exports = (client: Client) => {
     if (!file.endsWith('.js') && !file.endsWith('.ts')) return;
     const event: BotEvent = require(`${eventsDir}/${file}`).default;
 
-    event.once
-      ? client.once(event.name, event.execute)
-      : client.on(event.name, event.execute);
+    if (event.once) {
+      client.once(event.name, event.execute);
+    } else {
+      client.on(event.name, event.execute);
+    }
     logger.info(`✔ Successfully loaded event ${event.name}`);
   });
 };

@@ -26,7 +26,7 @@ const schedule = async (season: number, team: Team) => {
   const scheduleTable = tables.eq(6).get(0);
   const scheduleRows = $(scheduleTable).find('tr');
 
-  let results: InternalSchedule[] = []
+  const results: InternalSchedule[] = []
 
   const parseWeek = (el: any) => {
     const weekString = $(el).find('td').eq(1).text().trim();

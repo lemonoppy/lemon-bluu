@@ -34,6 +34,6 @@
     "apps/bots/bot-template/src/**/*.ts": "eslint --fix",
     "packages/discord/src/**/*.ts": "eslint --fix",
     "packages/ui/src/**/*.{ts,tsx}": "eslint --fix",
-    "apps/web/**/*.{ts,tsx}": "eslint --fix"
+    "apps/web/**/*.{ts,tsx}": "eslint --config apps/web/eslint.config.mjs --fix"
   }
 }

@@ -3,7 +3,7 @@ import { Teams, findTeamByName } from 'src/lib/teams';
 import { Team } from 'typings/portal';
 
 // Cache teams by guild ID and search key to avoid repeated lookups
-let teamCache: Map<string, Team> = new Map();
+const teamCache: Map<string, Team> = new Map();
 
 // Find team by search key (name, abbreviation, location, or ID)
 function findTeamBySearchKey(searchKey: string): Team | null {

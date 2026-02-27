@@ -212,7 +212,7 @@ export const getSeasonGameData = async (season: number, includePostseason: boole
     });
 
     // Filter games based on weeks (skip preseason)
-    let relevantGames: Array<{ id: string; week: number }> = [];
+    const relevantGames: Array<{ id: string; week: number }> = [];
     
     Object.entries(gameToWeekMap).forEach(([gameId, week]) => {
       if (includePostseason) {

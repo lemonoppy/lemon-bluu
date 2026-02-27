@@ -102,7 +102,7 @@ const command: SlashCommand = {
         return;
       }
 
-      let resultMessage = [
+      const resultMessage = [
         `✅ **S${season} W${week} - Unified Processing Complete**`,
         `📊 **Records Processed:** ${result.totalRecords}`,
         `💾 **Saved to player_stats:** ${result.insertedCount}`

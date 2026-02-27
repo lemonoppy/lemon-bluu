@@ -51,7 +51,7 @@ class PortalApiClient {
       apiKey: process.env.GOOGLE_API_KEY ?? '',
     });
 
-    let sheetResponseData: T[] = [];
+    const sheetResponseData: T[] = [];
 
     try {
       // Load document properties and worksheets

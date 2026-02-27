@@ -75,7 +75,7 @@ export default {
       await interaction.deferReply();
 
       const buildMilestone = (statName: string, milestones: Array<MilestoneChase>) => {
-        let milestoneStrings: string[] = [];
+        const milestoneStrings: string[] = [];
         milestones.forEach((milestone: MilestoneChase) => {
           if (milestone && milestone.player) {
             milestoneStrings.push(`**${milestone.player}** needs ${milestone.milestone} more to ${milestone.milestone + milestone.stat} (${milestone.stat})`);

@@ -44,8 +44,8 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
 
   const buildEmbedFields = (roster: FantasyRosteredPlayer[]) => {
     const embeds: any[] = [{
-      name: `Total Points: ${fantasyUserInfo?.score}`,
-      value: `${getGroupDisplayName(fantasyUserInfo?.group!)}: #${fantasyUserInfo?.rank}, Overall: #${fantasyUserInfo?.overall}`,
+      name: `Total Points: ${fantasyUserInfo.score}`,
+      value: `${getGroupDisplayName(fantasyUserInfo.group)}: #${fantasyUserInfo.rank}, Overall: #${fantasyUserInfo.overall}`,
       inline: false
     }];
 

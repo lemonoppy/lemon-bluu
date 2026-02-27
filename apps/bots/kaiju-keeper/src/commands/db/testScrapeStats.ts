@@ -82,7 +82,7 @@ const testProcessWeekUnified = async (season: number, week: number, progressCall
 
     // Actually process the player stats (without saving) to show what would be created
     let processedStats: any[] = [];
-    let statBreakdown = {
+    const statBreakdown = {
       totalPlayers: 0,
       playersWithStats: {
         passing: 0, rushing: 0, receiving: 0, kicking: 0,
@@ -344,7 +344,7 @@ const command: SlashCommand = {
         return;
       }
 
-      let resultMessage = [
+      const resultMessage = [
         `🧪 **TEST: S${season} W${week} - Unified Processing Analysis (DRY RUN)**`,
         `📊 **Games found:** ${result.sampleData.gameData.gamesInWeek}`,
         `🎯 **Box score records:** ${result.sampleData.fetchedData.boxScoreRecords}`,

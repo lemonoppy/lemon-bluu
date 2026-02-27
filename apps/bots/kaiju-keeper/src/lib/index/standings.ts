@@ -40,12 +40,12 @@ const standings = async (season: number, league: string) => {
   const $ = cheerio.load(response.data);
   const hiliteRows = $('tr.hilite');
 
-  let standings: { ASFC: InternalStandings[], NSFC: InternalStandings[]} = {
+  const standings: { ASFC: InternalStandings[], NSFC: InternalStandings[]} = {
     ASFC: [],
     NSFC: []
   }
 
-  let dsflStandings: { North: InternalStandings[], South: InternalStandings[]} = {
+  const dsflStandings: { North: InternalStandings[], South: InternalStandings[]} = {
     North: [],
     South: []
   }
