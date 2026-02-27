@@ -8,6 +8,15 @@ updates:
       dependencies:
         patterns:
           - "*"
+    ignore:
+      # Bots use .eslintrc.json (ESLint v8 legacy config) — major updates break them
+      - dependency-name: "eslint"
+        update-types: ["version-update:semver-major"]
+      # @typescript-eslint v7+ requires ESLint v9+
+      - dependency-name: "@typescript-eslint/eslint-plugin"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@typescript-eslint/parser"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: "github-actions"
     directory: "/"
