@@ -1,0 +1,7 @@
+node_modules
+build
+.env
+*.log
+*.sqlite
+config.json
+google-service-account.json

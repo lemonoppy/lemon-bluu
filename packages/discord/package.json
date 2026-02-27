@@ -1,0 +1,22 @@
+{
+  "name": "@lemon-bluu/discord",
+  "version": "0.0.0",
+  "private": true,
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "lint": "eslint src --ext .ts",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "discord.js": "^14.19.3",
+    "pino": "^7.0.0-rc.9",
+    "pino-pretty": "^11.0.0"
+  },
+  "devDependencies": {
+    "@lemon-bluu/eslint-config": "*",
+    "@lemon-bluu/tsconfig": "*",
+    "eslint": "^9",
+    "typescript": "^5"
+  }
+}

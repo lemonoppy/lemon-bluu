@@ -1,0 +1,9 @@
+node_modules
+.next
+dist
+build
+coverage
+.nyc_output
+logs
+**/*{.,-}min.js
+package.json
