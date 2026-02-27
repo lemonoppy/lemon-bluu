@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "@lemon-bluu/eslint-config": "*",
-    "@types/node": "^20.10.2",
+    "@types/node": "^25.3.2",
     "@typescript-eslint/eslint-plugin": "^8",
     "@typescript-eslint/parser": "^8",
     "eslint": "^9",
