@@ -34,7 +34,7 @@
     "google-spreadsheet": "^4.1.4",
     "googleapis": "105",
     "keyv": "^4.5.4",
-    "keyv-file": "^0.3.1",
+    "keyv-file": "^5.3.3",
     "lodash": "^4.17.21",
     "tsc-alias": "^1.8.11"
   },
