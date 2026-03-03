@@ -54,11 +54,6 @@ async function scrapePlayerData(): Promise<PlayerData[]> {
     console.log('Logging in...');
     await page.goto(config.loginUrl, { waitUntil: 'networkidle2' });
 
-    // Debug: capture login page state before interacting
-    await page.screenshot({ path: 'debug-login.png', fullPage: true });
-    fs.writeFileSync('debug-login.html', await page.content());
-    console.log('Saved debug-login.png and debug-login.html');
-
     await page.waitForSelector('input[name="username"], input[type="text"]', { timeout: 15000 });
     await page.type('input[name="username"], input[type="text"]', config.username);
     await page.type('input[name="password"], input[type="password"]', config.password);
