@@ -53,6 +53,7 @@ async function scrapePlayerData(): Promise<PlayerData[]> {
     // Login
     console.log('Logging in...');
     await page.goto(config.loginUrl, { waitUntil: 'networkidle2' });
+    await page.waitForSelector('input[name="username"], input[type="text"]', { timeout: 15000 });
     await page.type('input[name="username"], input[type="text"]', config.username);
     await page.type('input[name="password"], input[type="password"]', config.password);
     await Promise.all([
