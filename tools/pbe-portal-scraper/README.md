@@ -28,8 +28,14 @@ Puppeteer-based scraper for extracting draft class data from [pbe.simflow.io](ht
 
 ## Usage
 
+From the tool directory:
 ```bash
 yarn scrape    # Run the scraper for the configured SEASON
+```
+
+Or from the monorepo root:
+```bash
+yarn workspace @lemon-bluu/pbe-portal-scraper scrape
 ```
 
 Edit the `SEASON` constant at the top of `src/scraper.ts` to target a different season.

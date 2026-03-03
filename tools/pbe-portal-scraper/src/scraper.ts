@@ -30,8 +30,8 @@ try {
   process.exit(1);
 }
 
-// Configuration
-const SEASON = 60;
+// Configuration — override with SEASON env var (e.g. from CI)
+const SEASON = parseInt(process.env.SEASON ?? '61', 10);
 const PLAYER_LIST_URL =
   'https://pbe.simflow.io/view/player_list.php?league=MiLPBE&retired=Exclude&filler=Exclude';
 const OUTPUT_FILE = `drafted-players-s${SEASON}.json`;
@@ -44,6 +44,7 @@ async function scrapePlayerData(): Promise<PlayerData[]> {
   const browser = await puppeteer.launch({
     headless: true,
     defaultViewport: null,
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
   });
 
   try {
