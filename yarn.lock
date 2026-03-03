@@ -2361,7 +2361,7 @@ axe-core@^4.10.0:
   resolved "https://registry.yarnpkg.com/axe-core/-/axe-core-4.11.1.tgz#052ff9b2cbf543f5595028b583e4763b40c78ea7"
   integrity sha512-BASOg+YwO2C+346x3LZOeoovTIoTrRqEsqMa6fmfAV0P+U9mFr9NsyOEpiYvFjbc64NMrSswhV50WdXzdb/Z5A==
 
-axios@^1.12.0, axios@^1.7.7:
+axios@^1.12.0, axios@^1.13.2, axios@^1.7.7:
   version "1.13.6"
   resolved "https://registry.yarnpkg.com/axios/-/axios-1.13.6.tgz#c3f92da917dc209a15dd29936d20d5089b6b6c98"
   integrity sha512-ChTCHMouEe2kn713WHbQGcuYrr6fXTBiu460OTwWrWob16g1bXn4vtz07Ope7ewMozJAnEquLk5lWQWtBig9DQ==
@@ -2727,7 +2727,7 @@ cheerio-select@^2.1.0:
     domhandler "^5.0.3"
     domutils "^3.0.1"
 
-cheerio@^1.0.0:
+cheerio@^1.0.0, cheerio@^1.1.2:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/cheerio/-/cheerio-1.2.0.tgz#f23b777c49021ead7475dcf3390d3535a7f896d6"
   integrity sha512-WDrybc/gKFpTYQutKIK6UvfcuxijIZfMfXaYm8NMsPQxSYvf+13fXUJ4rztGGbJcBQ/GF55gvrZ0Bc0bj/mqvg==
@@ -6898,7 +6898,7 @@ puppeteer-core@24.37.5:
     webdriver-bidi-protocol "0.4.1"
     ws "^8.19.0"
 
-puppeteer@^24.15.0:
+puppeteer@^24.15.0, puppeteer@^24.32.0:
   version "24.37.5"
   resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-24.37.5.tgz#c61932cdb2bc53d18970671be18d547216d295f0"
   integrity sha512-3PAOIQLceyEmn1Fi76GkGO2EVxztv5OtdlB1m8hMUZL3f8KDHnlvXbvCXv+Ls7KzF1R0KdKBqLuT/Hhrok12hQ==

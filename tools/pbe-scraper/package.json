@@ -1,0 +1,32 @@
+{
+  "name": "@lemon-bluu/pbe-scraper",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "ts-node src/scraper.ts",
+    "new-season": "ts-node src/scrape-new-season.ts",
+    "scrape-all": "ts-node src/scraper-all.ts",
+    "update-all": "ts-node src/scraper-all.ts --update",
+    "test": "ts-node src/test-single-year.ts",
+    "test-all": "ts-node src/test-all-players.ts",
+    "test-new-season": "ts-node src/test-new-season.ts",
+    "build": "tsc && tsc-alias",
+    "lint": "eslint src --ext .ts",
+    "format": "prettier --write src"
+  },
+  "dependencies": {
+    "axios": "^1.13.2",
+    "cheerio": "^1.1.2"
+  },
+  "devDependencies": {
+    "@lemon-bluu/eslint-config": "*",
+    "@types/node": "^20.10.2",
+    "@typescript-eslint/eslint-plugin": "^8",
+    "@typescript-eslint/parser": "^8",
+    "eslint": "^9",
+    "eslint-plugin-import-x": "^4",
+    "tsc-alias": "^1.8.11",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.3.2"
+  }
+}
