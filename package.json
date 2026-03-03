@@ -37,6 +37,7 @@
     "packages/ui/src/**/*.{ts,tsx}": "eslint --fix",
     "apps/web/**/*.{ts,tsx}": "eslint --config apps/web/eslint.config.mjs --fix",
     "tools/pbe-scraper/src/**/*.ts": "eslint --config tools/pbe-scraper/eslint.config.js --fix",
-    "tools/pbe-portal-scraper/src/**/*.ts": "eslint --config tools/pbe-portal-scraper/eslint.config.js --fix"
+    "tools/pbe-portal-scraper/src/**/*.ts": "eslint --config tools/pbe-portal-scraper/eslint.config.js --fix",
+    "tools/mtg-glicko/src/**/*.ts": "eslint --config tools/mtg-glicko/eslint.config.js --fix"
   }
 }

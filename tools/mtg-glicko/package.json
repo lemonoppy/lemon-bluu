@@ -1,0 +1,25 @@
+{
+  "name": "@lemon-bluu/mtg-glicko",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "ts-node src/calculator.ts",
+    "build": "tsc && tsc-alias",
+    "lint": "eslint src --ext .ts",
+    "format": "prettier --write src"
+  },
+  "dependencies": {
+    "glicko2": "^1.1.0"
+  },
+  "devDependencies": {
+    "@lemon-bluu/eslint-config": "*",
+    "@types/node": "^20.10.2",
+    "@typescript-eslint/eslint-plugin": "^8",
+    "@typescript-eslint/parser": "^8",
+    "eslint": "^9",
+    "eslint-plugin-import-x": "^4",
+    "tsc-alias": "^1.8.11",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.3.2"
+  }
+}

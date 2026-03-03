@@ -88,6 +88,7 @@ packages/
 tools/
   pbe-scraper/         # CLI scrapers for pbesim.com fielding stats (TypeScript, cheerio/axios)
   pbe-portal-scraper/  # CLI scraper for pbe.simflow.io draft classes (TypeScript, Puppeteer, requires config.json)
+  mtg-glicko/          # Glicko-2 rating calculator for MTG cube draft results
 ```
 
 ### `apps/web` — Next.js Personal Site
