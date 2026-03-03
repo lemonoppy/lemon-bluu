@@ -1,24 +1,28 @@
 # lemon-bluu
 
-Personal monorepo — a Next.js web app and Discord bots, all sharing common packages.
+Personal monorepo — a Next.js web app, Discord bots, and CLI tools, all sharing common packages.
 
 ## Repo Structure
 
 ```
 lemon-bluu/
 ├── apps/
-│   ├── web/                  # Next.js personal site + tools
+│   ├── web/                    # Next.js personal site + tools
 │   └── bots/
-│       ├── fetcher-bee/      # Discord bot: MTG cube tools
-│       ├── kaiju-keeper/     # Discord bot: ISFL stats
-│       └── takoyaki/         # Discord bot: ISFL fantasy + portal tools
+│       ├── fetcher-bee/        # Discord bot: MTG cube tools
+│       ├── kaiju-keeper/       # Discord bot: ISFL stats
+│       └── takoyaki/           # Discord bot: ISFL fantasy + portal tools
 ├── packages/
-│   ├── discord/              # Shared bot utilities (format, logger)
-│   ├── eslint-config/        # Shared ESLint configs
-│   ├── tsconfig/             # Shared TypeScript configs
-│   └── ui/                   # Shared UI utilities (cn helper)
-├── package.json              # Root workspace config
-└── turbo.json                # Turborepo pipeline
+│   ├── discord/                # Shared bot utilities (format, logger)
+│   ├── eslint-config/          # Shared ESLint configs
+│   ├── tsconfig/               # Shared TypeScript configs
+│   └── ui/                     # Shared UI utilities (cn helper)
+├── tools/
+│   ├── pbe-scraper/            # pbesim.com fielding stats scraper
+│   ├── pbe-portal-scraper/     # pbe.simflow.io draft class scraper
+│   └── mtg-glicko/             # Glicko-2 ratings for MTG cube drafts
+├── package.json                # Root workspace config
+└── turbo.json                  # Turborepo pipeline
 ```
 
 ## Quick Start
@@ -53,13 +57,30 @@ Discord bot for the ISFL sim league. Handles fantasy football, portal queries, s
 
 - **Stack:** Discord.js v14, TypeScript, SQLite, Google Sheets API
 
+## Tools
+
+### `tools/pbe-scraper`
+CLI scrapers for career fielding stats from pbesim.com. Includes a year-by-year 2B scraper and an all-players alphabetical scraper.
+
+- **Stack:** TypeScript, cheerio, axios
+
+### `tools/pbe-portal-scraper`
+Puppeteer scraper for PBE draft class data from pbe.simflow.io. Requires `config.json` with login credentials (copy from `config.example.json`).
+
+- **Stack:** TypeScript, Puppeteer
+
+### `tools/mtg-glicko`
+Glicko-2 rating calculator for MTG cube draft history. Match data lives in `src/data.ts`; run `yarn start` to recalculate.
+
+- **Stack:** TypeScript, glicko2
+
 ## Shared Packages
 
 | Package | Description |
 |---------|-------------|
 | `@lemon-bluu/discord` | Shared bot utilities: `pluralize`, `suffix`, `hexColorToInt`, `logger` |
 | `@lemon-bluu/ui` | Shared UI utilities: `cn` (clsx + tailwind-merge) |
-| `@lemon-bluu/eslint-config` | Shared ESLint configs for bots (`/bot`) and web (`index.js`) |
+| `@lemon-bluu/eslint-config` | Shared ESLint configs for bots (`bot-flat.js`) and web (`index.js`) |
 | `@lemon-bluu/tsconfig` | Shared TypeScript base configs |
 
 ## Deployment

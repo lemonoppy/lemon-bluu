@@ -65,6 +65,12 @@ yarn debug-table      # Inspect label/input structure on player page
 yarn debug-xp-filter  # Inspect table headers and inputs
 ```
 
+`tools/mtg-glicko/` — Glicko-2 ratings for MTG cube drafts:
+```bash
+yarn start            # Run calculator, write output/mtg_glicko_data.json
+yarn build            # Compile TypeScript
+```
+
 Pre-commit hooks run `yarn lint-staged`, which auto-runs `eslint --fix` on staged TypeScript files per workspace.
 
 ## Architecture
@@ -110,9 +116,9 @@ All three bots share the same architecture (also documented in per-bot CLAUDE.md
 - **TypeScript paths**: `src/*` alias resolved at runtime via `tsconfig-paths`; resolved post-build via `tsc-alias`
 - **Logger**: Pino; pretty-printed in development (`pino-pretty`)
 
-### Tools — PBE Scrapers
+### Tools
 
-Both tools extend `@lemon-bluu/eslint-config/bot-flat.js` with `no-console: 'off'` (CLI tools need console output). Neither uses `tsconfig-paths`; no path aliases.
+All tools extend `@lemon-bluu/eslint-config/bot-flat.js` with `no-console: 'off'` (CLI tools need console output). None use `tsconfig-paths`; no path aliases.
 
 **`tools/pbe-scraper/`** (`@lemon-bluu/pbe-scraper`):
 - `src/types.ts` — `PlayerLink`, `FieldingStatRow`, `PlayerData` interfaces
@@ -126,6 +132,11 @@ Both tools extend `@lemon-bluu/eslint-config/bot-flat.js` with `no-console: 'off
 - Credentials in `config.json` (gitignored) — copy from `config.example.json`
 - `src/scraper.ts` — logs in, filters MiLPBE player list to XP=1 (rookies), scrapes pid/username/name/position/archetype/tpe/bankAccount/team, saves `drafted-players-s{SEASON}.json`
 - `src/debug/` — 6 one-off debug scripts for inspecting page structure
+
+**`tools/mtg-glicko/`** (`@lemon-bluu/mtg-glicko`):
+- `src/data.ts` — `MatchRecord[]` with all historical cube draft results
+- `src/calculator.ts` — runs Glicko-2 per draft, writes `output/mtg_glicko_data.json`
+- To add new results: append to `games` in `src/data.ts` and bump `TO_DRAFT`
 
 ### Shared Packages
 
