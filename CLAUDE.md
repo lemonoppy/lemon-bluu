@@ -148,6 +148,19 @@ All tools extend `@lemon-bluu/eslint-config/bot-flat.js` with `no-console: 'off'
 
 Both `apps/web` and `kaiju-keeper` use `neverthrow` (`Result`/`ResultAsync`) for typed error propagation instead of try/catch. New code in these apps should follow the same pattern.
 
+### Commit Convention
+
+All commits use **Conventional Commits** format: `type(scope): description`
+
+Common types: `feat`, `fix`, `refactor`, `chore`, `docs`, `test`, `perf`, `ci`
+
+Examples:
+- `feat(kaiju-keeper): add defensive milestone tracking`
+- `fix(takoyaki): defer reply in /ask to avoid Discord timeout`
+- `chore: add yarn dev alias`
+
+GitHub renders the type as a badge on the commit history automatically.
+
 ### Prettier Config
 
 Single quotes, semicolons, trailing commas, 2-space indent, 80-char print width (`.prettierrc` at root).
