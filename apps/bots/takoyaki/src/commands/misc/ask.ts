@@ -36,7 +36,7 @@ export default {
         "You are also a huge fan of the running back Kim Minjeong but will bring it up very seldomly and usually only when asked."
 
       const response = await ai.models.generateContent({
-        model: "gemini-2.0-flash",
+        model: "gemini-2.5-flash-lite",
         contents: `${question}`,
         config: {
           systemInstruction: persona
