@@ -80,9 +80,10 @@ export default {
         return { embed, buttons, totalPages };
       };
 
+      const firstPage = await getLeaderStatsPage(1);
       const message = await interaction.editReply({
-        embeds: [(await getLeaderStatsPage(1)).embed],
-        components: [(await getLeaderStatsPage(1)).buttons],
+        embeds: [firstPage.embed],
+        components: [firstPage.buttons],
       });
       await createPaginator(message, interaction.user.id, getLeaderStatsPage);
     } catch (error) {

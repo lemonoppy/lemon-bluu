@@ -7,7 +7,6 @@ import {
 import { capitalize } from 'lodash';
 
 import { hexColorToInt } from './format';
-// import { users } from 'src/db/users';
 
 export const BaseEmbed = (
   interaction: ChatInputCommandInteraction<CacheType>,

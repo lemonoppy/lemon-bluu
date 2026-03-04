@@ -1,3 +1,7 @@
+import { getUserByFuzzy } from 'src/db/portal';
+import { PortalClient } from 'src/db/portal/PortalClient';
+import { users } from 'src/db/users';
+
 export const shortenPosition = (position: string) => {
   switch (position) {
     case 'Quarterback':
@@ -37,10 +41,6 @@ export const formatBalance = (bankBalance: number) => {
  * @returns The player object if found, undefined otherwise
  */
 export const getPlayerFromDiscordUser = async (discordUserId: string) => {
-  const { getUserByFuzzy } = await import('src/db/portal');
-  const { PortalClient } = await import('src/db/portal/PortalClient');
-  const { users } = await import('src/db/users');
-
   const currentUserInfo = await users.get(discordUserId);
   if (!currentUserInfo?.forumName) {
     return undefined;

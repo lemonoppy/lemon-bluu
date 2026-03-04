@@ -117,11 +117,11 @@ class PortalApiClient {
     this.#loaded = false;
 
     await Promise.all([
-      await this.getUserInfo(true),
-      await this.getActivePlayers(true),
-      await this.getCurrentSeason(true),
-      await this.getHeaderInfo(true),
-      await this.getGeneralManagers(true),
+      this.getUserInfo(true),
+      this.getActivePlayers(true),
+      this.getCurrentSeason(true),
+      this.getHeaderInfo(true),
+      this.getGeneralManagers(true),
     ]);
 
     this.#lastLoadTimestamp = Date.now();

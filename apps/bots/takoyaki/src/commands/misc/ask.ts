@@ -1,10 +1,10 @@
-import * as process from 'node:process';
-
 import { GoogleGenAI } from "@google/genai";
 import { SlashCommandBuilder } from 'discord.js';
 
 import _ from 'lodash';
 import { SlashCommand } from 'typings/command';
+
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 export default {
   command: new SlashCommandBuilder()
@@ -20,9 +20,9 @@ export default {
     .setDescription('What does Takoyaki think?'),
   execute: async (interaction) => {
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-      const question = interaction.options.getString('question')
+      await interaction.deferReply();
 
+      const question = interaction.options.getString('question');
       const happiness = _.clamp(Math.random() * 20 + Math.random() * 20, 0, 30);
 
       const persona = "You are Takoyaki, a friendly assistant who is an insider, analyst, and fan of the International Sim Football League (ISFL). " +
@@ -45,40 +45,29 @@ export default {
       const responseText = response.text;
 
       if (typeof responseText !== 'string') {
-        await interaction.reply({
-          content: "There was an error generating a response. Please try again later.",
-        });
-        return;
-      }
-      else {
-        await interaction.reply({
-          content: `\`\`\`Question: ${question}\`\`\`\n\n${responseText}`,
-        });
-        return;
-      }
-    } catch (error: any) {
-      // Handle specific Google GenAI errors
-      if (error?.status === 503 || error?.message?.includes('overloaded') || error?.message?.includes('UNAVAILABLE')) {
-        await interaction.reply({
-          content: "🤖 Takoyaki's brain is a bit overloaded right now! Please try asking again in a few moments.",
-        });
+        await interaction.editReply({ content: "There was an error generating a response. Please try again later." });
         return;
       }
 
-      // Handle other API errors
-      if (error?.status >= 400 && error?.status < 500) {
-        await interaction.reply({
-          content: "There was an issue with your request. Please try rephrasing your question.",
-        });
-        return;
-      }
-
-      // Handle general errors
-      await interaction.reply({
-        content: "Takoyaki encountered an unexpected error. Please try again later.",
+      await interaction.editReply({
+        content: `\`\`\`Question: ${question}\`\`\`\n\n${responseText}`,
       });
+    } catch (error: any) {
+      const reply = interaction.deferred
+        ? (content: string) => interaction.editReply({ content })
+        : (content: string) => interaction.reply({ content });
 
-      // Re-throw the error so it gets logged by the interaction handler
+      if (error?.status === 503 || error?.message?.includes('overloaded') || error?.message?.includes('UNAVAILABLE')) {
+        await reply("🤖 Takoyaki's brain is a bit overloaded right now! Please try asking again in a few moments.");
+        return;
+      }
+
+      if (error?.status >= 400 && error?.status < 500) {
+        await reply("There was an issue with your request. Please try rephrasing your question.");
+        return;
+      }
+
+      await reply("Takoyaki encountered an unexpected error. Please try again later.");
       throw error;
     }
   },
