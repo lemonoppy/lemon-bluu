@@ -18,10 +18,17 @@ const PLAYER_SEASON_MILESTONE_MARKERS = {
   passingYards: [250, 500, 1000, 1500, 2000, 3000, 4000, 5000, 7500, 10000],
   tds: [5, 10, 15, 20, 25, 30, 40, 50, 75, 100],
   tackles: [20, 50, 75, 100, 150, 200, 250, 300, 400, 500],
-  ints: [5, 10, 15, 20, 25, 30, 40, 50],
+  ints: [1, 2, 3, 5],
   pancakes: [15, 25, 50, 75, 100, 150, 200, 250, 300],
   fieldGoals: [5, 10, 15, 20, 25, 30, 40, 50],
-  punts: [10, 25, 50, 75, 100, 150, 200]
+  punts: [10, 25, 50, 75, 100, 150, 200],
+  pds: [5, 10, 15, 20, 25, 30],
+  ff: [2, 3, 5, 8],
+  fr: [1, 2, 3, 4, 5],
+  safeties: [1, 2],
+  tfl: [5, 10, 15, 20, 25],
+  negativePlays: [10, 20, 30, 40, 50, 75, 100],
+  turnovers: [5, 10, 15, 20, 25, 30, 40]
 };
 
 const PLAYER_CAREER_MILESTONE_MARKERS = {
@@ -29,10 +36,17 @@ const PLAYER_CAREER_MILESTONE_MARKERS = {
   passingYards: [1000, 2500, 5000, 7500, 10000, 15000, 20000, 25000, 30000, 40000, 50000],
   tds: [10, 25, 50, 75, 100, 150, 200, 250, 300, 400, 500],
   tackles: [100, 250, 500, 750, 1000, 1500, 2000, 2500, 3000, 4000, 5000],
-  ints: [10, 25, 50, 75, 100, 150, 200, 250, 300],
+  ints: [5, 10, 15, 20, 25, 30],
   pancakes: [50, 100, 250, 500, 750, 1000, 1500, 2000, 2500, 3000],
   fieldGoals: [10, 25, 50, 75, 100, 150, 200, 250, 300],
-  punts: [25, 50, 100, 250, 500, 750, 1000, 1500, 2000]
+  punts: [25, 50, 100, 250, 500, 750, 1000, 1500, 2000],
+  pds: [25, 50, 75, 100, 150, 200],
+  ff: [5, 10, 15, 20, 30, 50],
+  fr: [5, 10, 15, 20, 30],
+  safeties: [1, 2, 3, 5, 10],
+  tfl: [25, 50, 75, 100, 150],
+  negativePlays: [25, 50, 75, 100, 150, 200, 250, 300],
+  turnovers: [10, 25, 50, 75, 100, 150, 200]
 };
 
 const TEAM_MILESTONE_MARKERS = {
@@ -41,7 +55,14 @@ const TEAM_MILESTONE_MARKERS = {
   tds: [50, 100, 150, 200, 250, 300, 400, 500, 750, 1000],
   tackles: [250, 500, 750, 1000, 1500, 2000, 2500, 3000],
   ints: [25, 50, 75, 100, 150, 200, 250, 300],
-  pancakes: [100, 200, 300, 500, 750, 1000, 1500, 2000]
+  pancakes: [100, 200, 300, 500, 750, 1000, 1500, 2000],
+  pds: [50, 100, 150, 200, 250, 300],
+  ff: [5, 10, 15, 20, 30],
+  fr: [5, 10, 15, 20, 30],
+  safeties: [1, 2, 3, 5],
+  tfl: [25, 50, 75, 100, 150, 200],
+  negativePlays: [200, 400, 600, 800, 1000, 1500, 2000],
+  turnovers: [10, 25, 50, 75, 100, 150, 200]
 };
 
 export class UnifiedMilestoneChecker {
@@ -54,7 +75,7 @@ export class UnifiedMilestoneChecker {
   // Get aggregated stats for a player from unified table including team info
   private static async getPlayerSeasonStats(pid: number, season: number, throughWeek: number): Promise<any> {
     const query = `
-      SELECT 
+      SELECT
         pid,
         team,
         SUM(passyds) as passyds,
@@ -69,8 +90,16 @@ export class UnifiedMilestoneChecker {
         SUM(rushyds + recyds) as totalyds,
         SUM(passtd + rushtd + rectd) as totaltds,
         SUM(kfgmu20 + kfgm2029 + kfgm3039 + kfgm4049 + kfgm50) as kfgtotal,
-        SUM(ppunts) as ppunts
-      FROM player_stats 
+        SUM(ppunts) as ppunts,
+        SUM(defsack) as defsack,
+        SUM(deftfl) as deftfl,
+        SUM(defff) as defff,
+        SUM(deffr) as deffr,
+        SUM(defsfty) as defsfty,
+        SUM(defsack + deftfl) as negativeplays,
+        SUM(defint + deffr) as turnovers,
+        SUM(defpd) as defpd
+      FROM player_stats
       WHERE pid = $1 AND season = $2 AND week <= $3 AND seasonstate != 'PreSeason'
       GROUP BY pid, team
       ORDER BY team
@@ -91,7 +120,7 @@ export class UnifiedMilestoneChecker {
   // Get aggregated career stats for a player from unified table
   private static async getPlayerCareerStats(pid: number): Promise<any> {
     const query = `
-      SELECT 
+      SELECT
         pid,
         SUM(passyds) as passyds,
         SUM(passtd) as passtd,
@@ -105,8 +134,16 @@ export class UnifiedMilestoneChecker {
         SUM(rushyds + recyds) as totalyds,
         SUM(passtd + rushtd + rectd) as totaltds,
         SUM(kfgmu20 + kfgm2029 + kfgm3039 + kfgm4049 + kfgm50) as kfgtotal,
-        SUM(ppunts) as ppunts
-      FROM player_stats 
+        SUM(ppunts) as ppunts,
+        SUM(defsack) as defsack,
+        SUM(deftfl) as deftfl,
+        SUM(defff) as defff,
+        SUM(deffr) as deffr,
+        SUM(defsfty) as defsfty,
+        SUM(defsack + deftfl) as negativeplays,
+        SUM(defint + deffr) as turnovers,
+        SUM(defpd) as defpd
+      FROM player_stats
       WHERE pid = $1 AND seasonstate != 'PreSeason'
       GROUP BY pid
     `;
@@ -149,9 +186,9 @@ export class UnifiedMilestoneChecker {
   // OPTIMIZATION: Batch get season stats for multiple players
   private static async getBatchPlayerSeasonStats(playerIds: number[], season: number, throughWeek: number): Promise<Map<number, any>> {
     if (playerIds.length === 0) return new Map();
-    
+
     const query = `
-      SELECT 
+      SELECT
         pid,
         team,
         SUM(passyds) as passyds,
@@ -166,8 +203,16 @@ export class UnifiedMilestoneChecker {
         SUM(rushyds + recyds) as totalyds,
         SUM(passtd + rushtd + rectd) as totaltds,
         SUM(kfgmu20 + kfgm2029 + kfgm3039 + kfgm4049 + kfgm50) as kfgtotal,
-        SUM(ppunts) as ppunts
-      FROM player_stats 
+        SUM(ppunts) as ppunts,
+        SUM(defsack) as defsack,
+        SUM(deftfl) as deftfl,
+        SUM(defff) as defff,
+        SUM(deffr) as deffr,
+        SUM(defsfty) as defsfty,
+        SUM(defsack + deftfl) as negativeplays,
+        SUM(defint + deffr) as turnovers,
+        SUM(defpd) as defpd
+      FROM player_stats
       WHERE pid = ANY($1) AND season = $2 AND week <= $3 AND seasonstate != 'PreSeason'
       GROUP BY pid, team
     `;
@@ -192,9 +237,9 @@ export class UnifiedMilestoneChecker {
   // OPTIMIZATION: Batch get career stats for multiple players
   private static async getBatchPlayerCareerStats(playerIds: number[]): Promise<Map<number, any>> {
     if (playerIds.length === 0) return new Map();
-    
+
     const query = `
-      SELECT 
+      SELECT
         pid,
         SUM(passyds) as passyds,
         SUM(passtd) as passtd,
@@ -208,8 +253,16 @@ export class UnifiedMilestoneChecker {
         SUM(rushyds + recyds) as totalyds,
         SUM(passtd + rushtd + rectd) as totaltds,
         SUM(kfgmu20 + kfgm2029 + kfgm3039 + kfgm4049 + kfgm50) as kfgtotal,
-        SUM(ppunts) as ppunts
-      FROM player_stats 
+        SUM(ppunts) as ppunts,
+        SUM(defsack) as defsack,
+        SUM(deftfl) as deftfl,
+        SUM(defff) as defff,
+        SUM(deffr) as deffr,
+        SUM(defsfty) as defsfty,
+        SUM(defsack + deftfl) as negativeplays,
+        SUM(defint + deffr) as turnovers,
+        SUM(defpd) as defpd
+      FROM player_stats
       WHERE pid = ANY($1) AND seasonstate != 'PreSeason'
       GROUP BY pid
     `;
@@ -276,6 +329,14 @@ export class UnifiedMilestoneChecker {
           { stat: 'totaltds', category: 'All-Purpose', statName: 'total TDs', markers: PLAYER_SEASON_MILESTONE_MARKERS.tds },
           { stat: 'deftck', category: 'Defense', statName: 'tackles', markers: PLAYER_SEASON_MILESTONE_MARKERS.tackles },
           { stat: 'defint', category: 'Defense', statName: 'interceptions', markers: PLAYER_SEASON_MILESTONE_MARKERS.ints },
+          { stat: 'defpd', category: 'Defense', statName: 'pass deflections', markers: PLAYER_SEASON_MILESTONE_MARKERS.pds },
+          { stat: 'defsack', category: 'Defense', statName: 'sacks', markers: PLAYER_SEASON_MILESTONE_MARKERS.ints },
+          { stat: 'deftfl', category: 'Defense', statName: 'tackles for loss', markers: PLAYER_SEASON_MILESTONE_MARKERS.tfl },
+          { stat: 'defff', category: 'Defense', statName: 'forced fumbles', markers: PLAYER_SEASON_MILESTONE_MARKERS.ff },
+          { stat: 'deffr', category: 'Defense', statName: 'fumble recoveries', markers: PLAYER_SEASON_MILESTONE_MARKERS.fr },
+          { stat: 'defsfty', category: 'Defense', statName: 'safeties', markers: PLAYER_SEASON_MILESTONE_MARKERS.safeties },
+          { stat: 'negativeplays', category: 'Defense', statName: 'negative plays', markers: PLAYER_SEASON_MILESTONE_MARKERS.negativePlays },
+          { stat: 'turnovers', category: 'Defense', statName: 'turnovers forced', markers: PLAYER_SEASON_MILESTONE_MARKERS.turnovers },
           { stat: 'otherpancakes', category: 'Blocking', statName: 'pancakes', markers: PLAYER_SEASON_MILESTONE_MARKERS.pancakes },
           { stat: 'kfgtotal', category: 'Kicking', statName: 'field goals', markers: PLAYER_SEASON_MILESTONE_MARKERS.fieldGoals },
           { stat: 'ppunts', category: 'Punting', statName: 'punts', markers: PLAYER_SEASON_MILESTONE_MARKERS.punts }
@@ -318,6 +379,14 @@ export class UnifiedMilestoneChecker {
             { stat: 'totaltds', category: 'All-Purpose', statName: 'career total TDs', markers: PLAYER_CAREER_MILESTONE_MARKERS.tds },
             { stat: 'deftck', category: 'Defense', statName: 'career tackles', markers: PLAYER_CAREER_MILESTONE_MARKERS.tackles },
             { stat: 'defint', category: 'Defense', statName: 'career interceptions', markers: PLAYER_CAREER_MILESTONE_MARKERS.ints },
+            { stat: 'defpd', category: 'Defense', statName: 'career pass deflections', markers: PLAYER_CAREER_MILESTONE_MARKERS.pds },
+            { stat: 'defsack', category: 'Defense', statName: 'career sacks', markers: PLAYER_CAREER_MILESTONE_MARKERS.ints },
+            { stat: 'deftfl', category: 'Defense', statName: 'career tackles for loss', markers: PLAYER_CAREER_MILESTONE_MARKERS.tfl },
+            { stat: 'defff', category: 'Defense', statName: 'career forced fumbles', markers: PLAYER_CAREER_MILESTONE_MARKERS.ff },
+            { stat: 'deffr', category: 'Defense', statName: 'career fumble recoveries', markers: PLAYER_CAREER_MILESTONE_MARKERS.fr },
+            { stat: 'defsfty', category: 'Defense', statName: 'career safeties', markers: PLAYER_CAREER_MILESTONE_MARKERS.safeties },
+            { stat: 'negativeplays', category: 'Defense', statName: 'career negative plays', markers: PLAYER_CAREER_MILESTONE_MARKERS.negativePlays },
+            { stat: 'turnovers', category: 'Defense', statName: 'career turnovers forced', markers: PLAYER_CAREER_MILESTONE_MARKERS.turnovers },
             { stat: 'otherpancakes', category: 'Blocking', statName: 'career pancakes', markers: PLAYER_CAREER_MILESTONE_MARKERS.pancakes },
             { stat: 'kfgtotal', category: 'Kicking', statName: 'career field goals', markers: PLAYER_CAREER_MILESTONE_MARKERS.fieldGoals },
             { stat: 'ppunts', category: 'Punting', statName: 'career punts', markers: PLAYER_CAREER_MILESTONE_MARKERS.punts }
@@ -369,13 +438,20 @@ export class UnifiedMilestoneChecker {
     try {
       // Get team stats aggregated from player stats
       const query = `
-        SELECT 
+        SELECT
           team,
           SUM(passtd + rushtd + rectd) as totaltds,
           SUM(deftck) as totaltackles,
           SUM(defint) as totalints,
-          SUM(otherpancakes) as totalpancakes
-        FROM player_stats 
+          SUM(otherpancakes) as totalpancakes,
+          SUM(defpd) as totalpds,
+          SUM(defff) as totalff,
+          SUM(deffr) as totalfr,
+          SUM(defsfty) as totalsafeties,
+          SUM(deftfl) as totaltfl,
+          SUM(defsack + deftfl) as totalnegativeplays,
+          SUM(defint + deffr) as totalturnovers
+        FROM player_stats
         WHERE season = $1 AND week <= $2 AND seasonstate != 'PreSeason'
         GROUP BY team
       `;
@@ -389,13 +465,20 @@ export class UnifiedMilestoneChecker {
             
             // Get previous week totals for comparison
             const previousQuery = `
-              SELECT 
+              SELECT
                 team,
                 SUM(passtd + rushtd + rectd) as totaltds,
                 SUM(deftck) as totaltackles,
                 SUM(defint) as totalints,
-                SUM(otherpancakes) as totalpancakes
-              FROM player_stats 
+                SUM(otherpancakes) as totalpancakes,
+                SUM(defpd) as totalpds,
+                SUM(defff) as totalff,
+                SUM(deffr) as totalfr,
+                SUM(defsfty) as totalsafeties,
+                SUM(deftfl) as totaltfl,
+                SUM(defsack + deftfl) as totalnegativeplays,
+                SUM(defint + deffr) as totalturnovers
+              FROM player_stats
               WHERE season = $1 AND week < $2 AND seasonstate != 'PreSeason' AND team = $3
               GROUP BY team
             `;
@@ -410,7 +493,14 @@ export class UnifiedMilestoneChecker {
                   { stat: 'totaltds', category: 'Team Offense', statName: 'team touchdowns', markers: TEAM_MILESTONE_MARKERS.tds },
                   { stat: 'totaltackles', category: 'Team Defense', statName: 'team tackles', markers: TEAM_MILESTONE_MARKERS.tackles },
                   { stat: 'totalints', category: 'Team Defense', statName: 'team interceptions', markers: TEAM_MILESTONE_MARKERS.ints },
-                  { stat: 'totalpancakes', category: 'Team Offense', statName: 'team pancakes', markers: TEAM_MILESTONE_MARKERS.pancakes }
+                  { stat: 'totalpancakes', category: 'Team Offense', statName: 'team pancakes', markers: TEAM_MILESTONE_MARKERS.pancakes },
+                  { stat: 'totalpds', category: 'Team Defense', statName: 'team pass deflections', markers: TEAM_MILESTONE_MARKERS.pds },
+                  { stat: 'totalff', category: 'Team Defense', statName: 'team forced fumbles', markers: TEAM_MILESTONE_MARKERS.ff },
+                  { stat: 'totalfr', category: 'Team Defense', statName: 'team fumble recoveries', markers: TEAM_MILESTONE_MARKERS.fr },
+                  { stat: 'totalsafeties', category: 'Team Defense', statName: 'team safeties', markers: TEAM_MILESTONE_MARKERS.safeties },
+                  { stat: 'totaltfl', category: 'Team Defense', statName: 'team tackles for loss', markers: TEAM_MILESTONE_MARKERS.tfl },
+                  { stat: 'totalnegativeplays', category: 'Team Defense', statName: 'team negative plays', markers: TEAM_MILESTONE_MARKERS.negativePlays },
+                  { stat: 'totalturnovers', category: 'Team Defense', statName: 'team turnovers forced', markers: TEAM_MILESTONE_MARKERS.turnovers }
                 ];
 
                 for (const check of teamChecks) {
