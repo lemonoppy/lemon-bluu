@@ -78,9 +78,12 @@ export const ErrorEmbed = (
       },
       {
         name: 'Raw Error',
-        value: `\`\`\`js\n${
-          error instanceof Error ? error.stack : error
-        }\`\`\``,
+        value: (() => {
+          const raw = error instanceof Error ? error.stack : String(error);
+          const maxLen = 1024 - 10; // account for ```js\n...\n```
+          const truncated = raw && raw.length > maxLen ? raw.slice(0, maxLen) + '…' : raw;
+          return `\`\`\`js\n${truncated}\`\`\``;
+        })(),
       },
     );
 };
