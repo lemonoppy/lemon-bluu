@@ -19,10 +19,12 @@ module.exports = (client: Client) => {
 
   // Load slash commands from current directory and within sub directories
   const commandDir = readdirSync(baseCommandsDir)
+    .filter(file => !file.startsWith('.'))
     .map((file) => join(baseCommandsDir, file))
     .filter((file) => {
       const isDirectory = statSync(file).isDirectory();
       if (!isDirectory) {
+        if (!file.endsWith('.js') && !file.endsWith('.ts')) return false;
         const command: SlashCommand = require(file).default;
         slashCommands.push(command.command);
         client.commands.set(command.command.name, command);

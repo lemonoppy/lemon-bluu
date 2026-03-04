@@ -23,6 +23,7 @@ module.exports = (client: Client) => {
     .filter((file) => {
       const isDirectory = statSync(file).isDirectory();
       if (!isDirectory) {
+        if (!file.endsWith('.js') && !file.endsWith('.ts')) return false;
         const command: SlashCommand = require(file).default;
         slashCommands.push(command.command);
         client.commands.set(command.command.name, command);
