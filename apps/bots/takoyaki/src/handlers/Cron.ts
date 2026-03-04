@@ -57,7 +57,7 @@ module.exports = async (client: Client) => {
 
     // Full reload every day at midnight (00:00) (production only)
     new CronJob('0 0 * * *', async () => {
-      const errorChannel = client.channels.cache.get(Config.botErrorChannelId) as TextBasedChannel | undefined;
+      const errorChannel = Config.botErrorChannelId ? client.channels.cache.get(Config.botErrorChannelId) as TextBasedChannel | undefined : undefined;
       await withCronErrorHandling(
         'Daily Cache Reload',
         async () => {
@@ -73,7 +73,7 @@ module.exports = async (client: Client) => {
 
   // Daily TPE Tracker Refresh every day at 8 AM
   new CronJob('0 8 * * *', async () => {
-    const errorChannel = client.channels.cache.get(Config.botErrorChannelId) as TextBasedChannel | undefined;
+    const errorChannel = Config.botErrorChannelId ? client.channels.cache.get(Config.botErrorChannelId) as TextBasedChannel | undefined : undefined;
     await withCronErrorHandling(
       'Daily TPE Tracker Refresh',
       async () => await SheetsClient.refreshTPETrackerViaWebApp('daily'),
@@ -83,7 +83,7 @@ module.exports = async (client: Client) => {
 
   // Weekly TPE Tracker Refresh every Monday at 8 AM
   new CronJob('0 8 * * 1', async () => {
-    const errorChannel = client.channels.cache.get(Config.botErrorChannelId) as TextBasedChannel | undefined;
+    const errorChannel = Config.botErrorChannelId ? client.channels.cache.get(Config.botErrorChannelId) as TextBasedChannel | undefined : undefined;
     await withCronErrorHandling(
       'Weekly TPE Tracker Refresh',
       async () => await SheetsClient.refreshTPETrackerViaWebApp('weekly'),

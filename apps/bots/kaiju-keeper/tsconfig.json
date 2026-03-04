@@ -14,7 +14,7 @@
     "resolveJsonModule": true,
     "forceConsistentCasingInFileNames": true,
     "removeComments": true,
-    "typeRoots": ["node_modules/@types", "./typings"],
+    "typeRoots": ["node_modules/@types", "../../../node_modules/@types", "./typings"],
     "isolatedModules": true,
     "types": ["node", "jest"],
     "sourceMap": false,

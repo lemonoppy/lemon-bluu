@@ -15,9 +15,9 @@ export default {
     await interaction.deferReply();
 
     try {
-      const channel = interaction.client.channels.cache.get(
-        Config.botCDNChannelId,
-      );
+      const channel = Config.botCDNChannelId
+        ? interaction.client.channels.cache.get(Config.botCDNChannelId)
+        : undefined;
       if (!channel) throw new Error('Could not find schedule channel.')
       if (!channel.isTextBased()) throw new Error('Schedule channel is not a text channel.')
       const storedMessage = await channel.messages.fetch(messageId);

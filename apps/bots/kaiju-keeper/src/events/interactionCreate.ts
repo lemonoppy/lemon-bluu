@@ -79,9 +79,9 @@ export default {
           });
         }
 
-        const channel = interaction.client.channels.cache.get(
-          Config.botErrorChannelId,
-        );
+        const channel = Config.botErrorChannelId
+          ? interaction.client.channels.cache.get(Config.botErrorChannelId)
+          : undefined;
         if (channel?.isTextBased() && 'send' in channel) {
           channel.send({ embeds: [ErrorEmbed(interaction, e)] });
         }

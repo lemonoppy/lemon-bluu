@@ -39,8 +39,8 @@ describe('sumStatsByKeys', () => {
   describe('rushing stats — YPC and points', () => {
     it('calculates yards per carry across multiple games', () => {
       const data = [
-        { player: 'RB', season: 1, yards: 100, attempts: 20, td: 2, ypc: 0 },
-        { player: 'RB', season: 1, yards: 50, attempts: 10, td: 1, ypc: 0 },
+        { player: 'RB', season: 1, yards: 100, attempts: 20, td: 2, ypc: 0, points: 0 },
+        { player: 'RB', season: 1, yards: 50, attempts: 10, td: 1, ypc: 0, points: 0 },
       ];
       const result = sumStatsByKeys(data, ['player', 'season']);
       expect(result['RB-1'].yards).toBe(150);
@@ -60,8 +60,8 @@ describe('sumStatsByKeys', () => {
   describe('receiving stats — YPR and points', () => {
     it('calculates yards per reception', () => {
       const data = [
-        { player: 'WR', season: 1, yards: 80, receptions: 8, td: 1, ypr: 0 },
-        { player: 'WR', season: 1, yards: 40, receptions: 4, td: 0, ypr: 0 },
+        { player: 'WR', season: 1, yards: 80, receptions: 8, td: 1, ypr: 0, points: 0 },
+        { player: 'WR', season: 1, yards: 40, receptions: 4, td: 0, ypr: 0, points: 0 },
       ];
       const result = sumStatsByKeys(data, ['player', 'season']);
       expect(result['WR-1'].ypr).toBe('10.00'); // 120 / 12
@@ -118,7 +118,7 @@ describe('sumStatsByKeys', () => {
         rating: 0, ypa: 0, completionpct: 0, points: 0,
       }];
       const result = sumStatsByKeys(data, ['player', 'season']);
-      const rating = parseFloat(result['QB-1'].rating as string);
+      const rating = parseFloat(String(result['QB-1'].rating));
       expect(rating).toBeGreaterThan(100);
       expect(rating).toBeLessThanOrEqual(158.4); // NFL max passer rating (158.333...)
     });
@@ -134,6 +134,7 @@ describe('sumStatsByKeys', () => {
         fg30_39made: 1, fg30_39att: 2,
         fg40_49made: 0, fg40_49att: 1,
         fg50plusmade: 0, fg50plusatt: 0,
+        fgPct: '0', points: 0,
       }];
       const result = sumStatsByKeys(data, ['player', 'season']);
       // 4 made / 6 attempted
@@ -151,6 +152,7 @@ describe('sumStatsByKeys', () => {
         fg30_39made: 0, fg30_39att: 0,
         fg40_49made: 0, fg40_49att: 0,
         fg50plusmade: 0, fg50plusatt: 0,
+        fgPct: '0', points: 0,
       }];
       const result = sumStatsByKeys(data, ['player', 'season']);
       expect(result['K-1'].fgPct).toBe('0.000');
@@ -182,14 +184,14 @@ describe('sumStatsByKeys', () => {
       const data = [{
         player: 'RB', season: 1,
         rushYards: 80, recYards: 30,
-        attempts: 15, receptions: 4, td: 1, ypc: 0, ypr: 0,
+        attempts: 15, receptions: 4, td: 1, ypc: 0, ypr: 0, scrimmageYards: 0,
       }];
       const result = sumStatsByKeys(data, ['player', 'season']);
       expect(result['RB-1'].scrimmageYards).toBe(110);
     });
 
     it('returns 0 scrimmageYards when both are absent', () => {
-      const data = [{ player: 'OL', season: 1, pancakes: 5 }];
+      const data = [{ player: 'OL', season: 1, pancakes: 5, scrimmageYards: 0 }];
       const result = sumStatsByKeys(data, ['player', 'season']);
       expect(result['OL-1'].scrimmageYards).toBe(0);
     });

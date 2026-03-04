@@ -1,7 +1,7 @@
+import { APIEmbedField } from 'discord-api-types/v10';
 import {
   SlashCommandBuilder,
 } from 'discord.js';
-import { APIEmbedField } from 'node_modules/discord-api-types/v10';
 import { PortalClient } from 'src/db/portal/PortalClient';
 import { BaseEmbed } from 'src/lib/embed';
 import { withErrorHandling } from 'src/lib/helpers/command';
