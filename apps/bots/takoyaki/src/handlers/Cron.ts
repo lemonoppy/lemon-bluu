@@ -3,6 +3,7 @@ import { Client, TextBasedChannel } from 'discord.js';
 import { FantasyClient } from 'src/db/fantasy/FantasyClient';
 import { PortalClient } from 'src/db/portal/PortalClient';
 import { SheetsClient } from 'src/db/sheets/SheetsClient';
+import { StatsClient } from 'src/db/stats/StatsClient';
 import { Config } from 'src/lib/config/config';
 import { logger } from 'src/lib/logger';
 
@@ -46,6 +47,7 @@ module.exports = async (client: Client) => {
     PortalClient.reload(),
     FantasyClient.reload(),
   ]);
+  await StatsClient.reload();
 
   const isProduction = process.env.NODE_ENV === 'production';
 
@@ -65,6 +67,7 @@ module.exports = async (client: Client) => {
             PortalClient.reload(),
             FantasyClient.reload(),
           ]);
+          await StatsClient.reload();
         },
         errorChannel
       );

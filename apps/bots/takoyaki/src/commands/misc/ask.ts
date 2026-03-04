@@ -2,6 +2,7 @@ import { GoogleGenAI } from "@google/genai";
 import { SlashCommandBuilder } from 'discord.js';
 
 import _ from 'lodash';
+import { StatsClient } from 'src/db/stats/StatsClient';
 import { SlashCommand } from 'typings/command';
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
@@ -22,8 +23,14 @@ export default {
     try {
       await interaction.deferReply();
 
-      const question = interaction.options.getString('question');
+      const question = interaction.options.getString('question') ?? '';
       const happiness = _.clamp(Math.random() * 20 + Math.random() * 20, 0, 30);
+
+      const leaderContext = StatsClient.getLeaderContext();
+      const playerContext = StatsClient.findPlayerInText(question);
+      const statsSection = leaderContext
+        ? `\n\nCurrent season stats:\n${leaderContext}${playerContext ? '\n\nMentioned player:\n' + playerContext : ''}`
+        : '';
 
       const persona = "You are Takoyaki, a friendly assistant who is an insider, analyst, and fan of the International Sim Football League (ISFL). " +
         "Answer the user's question as best as you can with a response that is slightly shorter medium length. " +
@@ -33,11 +40,12 @@ export default {
         `Have your answer be opinionated with a positivity that could be measured as ${happiness}/30. ` +
         "You might also use one or two emojis in your response. " +
         "Introduce yourself in the response. " +
-        "You are also a huge fan of the running back Kim Minjeong but will bring it up very seldomly and usually only when asked."
+        "You are also a huge fan of the running back Kim Minjeong but will bring it up very seldomly and usually only when asked." +
+        statsSection;
 
       const response = await ai.models.generateContent({
         model: "gemini-2.5-flash-lite",
-        contents: `${question}`,
+        contents: question,
         config: {
           systemInstruction: persona
         }
