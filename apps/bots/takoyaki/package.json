@@ -6,6 +6,7 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc && tsc-alias",
+    "dev": "yarn start:dev",
     "start:built": "node -r tsconfig-paths/register build/index.js",
     "start:dev": "NODE_ENV=development & nodemon -r tsconfig-paths/register --files src/index.ts | pino-pretty -i pid,hostname - t 'yyyy-mm-dd HH:MM:ss'",
     "start:prod": "ts-node -r tsconfig-paths/register --files src/index.ts",
