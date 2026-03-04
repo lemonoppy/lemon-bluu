@@ -17,10 +17,10 @@ export interface TeamServerConfig {
 
 // Team configuration options
 export const TeamConfig = {
-  // Method 1: Single search key (team name, abbreviation, or ID)
-  teamSearchKey: process.env.TEAM_SEARCH_KEY || 'osaka', // Searches team name, abbreviation, or ID
-  
-  // Method 2: Team-based mapping with server IDs and webhooks
+  // Fallback team for servers not in guildTeamMap (e.g. test servers)
+  teamSearchKey: 'osk',
+
+  // Team-based mapping with server IDs and webhooks
   // lemonoppy-cdn server: 1121495688681889927
   guildTeamMap: {
     // Team abbreviation -> { serverIds, webhook }
@@ -42,7 +42,7 @@ export const TeamConfig = {
     }
     // Add more teams as needed
   } as Record<string, TeamServerConfig>,
-  
+
   // Helper function to get team from server ID
   getTeamFromServerId: (serverId: string): string | null => {
     for (const [teamAbbr, config] of Object.entries(TeamConfig.guildTeamMap)) {
@@ -63,24 +63,7 @@ export const TeamConfig = {
   getAllTeams: (): string[] => {
     return Object.keys(TeamConfig.guildTeamMap);
   },
-  
-  // Fallback database prefix if team lookup fails
-  fallbackDbPrefix: process.env.DB_TABLE_PREFIX || 'kaiju',
 };
-
-// Validate team configuration
-const validateTeamConfig = () => {
-  if (!TeamConfig.teamSearchKey) {
-    throw new Error('TEAM_SEARCH_KEY must be provided');
-  }
-  
-  if (TeamConfig.fallbackDbPrefix && !TeamConfig.fallbackDbPrefix.match(/^[a-z][a-z0-9_]*$/)) {
-    throw new Error('DB_TABLE_PREFIX must be lowercase letters, numbers, and underscores only');
-  }
-};
-
-// Run validation on module load
-validateTeamConfig();
 
 export const Config = {
   portalApiUrl: `https://portal.sim-football.com/api/isfl/v1`,

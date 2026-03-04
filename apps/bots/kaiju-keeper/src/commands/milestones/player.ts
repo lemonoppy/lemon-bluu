@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from 'discord.js';
-import { DatabaseClient } from 'src/db/DBClient';
+import { UnifiedDatabaseClient } from 'src/db/UnifiedDBClient';
 import { BaseEmbed } from 'src/lib/embed';
 import { logger } from 'src/lib/logger';
 
@@ -15,10 +15,6 @@ const MILESTONE_MARKERS = {
   passingYards: {
     target: 500,
     min: 200
-  },
-  points: {
-    target: 50,
-    min: 15
   },
   tds: {
     target: 10,
@@ -81,19 +77,19 @@ export default {
             milestoneStrings.push(`**${milestone.player}** needs ${milestone.milestone} more to ${milestone.milestone + milestone.stat} (${milestone.stat})`);
           }
         });
-        
+
         // Return null if no milestones to skip this field entirely
         if (milestoneStrings.length === 0) {
           return null;
         }
-        
+
         const value = milestoneStrings.join('\n');
         const field = {
           name: String(statName || 'Unknown Stat'),
           value: String(value || 'No data available.'),
           inline: false
         };
-        
+
         // Ensure name and value are valid strings with proper length
         if (!field.name || field.name.length === 0 || field.name.length > 256) {
           field.name = 'Invalid Stat';
@@ -101,17 +97,21 @@ export default {
         if (!field.value || field.value.length === 0 || field.value.length > 1024) {
           field.value = 'No data available.';
         }
-        
+
         return field;
       }
 
       const currentTeam = getTeamForGuild(interaction.guildId);
+      const teamAbbr = currentTeam.abbreviation;
+
+      // Fetch portal data once, share across all stat queries
+      const portalData = await UnifiedDatabaseClient.getPortalData(teamAbbr);
 
       const singleEmbed = BaseEmbed(interaction, {
         teamColor: currentTeam.colors.primary,
         logoUrl: currentTeam.logoUrl,
       }).setTitle(`Upcoming Player Milestones - ${currentTeam.location} ${currentTeam.name}`);
-      
+
       const offenseEmbed = BaseEmbed(interaction, {
         teamColor: currentTeam.colors.primary,
         logoUrl: currentTeam.logoUrl,
@@ -127,67 +127,34 @@ export default {
         logoUrl: currentTeam.logoUrl,
       }).setTitle(`Other Milestones - ${currentTeam.location} ${currentTeam.name}`);
 
-      const passingRecords = await DatabaseClient.getPassingStats(true, interaction.guildId ?? undefined);
-      if (!Array.isArray(passingRecords)) {
-        await interaction.editReply({
-          content: 'No rushing records found.',
-        });
-        return;
-      }
+      // Fetch all stat categories in parallel, sharing portal data
+      const [
+        passingRecords, rushingRecords, receivingRecords,
+        defensiveRecords, otherRecords, kickingRecords, puntingRecords
+      ] = await Promise.all([
+        UnifiedDatabaseClient.getPassingStats(teamAbbr, undefined, undefined, false, portalData),
+        UnifiedDatabaseClient.getRushingStats(teamAbbr, undefined, undefined, false, portalData),
+        UnifiedDatabaseClient.getReceivingStats(teamAbbr, undefined, undefined, false, portalData),
+        UnifiedDatabaseClient.getDefenseStats(teamAbbr, undefined, undefined, false, portalData),
+        UnifiedDatabaseClient.getOtherStats(teamAbbr, undefined, undefined, false, portalData),
+        UnifiedDatabaseClient.getKickingStats(teamAbbr, undefined, undefined, false, portalData),
+        UnifiedDatabaseClient.getPuntingStats(teamAbbr, undefined, undefined, false, portalData),
+      ]);
+
+      if (!Array.isArray(passingRecords)) { await interaction.editReply({ content: 'No passing records found.' }); return; }
+      if (!Array.isArray(rushingRecords)) { await interaction.editReply({ content: 'No rushing records found.' }); return; }
+      if (!Array.isArray(receivingRecords)) { await interaction.editReply({ content: 'No receiving records found.' }); return; }
+      if (!Array.isArray(defensiveRecords)) { await interaction.editReply({ content: 'No defensive records found.' }); return; }
+      if (!Array.isArray(otherRecords)) { await interaction.editReply({ content: 'No other records found.' }); return; }
+      if (!Array.isArray(kickingRecords)) { await interaction.editReply({ content: 'No kicking records found.' }); return; }
+      if (!Array.isArray(puntingRecords)) { await interaction.editReply({ content: 'No punting records found.' }); return; }
+
       const franchisePassingRecords = Object.values(sumStatsByKeys(passingRecords, ['pid'], ['id', 'season', 'week']));
-
-      const rushingRecords = await DatabaseClient.getRushingStats(true, interaction.guildId ?? undefined);
-      if (!Array.isArray(rushingRecords)) {
-        await interaction.editReply({
-          content: 'No rushing records found.',
-        });
-        return;
-      }
       const franchiseRushingRecords = Object.values(sumStatsByKeys(rushingRecords, ['pid'], ['id', 'season', 'week']));
-
-      const receivingRecords = await DatabaseClient.getReceivingStats(true, interaction.guildId ?? undefined);
-      if (!Array.isArray(receivingRecords)) {
-        await interaction.editReply({
-          content: 'No receiving records found.',
-        });
-        return;
-      }
       const franchiseReceivingRecords = Object.values(sumStatsByKeys(receivingRecords, ['pid'], ['id', 'season', 'week']));
-
-      const defensiveRecords = await DatabaseClient.getDefensiveStats(true, interaction.guildId ?? undefined);
-      if (!Array.isArray(defensiveRecords)) {
-        await interaction.editReply({
-          content: 'No receiving records found.',
-        });
-        return;
-      }
       const franchiseDefensiveRecords = Object.values(sumStatsByKeys(defensiveRecords, ['pid'], ['id', 'season', 'week']));
-
-      const otherRecords = await DatabaseClient.getOtherStats(true, interaction.guildId ?? undefined);
-      if (!Array.isArray(otherRecords)) {
-        await interaction.editReply({
-          content: 'No receiving records found.',
-        });
-        return;
-      }
       const franchiseOtherRecords = Object.values(sumStatsByKeys(otherRecords, ['pid'], ['id', 'season', 'week']));
-
-      const kickingRecords = await DatabaseClient.getKickingStats(true, interaction.guildId ?? undefined);
-      if (!Array.isArray(kickingRecords)) {
-        await interaction.editReply({
-          content: 'No kicking records found.',
-        });
-        return;
-      }
       const franchiseKickingRecords = Object.values(sumStatsByKeys(kickingRecords, ['pid'], ['id', 'season', 'week']));
-
-      const puntingRecords = await DatabaseClient.getPuntingStats(true, interaction.guildId ?? undefined);
-      if (!Array.isArray(puntingRecords)) {
-        await interaction.editReply({
-          content: 'No kicking records found.',
-        });
-        return;
-      }
       const franchisePuntingRecords = Object.values(sumStatsByKeys(puntingRecords, ['pid'], ['id', 'season', 'week']));
 
       // Use the helper for both rushing and receiving milestones
@@ -210,7 +177,7 @@ export default {
         buildMilestone('Rushing Yards', filteredRushingYardMilestones),
         buildMilestone('Receiving TDs', filteredReceivingTDMilestones),
         buildMilestone('Receiving Yards', filteredReceivingYardMilestones),
-      ].filter((field): field is { name: string; value: string; inline: boolean } => 
+      ].filter((field): field is { name: string; value: string; inline: boolean } =>
         field !== null && field.name.length > 0 && field.value.length > 0
       );
 
@@ -219,17 +186,16 @@ export default {
         buildMilestone('Sacks', filteredSackMilestones),
         buildMilestone('Interceptions', filteredInterceptionMilestones),
         buildMilestone('Passes Defensed', filteredPDMilestones),
-      ].filter((field): field is { name: string; value: string; inline: boolean } => 
+      ].filter((field): field is { name: string; value: string; inline: boolean } =>
         field !== null && field.name.length > 0 && field.value.length > 0
       );
 
       const otherFields = [
         buildMilestone('Pancakes', filteredPancakeMilestones),
-        buildMilestone('Kicking Points', buildMilestoneChases(franchiseKickingRecords, 'points', MILESTONE_MARKERS.points)),
         buildMilestone('Kicking XP Made', buildMilestoneChases(franchiseKickingRecords, 'xpmade', MILESTONE_MARKERS.xp)),
         buildMilestone('Punting Yards', buildMilestoneChases(franchisePuntingRecords, 'yds', MILESTONE_MARKERS.yards)),
         buildMilestone('Inside 20', buildMilestoneChases(franchisePuntingRecords, 'inside20', MILESTONE_MARKERS.xp)),
-      ].filter((field): field is { name: string; value: string; inline: boolean } => 
+      ].filter((field): field is { name: string; value: string; inline: boolean } =>
         field !== null && field.name.length > 0 && field.value.length > 0
       );
 
@@ -247,11 +213,8 @@ export default {
       }
 
       const embeds = [];
-      // if (offenseFields.length > 0) embeds.push(offenseEmbed);
-      // if (defenseFields.length > 0) embeds.push(defenseEmbed);
-      // if (otherFields.length > 0) embeds.push(otherEmbed);
       if (singleEmbed.length > 0) embeds.push(singleEmbed);
-      
+
       if (embeds.length === 0) {
         await interaction.editReply({
           content: 'No milestone data available for this team.',

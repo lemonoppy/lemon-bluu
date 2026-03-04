@@ -84,11 +84,18 @@ const command: SlashCommand = {
         .setMinValue(1)
         .setMaxValue(19)
         .setRequired(true)
+    )
+    .addBooleanOption(option =>
+      option
+        .setName('silent')
+        .setDescription('Scrape stats without posting milestones to team webhooks')
+        .setRequired(false)
     ),
   minRole: UserRole.SERVER_ADMIN,
   execute: async (interaction) => {
     const season = interaction.options.getInteger('season', true);
     const week = interaction.options.getInteger('week', true);
+    const silent = interaction.options.getBoolean('silent') ?? false;
 
     await interaction.deferReply();
 
@@ -118,11 +125,13 @@ const command: SlashCommand = {
         const milestoneAchievements = await UnifiedMilestoneChecker.checkAllMilestones(season, week);
         
         if (milestoneAchievements.length > 0) {
-          resultMessage.push(`🏆 **Milestones:** ${milestoneAchievements.length} achievements found - posting to team webhooks`);
-          logger.info(`Found ${milestoneAchievements.length} milestone achievements`);
-          
-          // Post milestones to team webhooks
-          await postMilestonesToWebhooks(milestoneAchievements, season, week);
+          if (silent) {
+            resultMessage.push(`🏆 **Milestones:** ${milestoneAchievements.length} achievements found - skipped (silent mode)`);
+          } else {
+            resultMessage.push(`🏆 **Milestones:** ${milestoneAchievements.length} achievements found - posting to team webhooks`);
+            logger.info(`Found ${milestoneAchievements.length} milestone achievements`);
+            await postMilestonesToWebhooks(milestoneAchievements, season, week);
+          }
         } else {
           resultMessage.push(`🏆 **Milestones:** No new milestones this week`);
         }

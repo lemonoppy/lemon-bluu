@@ -69,29 +69,3 @@ export const OSAKA_KAIJU: Team = Teams.OSAKA_KAIJU;
 // Current team instance - dynamically determined (defaults to search key method)
 export const CURRENT_TEAM = getCurrentTeam();
 
-// Helper function to get database table name with team prefix
-export const getDbTableName = (statType: string, guildId?: string | null): string => {
-  // Use the same logic as teamResolver to ensure consistency
-  let searchKey: string;
-  
-  if (guildId) {
-    const teamAbbr = TeamConfig.getTeamFromServerId(guildId);
-    searchKey = teamAbbr || TeamConfig.teamSearchKey;
-  } else {
-    searchKey = TeamConfig.teamSearchKey;
-  }
-  
-  // Get the team
-  const team = getTeamForGuild(guildId || null);
-  
-  // Create prefix using same logic as teamResolver:
-  // If searchKey matches abbreviation exactly, use searchKey as prefix
-  if (team.abbreviation.toLowerCase() === searchKey.toLowerCase()) {
-    const prefix = searchKey.toLowerCase();
-    return `${prefix}_${statType}`;
-  }
-  
-  // Otherwise use cleaned location name
-  const prefix = team.location.toLowerCase().replace(/[^a-z0-9]/g, '');
-  return `${prefix}_${statType}`;
-};

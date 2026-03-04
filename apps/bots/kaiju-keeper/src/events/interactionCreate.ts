@@ -1,5 +1,4 @@
 import { Events, Interaction } from 'discord.js';
-import { commandCountDB, userCountDB } from 'src/db/users';
 import { Config } from 'src/lib/config/config';
 import { ErrorEmbed } from 'src/lib/embed';
 
@@ -7,8 +6,6 @@ import { pluralize } from 'src/lib/format';
 import { logger } from 'src/lib/logger';
 import { checkRole } from 'src/lib/role';
 import { BotEvent } from 'typings/event';
-
-// Initialize Keyv with SQLite
 
 export default {
   name: Events.InteractionCreate,
@@ -53,17 +50,6 @@ export default {
       }
 
       try {
-        const commandKey = `command:${interaction.commandName}`;
-        const userKey = `user:${interaction.user.username}`;
-        const [commandUsage, userUsage] = await Promise.all([
-          commandCountDB.get(commandKey),
-          userCountDB.get(userKey),
-        ]);
-        await Promise.all([
-          commandCountDB.set(commandKey, (commandUsage || 0) + 1),
-          userCountDB.set(userKey, (userUsage || 0) + 1),
-        ]);
-
         await command.execute(interaction);
       } catch (e) {
         if (!interaction.replied && !interaction.deferred) {

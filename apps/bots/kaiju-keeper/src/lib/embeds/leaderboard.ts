@@ -53,6 +53,9 @@ export async function createLeaderboardEmbed(interaction: ChatInputCommandIntera
     sortedStats = sortedStats.filter(player => player.onteam);
   }
 
+  // Filter out zero-stat entries before formatting
+  sortedStats = sortedStats.filter(stat => Number(stat[chosenStat]) !== 0);
+
   // Format numbers in sortedStats for the chosenStat
   sortedStats = sortedStats.map(stat => ({
     ...stat,
@@ -72,9 +75,6 @@ export async function createLeaderboardEmbed(interaction: ChatInputCommandIntera
   }
 
   for (let i = 0; i < 10 && i < sortedStats.length; i++) {
-    if (!sortedStats[i][chosenStat] || sortedStats[i][chosenStat] === 0) {
-      continue; // Skip if the stat is undefined or null
-    }
     embedFields.push({
       name: `#${i + 1}${aggregateAppend(sortedStats[i].season, sortedStats[i].week)} - ${sortedStats[i].firstname} ${sortedStats[i].lastname}`,
       value: `${sortedStats[i][chosenStat]} ${statNames[chosenStat]} - ${sortedStats[i].position}${!activeOnly && sortedStats[i].onteam ? ' (Active) ✨' : ''}`,

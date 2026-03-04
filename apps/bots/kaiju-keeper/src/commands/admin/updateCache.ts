@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from 'discord.js';
-import { DatabaseClient } from 'src/db/DBClient';
+import { PortalClient } from 'src/db/PortalClient';
 import { UserRole } from 'src/lib/config/config';
 
 import { SlashCommand } from 'typings/command';
@@ -11,7 +11,7 @@ export default {
   execute: async (interaction) => {
     await interaction.deferReply();
 
-    await DatabaseClient.reload();
+    await PortalClient.reload();
 
     await interaction.editReply({
       content: `Updated cache!`,

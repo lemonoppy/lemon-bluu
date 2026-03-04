@@ -6,40 +6,48 @@ import { normalizeTeamAbbreviation } from 'src/lib/unifiedTableManager';
 import { AppError, DatabaseError } from 'typings/errors.typings';
 import {
   UnifiedDefenseStatsWithPlayer,
-  UnifiedGameStats,
   UnifiedKickingStatsWithPlayer,
   UnifiedOtherStatsWithPlayer,
   UnifiedPassingStatsWithPlayer,
-  UnifiedPlayer,
   UnifiedPuntingStatsWithPlayer,
   UnifiedReceivingStatsWithPlayer,
   UnifiedRushingStatsWithPlayer,
   UnifiedSpecialTeamsStatsWithPlayer
 } from 'typings/unified-db.typings';
 
+type PortalData = {
+  playersMap: Map<number, any>;
+  activePlayerIds: number[];
+  activePlayerIdsSet: Set<number>;
+};
+
 class UnifiedDBClient {
   constructor() {
   }
 
-
   /**
-   * Get active player PIDs for a team from the portal
+   * Fetch and prepare portal data for a team once.
+   * Pass the result to stat methods to avoid redundant portal fetches.
    */
-  async #getActiveTeamPlayerIds(teamAbbr: string): Promise<number[]> {
-    try {
-      const players = await PortalClient.getPlayers();
-      const normalizedTeam = normalizeTeamAbbreviation(teamAbbr);
-      
-      return players
-        .filter(player => 
-          player.status === 'active' && 
-          player.isflTeam === normalizedTeam
-        )
-        .map(player => player.pid);
-    } catch (error) {
-      logger.error('Failed to get active team players:', error);
-      return [];
-    }
+  async getPortalData(teamAbbr: string): Promise<PortalData> {
+    const allPlayers = await PortalClient.getAllPlayers();
+    const normalizedTeam = normalizeTeamAbbreviation(teamAbbr);
+
+    const playersMap = new Map<number, any>();
+    const activePlayerIds: number[] = [];
+
+    allPlayers.forEach(player => {
+      if (player.pid) {
+        playersMap.set(player.pid, player);
+        if (player.status === 'active' && player.isflTeam?.toUpperCase() === normalizedTeam) {
+          activePlayerIds.push(player.pid);
+        }
+      }
+    });
+
+    logger.debug(`UnifiedDBClient: Loaded ${allPlayers.length} players, ${activePlayerIds.length} active on ${normalizedTeam}`);
+
+    return { playersMap, activePlayerIds, activePlayerIdsSet: new Set(activePlayerIds) };
   }
 
   /**
@@ -52,29 +60,16 @@ class UnifiedDBClient {
     season?: number,
     week?: number,
     orderBy: string = `${tableAlias}.rushyds DESC`,
-    activeOnly: boolean = false
+    activeOnly: boolean = false,
+    portalData?: PortalData
   ): Promise<T[] | AppError> {
 
-    // Get ALL players from PortalClient for name mapping (not just active ones)
-    // This is important for franchise leaderboards that include retired/inactive players
-    const allPlayers = await PortalClient.getAllPlayers();
-    const playersMap = new Map<number, any>();
-    allPlayers.forEach(player => {
-      if (player.pid) {
-        playersMap.set(player.pid, player);
-      }
-    });
-    
-    logger.debug(`UnifiedDBClient: Loaded ${allPlayers.length} players from PortalClient, mapped ${playersMap.size} with PIDs`);
+    const { playersMap, activePlayerIds, activePlayerIdsSet } =
+      portalData ?? await this.getPortalData(teamAbbr);
 
-    // Get active players for this team from portal for onteam flag logic
-    const activePlayerIds = await this.#getActiveTeamPlayerIds(teamAbbr);
-    const activePlayerIdsSet = new Set(activePlayerIds);
-    
     const conditions = [`${tableAlias}.team = $1`];
     const params: string[] = [normalizeTeamAbbreviation(teamAbbr)];
 
-    // If activeOnly is true, only include currently active players
     if (activeOnly && activePlayerIds.length > 0) {
       conditions.push(`${tableAlias}.pid = ANY($${params.length + 1})`);
       params.push(`{${activePlayerIds.join(',')}}`);
@@ -90,7 +85,6 @@ class UnifiedDBClient {
       params.push(week.toString());
     }
 
-    // Simple query without joins - we'll add player info from PortalClient
     const query = `
       SELECT ${tableAlias}.*
       FROM ${tableName} ${tableAlias}
@@ -105,15 +99,15 @@ class UnifiedDBClient {
         if (queryResult.rowCount === 0) {
           return notFoundError(`${tableName} Stats`);
         }
-        
-        // Merge stats with player info from PortalClient
+
+        const unmappedPids = new Set<number>();
         const enrichedRows = queryResult.rows.map((row: any) => {
           const player = playersMap.get(row.pid);
-          
+
           if (!player) {
-            logger.warn(`UnifiedDBClient: No player data found for PID ${row.pid}`);
+            unmappedPids.add(row.pid);
           }
-          
+
           return {
             ...row,
             player_name: player?.username || `Player ${row.pid}`,
@@ -121,13 +115,14 @@ class UnifiedDBClient {
             lastname: player?.lastName || '',
             position: player?.position || '',
             status: player?.status || 'active',
-            // onteam logic: indicates if player is CURRENTLY on this team
-            // This should always be based on current active status, regardless of activeOnly
-            // activeOnly controls which players are included in results, onteam shows current status
             onteam: activePlayerIdsSet.has(row.pid)
           };
         });
-        
+
+        if (unmappedPids.size > 0) {
+          logger.warn(`UnifiedDBClient: No portal data for PIDs: ${[...unmappedPids].join(', ')} — likely retired/historical players`);
+        }
+
         return enrichedRows as T[];
       },
       (error): DatabaseError =>
@@ -135,59 +130,12 @@ class UnifiedDBClient {
     );
   }
 
-  /**
-   * Get all players, optionally filtered by team and season
-   */
-  async getPlayers(teamAbbr?: string, season?: number): Promise<UnifiedPlayer[] | AppError> {
-
-    let query = 'SELECT DISTINCT p.* FROM players p';
-    const params: string[] = [];
-    const conditions: string[] = [];
-
-    if (teamAbbr || season) {
-      query += ' JOIN player_games pg ON p.id = pg.pid';
-      
-      if (teamAbbr) {
-        conditions.push(`pg.team = $${params.length + 1}`);
-        params.push(normalizeTeamAbbreviation(teamAbbr));
-      }
-      
-      if (season) {
-        conditions.push(`pg.season = $${params.length + 1}`);
-        params.push(season.toString());
-      }
-    }
-
-    if (conditions.length > 0) {
-      query += ` WHERE ${conditions.join(' AND ')}`;
-    }
-
-    query += ' ORDER BY p.name';
-
-    const result = await Query<UnifiedPlayer>(query, params.length > 0 ? params : undefined);
-
-    return result.match(
-      (queryResult) => {
-        if (queryResult.rowCount === 0) {
-          return notFoundError('Players');
-        }
-        return queryResult.rows;
-      },
-      (error): DatabaseError =>
-        dbError(`Failed to fetch players: ${error.message}`, 'DB_ERROR')
-    );
-  }
-
-  /**
-   * Get passing stats with player info, filtered by team and optionally by season
-   */
-  async getPassingStats(teamAbbr: string, season?: number, week?: number, activeOnly: boolean = false): Promise<UnifiedPassingStatsWithPlayer[] | AppError> {
+  async getPassingStats(teamAbbr: string, season?: number, week?: number, activeOnly: boolean = false, portalData?: PortalData): Promise<UnifiedPassingStatsWithPlayer[] | AppError> {
     const result = await this.#getStatsWithTeamFilter<any>(
-      'player_stats', 'ps', teamAbbr, season, week, 'ps.passyds DESC, ps.passtd DESC', activeOnly
+      'player_stats', 'ps', teamAbbr, season, week, 'ps.passyds DESC, ps.passtd DESC', activeOnly, portalData
     );
-    
+
     if (Array.isArray(result)) {
-      // Map to expected format
       return result.map(row => ({
         id: row.pid,
         season: row.season,
@@ -215,16 +163,12 @@ class UnifiedDBClient {
     return result;
   }
 
-  /**
-   * Get rushing stats with player info, filtered by team and optionally by season
-   */
-  async getRushingStats(teamAbbr: string, season?: number, week?: number, activeOnly: boolean = false): Promise<UnifiedRushingStatsWithPlayer[] | AppError> {
+  async getRushingStats(teamAbbr: string, season?: number, week?: number, activeOnly: boolean = false, portalData?: PortalData): Promise<UnifiedRushingStatsWithPlayer[] | AppError> {
     const result = await this.#getStatsWithTeamFilter<any>(
-      'player_stats', 'rs', teamAbbr, season, week, 'rs.rushyds DESC, rs.rushtd DESC', activeOnly
+      'player_stats', 'rs', teamAbbr, season, week, 'rs.rushyds DESC, rs.rushtd DESC', activeOnly, portalData
     );
-    
+
     if (Array.isArray(result)) {
-      // Map to expected format
       return result.map(row => ({
         id: row.pid,
         season: row.season,
@@ -248,14 +192,11 @@ class UnifiedDBClient {
     return result;
   }
 
-  /**
-   * Get receiving stats with player info, filtered by team and optionally by season
-   */
-  async getReceivingStats(teamAbbr: string, season?: number, week?: number, activeOnly: boolean = false): Promise<UnifiedReceivingStatsWithPlayer[] | AppError> {
+  async getReceivingStats(teamAbbr: string, season?: number, week?: number, activeOnly: boolean = false, portalData?: PortalData): Promise<UnifiedReceivingStatsWithPlayer[] | AppError> {
     const result = await this.#getStatsWithTeamFilter<any>(
-      'player_stats', 'rs', teamAbbr, season, week, 'rs.recyds DESC, rs.rectd DESC', activeOnly
+      'player_stats', 'rs', teamAbbr, season, week, 'rs.recyds DESC, rs.rectd DESC', activeOnly, portalData
     );
-    
+
     if (Array.isArray(result)) {
       return result.map(row => ({
         id: row.pid,
@@ -281,14 +222,11 @@ class UnifiedDBClient {
     return result;
   }
 
-  /**
-   * Get defense stats with player info, filtered by team and optionally by season
-   */
-  async getDefenseStats(teamAbbr: string, season?: number, week?: number, activeOnly: boolean = false): Promise<UnifiedDefenseStatsWithPlayer[] | AppError> {
+  async getDefenseStats(teamAbbr: string, season?: number, week?: number, activeOnly: boolean = false, portalData?: PortalData): Promise<UnifiedDefenseStatsWithPlayer[] | AppError> {
     const result = await this.#getStatsWithTeamFilter<any>(
-      'player_stats', 'ds', teamAbbr, season, week, 'ds.deftck DESC, ds.defsack DESC', activeOnly
+      'player_stats', 'ds', teamAbbr, season, week, 'ds.deftck DESC, ds.defsack DESC', activeOnly, portalData
     );
-    
+
     if (Array.isArray(result)) {
       return result.map(row => ({
         id: row.pid,
@@ -309,6 +247,8 @@ class UnifiedDBClient {
         blkp: row.defblkp,
         blkxp: row.defblkxp,
         blkfg: row.defblkfg,
+        negativeplays: (row.defsack || 0) + (row.deftfl || 0),
+        turnovers: (row.defint || 0) + (row.deffr || 0),
         player_name: row.player_name,
         firstname: row.firstname,
         lastname: row.lastname,
@@ -320,14 +260,11 @@ class UnifiedDBClient {
     return result;
   }
 
-  /**
-   * Get kicking stats with player info, filtered by team and optionally by season
-   */
-  async getKickingStats(teamAbbr: string, season?: number, week?: number, activeOnly: boolean = false): Promise<UnifiedKickingStatsWithPlayer[] | AppError> {
+  async getKickingStats(teamAbbr: string, season?: number, week?: number, activeOnly: boolean = false, portalData?: PortalData): Promise<UnifiedKickingStatsWithPlayer[] | AppError> {
     const result = await this.#getStatsWithTeamFilter<any>(
-      'player_stats', 'ks', teamAbbr, season, week, '(ks.kxpm + ks.kfgmu20 + ks.kfgm2029 + ks.kfgm3039 + ks.kfgm4049 + ks.kfgm50) DESC', activeOnly
+      'player_stats', 'ks', teamAbbr, season, week, '(ks.kxpm + ks.kfgmu20 + ks.kfgm2029 + ks.kfgm3039 + ks.kfgm4049 + ks.kfgm50) DESC', activeOnly, portalData
     );
-    
+
     if (Array.isArray(result)) {
       return result.map(row => ({
         id: row.pid,
@@ -359,14 +296,11 @@ class UnifiedDBClient {
     return result;
   }
 
-  /**
-   * Get punting stats with player info, filtered by team and optionally by season
-   */
-  async getPuntingStats(teamAbbr: string, season?: number, week?: number, activeOnly: boolean = false): Promise<UnifiedPuntingStatsWithPlayer[] | AppError> {
+  async getPuntingStats(teamAbbr: string, season?: number, week?: number, activeOnly: boolean = false, portalData?: PortalData): Promise<UnifiedPuntingStatsWithPlayer[] | AppError> {
     const result = await this.#getStatsWithTeamFilter<any>(
-      'player_stats', 'ps', teamAbbr, season, week, 'ps.pavg DESC, ps.ppunts DESC', activeOnly
+      'player_stats', 'ps', teamAbbr, season, week, 'ps.pavg DESC, ps.ppunts DESC', activeOnly, portalData
     );
-    
+
     if (Array.isArray(result)) {
       return result.map(row => ({
         id: row.pid,
@@ -391,14 +325,11 @@ class UnifiedDBClient {
     return result;
   }
 
-  /**
-   * Get other stats with player info, filtered by team and optionally by season
-   */
-  async getOtherStats(teamAbbr: string, season?: number, week?: number, activeOnly: boolean = false): Promise<UnifiedOtherStatsWithPlayer[] | AppError> {
+  async getOtherStats(teamAbbr: string, season?: number, week?: number, activeOnly: boolean = false, portalData?: PortalData): Promise<UnifiedOtherStatsWithPlayer[] | AppError> {
     const result = await this.#getStatsWithTeamFilter<any>(
-      'player_stats', 'os', teamAbbr, season, week, 'os.otherpancakes DESC, os.otherpenalties ASC', activeOnly
+      'player_stats', 'os', teamAbbr, season, week, 'os.otherpancakes DESC, os.otherpenalties ASC', activeOnly, portalData
     );
-    
+
     if (Array.isArray(result)) {
       return result.map(row => ({
         id: row.pid,
@@ -422,12 +353,9 @@ class UnifiedDBClient {
     return result;
   }
 
-  /**
-   * Get special teams stats with player info, filtered by team and optionally by season
-   */
-  async getSpecialTeamsStats(teamAbbr: string, season?: number, week?: number, activeOnly: boolean = false): Promise<UnifiedSpecialTeamsStatsWithPlayer[] | AppError> {
+  async getSpecialTeamsStats(teamAbbr: string, season?: number, week?: number, activeOnly: boolean = false, portalData?: PortalData): Promise<UnifiedSpecialTeamsStatsWithPlayer[] | AppError> {
     const result = await this.#getStatsWithTeamFilter<any>(
-      'player_stats', 'st', teamAbbr, season, week, 'st.stkryds DESC, st.stpryds DESC', activeOnly
+      'player_stats', 'st', teamAbbr, season, week, 'st.stkryds DESC, st.stpryds DESC', activeOnly, portalData
     );
 
     if (Array.isArray(result)) {
@@ -455,197 +383,6 @@ class UnifiedDBClient {
       }));
     }
     return result;
-  }
-
-  /**
-   * Get game stats for a team, optionally filtered by season and week
-   */
-  async getGameStats(teamAbbr: string, season?: number, week?: number): Promise<UnifiedGameStats[] | AppError> {
-
-    const conditions = ['team = $1'];
-    const params = [normalizeTeamAbbreviation(teamAbbr)];
-
-    if (season) {
-      conditions.push(`season = $${params.length + 1}`);
-      params.push(season.toString());
-    }
-
-    if (week) {
-      conditions.push(`week = $${params.length + 1}`);
-      params.push(week.toString());
-    }
-
-    const query = `
-      SELECT * FROM games
-      WHERE ${conditions.join(' AND ')}
-      ORDER BY season DESC, week DESC
-    `;
-
-    const result = await Query<UnifiedGameStats>(query, params);
-
-    return result.match(
-      (queryResult) => {
-        if (queryResult.rowCount === 0) {
-          return notFoundError('Game Stats');
-        }
-        return queryResult.rows;
-      },
-      (error): DatabaseError =>
-        dbError(`Failed to fetch game stats: ${error.message}`, 'DB_ERROR')
-    );
-  }
-
-  /**
-   * Create or update a player in the unified system
-   */
-   
-  async createOrUpdatePlayer(name: string, _teamAbbr?: string, _season?: number): Promise<number | AppError> {
-    const normalizedName = name ? name.replace(/[.]/g, '').trim() : '';
-    if (!normalizedName || normalizedName === '{{sname}}') {
-      return dbError('Invalid player name', 'VALIDATION_ERROR');
-    }
-
-
-    // Check if player exists
-    const existingPlayerResult = await Query<{ id: number }>(
-      'SELECT id FROM players WHERE name = $1',
-      [normalizedName]
-    );
-
-    return existingPlayerResult.match(
-      async (result) => {
-        let playerId: number;
-
-        if (result.rowCount && result.rowCount > 0) {
-          // Player exists
-          playerId = result.rows[0].id;
-        } else {
-          // Create new player
-          const insertResult = await Query<{ id: number }>(
-            'INSERT INTO players (name) VALUES ($1) RETURNING id',
-            [normalizedName]
-          );
-          
-          const newPlayerId = await insertResult.match(
-            (insertResult) => {
-              if (insertResult.rowCount && insertResult.rowCount > 0) {
-                return insertResult.rows[0].id;
-              } else {
-                return null;
-              }
-            },
-            () => null
-          );
-
-          if (!newPlayerId) {
-            return dbError('Failed to create player', 'DB_ERROR');
-          }
-
-          playerId = newPlayerId;
-        }
-
-        // Player game records are created during stat insertion, not here
-        // This method just ensures the player exists in the players table
-
-        return playerId;
-      },
-      (error) => dbError(`Failed to check existing player: ${error.message}`, 'DB_ERROR')
-    );
-  }
-
-  /**
-   * Get player ID map for a specific team (for scraping compatibility)
-   */
-  async getPlayerIdMap(teamAbbr?: string): Promise<Record<string, number> | AppError> {
-
-    let query = 'SELECT id, name FROM players WHERE name IS NOT NULL';
-    const params: string[] = [];
-
-    if (teamAbbr) {
-      query = `
-        SELECT DISTINCT p.id, p.name 
-        FROM players p
-        JOIN player_games pg ON p.id = pg.pid
-        WHERE p.name IS NOT NULL AND pg.team = $1
-      `;
-      params.push(normalizeTeamAbbreviation(teamAbbr));
-    }
-
-    query += ' ORDER BY id';
-
-    const result = await Query<{ id: number; name: string }>(query, params.length > 0 ? params : undefined);
-
-    return result.match(
-      (queryResult) => {
-        const playerIdMap: Record<string, number> = {};
-        queryResult.rows.forEach(player => {
-          if (player.name) {
-            playerIdMap[player.name] = player.id;
-          }
-        });
-        return playerIdMap;
-      },
-      (error) => dbError(`Failed to fetch player ID map: ${error.message}`, 'DB_ERROR')
-    );
-  }
-
-  /**
-   * Get teams that have data in the system
-   */
-  async getAvailableTeams(): Promise<string[] | AppError> {
-
-    const result = await Query<{ team: string }>(
-      'SELECT DISTINCT team FROM games ORDER BY team'
-    );
-
-    return result.match(
-      (queryResult) => queryResult.rows.map(row => row.team),
-      (error) => dbError(`Failed to fetch available teams: ${error.message}`, 'DB_ERROR')
-    );
-  }
-
-  /**
-   * Get available seasons for a team
-   */
-  async getAvailableSeasons(teamAbbr?: string): Promise<number[] | AppError> {
-
-    let query = 'SELECT DISTINCT season FROM games';
-    const params: string[] = [];
-
-    if (teamAbbr) {
-      query += ' WHERE team = $1';
-      params.push(normalizeTeamAbbreviation(teamAbbr));
-    }
-
-    query += ' ORDER BY season DESC';
-
-    const result = await Query<{ season: number }>(query, params.length > 0 ? params : undefined);
-
-    return result.match(
-      (queryResult) => queryResult.rows.map(row => row.season),
-      (error) => dbError(`Failed to fetch available seasons: ${error.message}`, 'DB_ERROR')
-    );
-  }
-
-  /**
-   * Get a player's current team status from the portal
-   */
-  async getPlayerTeamStatus(pid: number): Promise<{ currentTeam: string | null; isActive: boolean } | AppError> {
-    try {
-      const players = await PortalClient.getPlayers();
-      const player = players.find(p => p.pid === pid);
-      
-      if (!player) {
-        return { currentTeam: null, isActive: false };
-      }
-      
-      return {
-        currentTeam: player.isflTeam,
-        isActive: player.status === 'active'
-      };
-    } catch (error) {
-      return dbError(`Failed to get player team status: ${error instanceof Error ? error.message : 'Unknown error'}`, 'DB_ERROR');
-    }
   }
 }
 

@@ -5,11 +5,11 @@ import { createLeaderboardEmbed } from 'src/lib/embeds/leaderboard';
 import { logger } from 'src/lib/logger';
 
 import { SlashCommand } from 'typings/command';
-import { DefensiveStats } from 'typings/db.typings';
 import { AggregateTypes } from 'typings/records.typings';
+import { UnifiedDefenseStats } from 'typings/unified-db.typings';
 
 const statNames: {
-  [key in keyof Partial<DefensiveStats>]: string;
+  [key in keyof Partial<UnifiedDefenseStats>]: string;
 } = {
   tck: 'Tackles',
   tfl: 'TFL',
@@ -19,6 +19,8 @@ const statNames: {
   pd: 'Passes Defended',
   int: 'Interceptions',
   sfty: 'Safeties',
+  negativeplays: 'Negative Plays',
+  turnovers: 'Turnovers Forced',
   td: 'Defensive Touchdowns',
   blkp: 'Blocked Punts',
   blkxp: 'Blocked XP',

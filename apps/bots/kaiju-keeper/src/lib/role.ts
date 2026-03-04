@@ -1,7 +1,5 @@
 import { APIInteractionGuildMember, GuildMember } from 'discord.js';
 
-import { discordMods } from 'src/db/users';
-
 import { Config, UserRole } from './config/config';
 
 export const checkRole = async (
@@ -15,9 +13,5 @@ export const checkRole = async (
   if (Config.teamGMs.includes(member.user.id)) {
     return minRole <= UserRole.SERVER_ADMIN;
   }
-
-
-  const user = await discordMods.get(member.user.id);
-  const userRole = user ? user.role : UserRole.REGULAR;
-  return userRole >= minRole;
+  return UserRole.REGULAR >= minRole;
 };

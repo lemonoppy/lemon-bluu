@@ -89,6 +89,8 @@ export type UnifiedDefenseStats = BaseStatRecord & {
   blkp: number;
   blkxp: number;
   blkfg: number;
+  negativeplays: number;
+  turnovers: number;
 }
 
 export type UnifiedKickingStats = BaseStatRecord & {
