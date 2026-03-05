@@ -12,7 +12,8 @@
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "format": "turbo run format",
-    "prepare": "husky"
+    "prepare": "husky",
+    "mtg-glicko": "yarn workspace @lemon-bluu/mtg-glicko start"
   },
   "devDependencies": {
     "husky": "^9.1.7",
