@@ -36,8 +36,8 @@
     "lodash": "^4.17.21",
     "lz-string": "^1.5.0",
     "neverthrow": "^8.2.0",
-    "pg": "^8.16.0",
-    "puppeteer": "^24.15.0",
+    "pg": "^8.20.0",
+    "puppeteer": "^24.38.0",
     "tsc-alias": "^1.8.11"
   },
   "devDependencies": {
@@ -45,7 +45,7 @@
     "@types/jest": "^30.0.0",
     "@types/lodash": "^4.17.0",
     "@types/node": "^20.10.2",
-    "@types/pg": "^8.15.4",
+    "@types/pg": "^8.18.0",
     "@typescript-eslint/eslint-plugin": "^8",
     "@typescript-eslint/parser": "^8",
     "eslint": "^9",

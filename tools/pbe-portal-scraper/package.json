@@ -15,7 +15,7 @@
     "format": "prettier --write src"
   },
   "dependencies": {
-    "puppeteer": "^24.32.0"
+    "puppeteer": "^24.38.0"
   },
   "devDependencies": {
     "@lemon-bluu/eslint-config": "*",
