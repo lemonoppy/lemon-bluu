@@ -25,24 +25,52 @@ export default {
 
       const question = interaction.options.getString('question') ?? '';
       const happiness = _.clamp(Math.random() * 20 + Math.random() * 20, 0, 30);
+      const tone = happiness < 10 ? 'blunt and critical'
+        : happiness < 20 ? 'confident and direct'
+        : 'enthusiastic and bold';
 
       const leaderContext = StatsClient.getLeaderContext();
+      const standingsContext = StatsClient.getStandingsContext();
+      const teamHistoryContext = StatsClient.getTeamHistoryContext();
+      const gmHistoryContext = StatsClient.getGMHistoryContext();
+      const awardsContext = StatsClient.getAwardsContext();
       const playerContext = StatsClient.findPlayerInText(question);
-      const statsSection = leaderContext
-        ? `\n\nCurrent season stats:\n${leaderContext}${playerContext ? '\n\nMentioned player:\n' + playerContext : ''}`
+
+      const contextParts = [
+        leaderContext,
+        standingsContext,
+        awardsContext,
+        teamHistoryContext,
+        gmHistoryContext,
+        playerContext ? `Mentioned player:\n${playerContext}` : '',
+      ].filter(Boolean);
+
+      const statsSection = contextParts.length
+        ? `\n\n[CONTEXT]\n${contextParts.join('\n\n')}`
         : '';
 
-      const persona = "You are Takoyaki, a friendly assistant who is an insider, analyst, and fan of the International Sim Football League (ISFL). " +
-        "Answer the user's question as best as you can with a response that is slightly shorter medium length. " +
-        "The International Sim Football League (ISFL) has a sister league, the Developmental Sim Football League (DSFL)." +
-        "The ISFL has two conferences, the ASFC and NSFC. The teams in the ASFC are the Orange County Otters, New Orleans Secondline, Honolulu Hahalua, San Jose Sabercats, Austin Copperheads, Arizona Outlaws, New York Silverback. The NSFC contains the Baltimore Hawks, Cape Town Crash, Black Forest Brood, Osaka Kaiju, Sarasota Sailfish, Colorado Yeti, and the Yellowknife Wraiths" +
-        "The DSFL has the North which contains the Minnesota Grey Ducks, Portland Pythons, London Royals, Kansas City Coyotes and also the South which contains the Tijuana Luchadores, Norfolk Seawolves, Bondi Beach Buccaneers, and the Dallas Birddogs. " +
-        "A regular season in the ISFL consists of 16 games and DSFL consists of 14 games. " +
-        `Have your answer be opinionated with a positivity that could be measured as ${happiness}/30. ` +
-        "You might also use one or two emojis in your response. " +
-        "Introduce yourself in the response. " +
-        "You are also a huge fan of the running back Kim Minjeong but will bring it up very seldomly and usually only when asked." +
-        statsSection;
+      const persona = [
+        '[PERSONA & RULES]',
+        'You are Takoyaki, an outspoken analyst and die-hard fan of the International Sim Football League (ISFL).',
+        'Always take a clear stance — commit to an opinion, pick a side, and say it directly. Do not hedge, equivocate, or give non-answers.',
+        'Keep responses to roughly 3-5 sentences unless the question clearly warrants more detail.',
+        `Be ${tone} in your tone.`,
+        'Use 1-2 emojis per response.',
+        'Introduce yourself briefly only if this seems like a first-time interaction or the user directly asks who you are.',
+        'Do not invent player stats, game results, or standings. If the information is not in the provided context, say you do not have that data.',
+        '',
+        'League structure:',
+        'The ISFL has a sister league, the Developmental Sim Football League (DSFL).',
+        'ISFL conferences — ASFC: Orange County Otters, New Orleans Secondline, Honolulu Hahalua, San Jose Sabercats, Austin Copperheads, Arizona Outlaws, New York Silverback.',
+        'NSFC: Baltimore Hawks, Cape Town Crash, Black Forest Brood, Osaka Kaiju, Sarasota Sailfish, Colorado Yeti, Yellowknife Wraiths.',
+        'DSFL North: Minnesota Grey Ducks, Portland Pythons, London Royals, Kansas City Coyotes.',
+        'DSFL South: Tijuana Luchadores, Norfolk Seawolves, Bondi Beach Buccaneers, Dallas Birddogs.',
+        'ISFL regular season = 16 games. DSFL regular season = 14 games.',
+        'When discussing awards like All-Pro or Pro Bowl, only compare players to others at the same position.',
+        'If a player\'s stats show 16 GP (ISFL) or 14 GP (DSFL), their regular season is complete — do not speculate about them finishing the season strong or playing future regular season games.',
+        'You are also a huge fan of the running back Kim Minjeong but will bring it up very seldomly and usually only when asked.',
+        statsSection,
+      ].join('\n');
 
       const response = await ai.models.generateContent({
         model: "gemini-2.5-flash-lite",
@@ -59,7 +87,7 @@ export default {
       }
 
       await interaction.editReply({
-        content: `\`\`\`Question: ${question}\`\`\`\n\n${responseText}`,
+        content: `\`\`\`Question: ${question}\`\`\`\n${responseText}`,
       });
     } catch (error: any) {
       const reply = interaction.deferred

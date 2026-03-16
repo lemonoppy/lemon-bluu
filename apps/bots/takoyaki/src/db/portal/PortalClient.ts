@@ -1,7 +1,7 @@
 import { Config } from 'src/lib/config/config';
 import { DynamicConfig } from 'src/lib/config/dynamicConfig';
 import { logger } from 'src/lib/logger';
-import { BankAccountHeaderData, BasicUserInfo, IATracker, ManagerInfo, Player, Season } from 'typings/portal';
+import { Award, BankAccountHeaderData, BasicUserInfo, GMRecord, IATracker, ManagerInfo, Player, Season, StandingsResponse, TeamHistoryResponse } from 'typings/portal';
 
 class PortalApiClient {
   #userInfo: Array<BasicUserInfo> = [];
@@ -10,6 +10,11 @@ class PortalApiClient {
   #availableSeasons: Array<Season> = [];
   #headerInfo: Array<BankAccountHeaderData> = [];
   #generalManagers: Array<ManagerInfo> = [];
+  #standings: StandingsResponse | null = null;
+  #standingsSeason: number = 0;
+  #teamHistory: TeamHistoryResponse | null = null;
+  #gmHistory: Array<GMRecord> = [];
+  #awards: Array<Award> = [];
   // #latestBankBalance: Array<BankAccountHeaderData> = [];
   #loaded = false;
   #lastLoadTimestamp = 0;
@@ -113,6 +118,43 @@ class PortalApiClient {
     return this.#generalManagers;
   }
 
+  async getStandings(season: number, reload: boolean = false): Promise<StandingsResponse | null> {
+    if (this.#standings && this.#standingsSeason === season && !reload) {
+      return this.#standings;
+    }
+    logger.debug(`PortalClient: Fetching standings for season ${season}`);
+    const response = await fetch(`${Config.portalApiUrl}/standings?season=${season}`);
+    if (!response.ok) {
+      logger.error(`PortalClient: Failed to fetch standings: ${response.statusText}`);
+      return null;
+    }
+    this.#standings = await response.json();
+    this.#standingsSeason = season;
+    return this.#standings;
+  }
+
+  async getTeamHistory(reload: boolean = false): Promise<TeamHistoryResponse | null> {
+    if (this.#teamHistory && !reload) return this.#teamHistory;
+    logger.debug('PortalClient: Fetching team history');
+    const response = await fetch(`${Config.portalApiUrl}/team-history/records`);
+    if (!response.ok) {
+      logger.error(`PortalClient: Failed to fetch team history: ${response.statusText}`);
+      return null;
+    }
+    this.#teamHistory = await response.json();
+    return this.#teamHistory;
+  }
+
+  async getGMHistory(reload: boolean = false): Promise<Array<GMRecord>> {
+    this.#gmHistory = await this.#getData(this.#gmHistory, reload, ['gm-history/records']);
+    return this.#gmHistory;
+  }
+
+  async getAwards(reload: boolean = false): Promise<Array<Award>> {
+    this.#awards = await this.#getData(this.#awards, reload, ['awards']);
+    return this.#awards;
+  }
+
   async reload(): Promise<void> {
     this.#loaded = false;
 
@@ -122,6 +164,9 @@ class PortalApiClient {
       this.getCurrentSeason(true),
       this.getHeaderInfo(true),
       this.getGeneralManagers(true),
+      this.getTeamHistory(true),
+      this.getGMHistory(true),
+      this.getAwards(true),
     ]);
 
     this.#lastLoadTimestamp = Date.now();

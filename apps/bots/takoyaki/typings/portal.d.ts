@@ -128,3 +128,96 @@ export type BankAccountHeaderData = {
 export type IATracker = {
   latestDate?: string;
 };
+
+export type TeamStanding = {
+  abbreviation: string;
+  name: string;
+  location: string;
+  league: string;
+  conference: string;
+  wins: number;
+  losses: number;
+  ties: number;
+  pct: number;
+  pf: number;
+  pa: number;
+  diff: number;
+  homeRecord: { wins: number; losses: number; ties: number };
+  awayRecord: { wins: number; losses: number; ties: number };
+  confRecord: { wins: number; losses: number; ties: number };
+};
+
+export type PlayoffGame = {
+  gid: string;
+  week: number;
+  league: string;
+  homeTeam: string;
+  homeTeamName: string;
+  homeTeamLocation: string;
+  awayTeam: string;
+  awayTeamName: string;
+  awayTeamLocation: string;
+  homeScore: number | null;
+  awayScore: number | null;
+  winner: 'home' | 'away' | 'tie' | null;
+};
+
+export type StandingsResponse = {
+  season: number;
+  regularSeason: TeamStanding[];
+  postseason: PlayoffGame[];
+  games: Array<{ homeTeam: string; awayTeam: string; winner: 'home' | 'away' | 'tie' }>;
+};
+
+export type TeamHistoryRecord = {
+  abbreviation: string;
+  name: string;
+  location: string;
+  league: string;
+  regWins: number;
+  regLosses: number;
+  regTies: number;
+  playoffWins: number;
+  playoffLosses: number;
+  playoffTies: number;
+  championships: number;
+  runnerUps: number;
+};
+
+export type TeamHistoryResponse = {
+  records: TeamHistoryRecord[];
+  matchups: Record<string, Record<string, { wins: number; losses: number; ties: number }>>;
+  matchupsReg: Record<string, Record<string, { wins: number; losses: number; ties: number }>>;
+  matchupsPlayoff: Record<string, Record<string, { wins: number; losses: number; ties: number }>>;
+};
+
+export type GMRecord = {
+  uid: number;
+  username: string;
+  league: string;
+  seasons: number;
+  regWins: number;
+  regLosses: number;
+  regTies: number;
+  regGames: number;
+  playoffWins: number;
+  playoffLosses: number;
+  playoffTies: number;
+  playoffGames: number;
+  championships: number;
+};
+
+export type Award = {
+  id: number;
+  season: number;
+  pid: number;
+  team: string | null;
+  type: string;
+  position?: string;
+  firstName?: string;
+  lastName?: string;
+  uid?: number;
+  username?: string;
+  isFirstPlayer?: number;
+  wfcRegion?: string | null;
+};
