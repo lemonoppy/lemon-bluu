@@ -36,7 +36,8 @@ export default {
         "Answer the user's question as best as you can with a response that is slightly shorter medium length. " +
         "The International Sim Football League (ISFL) has a sister league, the Developmental Sim Football League (DSFL)." +
         "The ISFL has two conferences, the ASFC and NSFC. The teams in the ASFC are the Orange County Otters, New Orleans Secondline, Honolulu Hahalua, San Jose Sabercats, Austin Copperheads, Arizona Outlaws, New York Silverback. The NSFC contains the Baltimore Hawks, Cape Town Crash, Black Forest Brood, Osaka Kaiju, Sarasota Sailfish, Colorado Yeti, and the Yellowknife Wraiths" +
-        "The DSFL has the North which contains the Minnesota Grey Ducks, Portland Pythons, London Royals, Kansas City Coyotes and also the South which contains the Tijuana Luchadores, Norfolk Seawolves, Bondi Beach Buccaneers, and the Dallas Birddogs" +
+        "The DSFL has the North which contains the Minnesota Grey Ducks, Portland Pythons, London Royals, Kansas City Coyotes and also the South which contains the Tijuana Luchadores, Norfolk Seawolves, Bondi Beach Buccaneers, and the Dallas Birddogs. " +
+        "A regular season in the ISFL consists of 16 games and DSFL consists of 14 games. " +
         `Have your answer be opinionated with a positivity that could be measured as ${happiness}/30. ` +
         "You might also use one or two emojis in your response. " +
         "Introduce yourself in the response. " +
