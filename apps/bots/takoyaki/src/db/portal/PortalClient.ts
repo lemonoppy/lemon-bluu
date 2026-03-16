@@ -1,7 +1,7 @@
 import { Config } from 'src/lib/config/config';
 import { DynamicConfig } from 'src/lib/config/dynamicConfig';
 import { logger } from 'src/lib/logger';
-import { Award, BankAccountHeaderData, BasicUserInfo, GMRecord, IATracker, ManagerInfo, Player, Season, StandingsResponse, TeamHistoryResponse } from 'typings/portal';
+import { Award, BankAccountHeaderData, BasicUserInfo, GMRecord, IATracker, ManagerInfo, Player, PlayerSeasonStat, Season, StandingsResponse, TeamHistoryResponse } from 'typings/portal';
 
 class PortalApiClient {
   #userInfo: Array<BasicUserInfo> = [];
@@ -153,6 +153,20 @@ class PortalApiClient {
   async getAwards(reload: boolean = false): Promise<Array<Award>> {
     this.#awards = await this.#getData(this.#awards, reload, ['awards']);
     return this.#awards;
+  }
+
+  getCurrentSeasonInfo(): Season | null {
+    return this.#availableSeasons[0] ?? null;
+  }
+
+  async getPlayerCareerStats(pid: number): Promise<PlayerSeasonStat[]> {
+    logger.debug(`PortalClient: Fetching career stats for pid ${pid}`);
+    const response = await fetch(`${Config.portalApiUrl}/player/stats?pid=${pid}`);
+    if (!response.ok) {
+      logger.error(`PortalClient: Failed to fetch career stats for pid ${pid}: ${response.statusText}`);
+      return [];
+    }
+    return response.json();
   }
 
   async reload(): Promise<void> {

@@ -221,3 +221,19 @@ export type Award = {
   isFirstPlayer?: number;
   wfcRegion?: string | null;
 };
+
+export type PlayerSeasonStat = {
+  season: number;
+  seasonState: string;
+  passYds: number;
+  passTD: number;
+  passInt: number;
+  rushYds: number;
+  rushTD: number;
+  recRec: number;
+  recYds: number;
+  recTD: number;
+  defTck: number;
+  defSack: number;
+  defInt: number;
+};
