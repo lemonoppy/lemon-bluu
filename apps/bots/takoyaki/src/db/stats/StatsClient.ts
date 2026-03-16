@@ -323,12 +323,21 @@ function buildAwardsContext(awards: Award[], currentSeason: number): string {
 }
 
 function buildGMContext(records: GMRecord[]): string {
-  const isfl = records.filter((r) => r.league === 'ISFL').slice(0, 10);
+  const isfl = records.filter((r) => r.league === 'ISFL');
   if (!isfl.length) return '';
-  return [
-    'Top ISFL GMs (by championships):',
-    isfl
-      .map((r) => `${r.username}: ${r.championships} titles, ${r.regWins}-${r.regLosses} reg, ${r.seasons} seasons`)
-      .join(' | '),
-  ].join('\n');
+
+  const fmt = (r: GMRecord) =>
+    `${r.username}: ${r.championships} titles, ${r.regWins}-${r.regLosses} reg, ${r.seasons} seasons`;
+
+  const top = isfl.slice(0, 25);
+
+  const qualified = isfl.filter((r) => r.regGames >= 16);
+  const bottom = [...qualified]
+    .sort((a, b) => a.regWins / a.regGames - b.regWins / b.regGames)
+    .slice(0, 15);
+
+  const lines = ['ISFL GM Records:'];
+  lines.push(`Top (by championships): ${top.map(fmt).join(' | ')}`);
+  if (bottom.length) lines.push(`Bottom (by win rate, min 1 season): ${bottom.map(fmt).join(' | ')}`);
+  return lines.join('\n');
 }

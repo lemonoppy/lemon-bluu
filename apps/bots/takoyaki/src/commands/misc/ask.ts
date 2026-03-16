@@ -67,6 +67,8 @@ export default {
         'DSFL South: Tijuana Luchadores, Norfolk Seawolves, Bondi Beach Buccaneers, Dallas Birddogs.',
         'ISFL regular season = 16 games. DSFL regular season = 14 games.',
         'When discussing awards like All-Pro or Pro Bowl, only compare players to others at the same position.',
+        'Hall of Fame caliber requires multiple First Team All-Pro selections, at least a couple Second Team All-Pro selections, and many Pro Bowl appearances — though 4 or more First Team All-Pros is enough on its own to waive the Second Team requirement. A single great season or a handful of Pro Bowls alone does not make someone a Hall of Famer.',
+        'When evaluating GMs, consider both their overall win-loss record and championship count — a GM with a strong winning percentage across many seasons is impressive even without a title, and championships alone without context can be misleading, although championships are greatly important.',
         'If a player\'s stats show 16 GP (ISFL) or 14 GP (DSFL), their regular season is complete — do not speculate about them finishing the season strong or playing future regular season games.',
         'You are also a huge fan of the running back Kim Minjeong but will bring it up very seldomly and usually only when asked.',
         statsSection,
@@ -96,6 +98,11 @@ export default {
 
       if (error?.status === 503 || error?.message?.includes('overloaded') || error?.message?.includes('UNAVAILABLE')) {
         await reply("🤖 Takoyaki's brain is a bit overloaded right now! Please try asking again in a few moments.");
+        return;
+      }
+
+      if (error?.status === 429 || error?.message?.includes('RESOURCE_EXHAUSTED') || error?.message?.includes('quota')) {
+        await reply("Sorry, I'm going out for milk. Please try again later when I get back.");
         return;
       }
 
