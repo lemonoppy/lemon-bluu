@@ -258,6 +258,25 @@ function buildActualDraftOrder(
 ): DraftEntry[] {
   const { playoffTeams, eliminationWeek } = getPlayoffInfo(postseason);
 
+  // Supplement with bye teams: teams that made the playoffs but haven't
+  // appeared in any game yet because they received a first-round bye.
+  // Determine expected playoff teams from conference standings.
+  const maxWeek = Math.max(...postseason.map(g => g.week));
+  const byConf = new Map<string, Team[]>();
+  for (const t of teams) {
+    if (!byConf.has(t.conference)) byConf.set(t.conference, []);
+    byConf.get(t.conference)!.push(t);
+  }
+  for (const confTeams of byConf.values()) {
+    const sorted = sortGroup(confTeams, games).map(e => e.team);
+    for (const team of sorted.slice(-PLAYOFF_PER_CONF)) {
+      if (!playoffTeams.has(team.abbreviation)) {
+        playoffTeams.add(team.abbreviation);
+        eliminationWeek.set(team.abbreviation, maxWeek + 1);
+      }
+    }
+  }
+
   const nonPlayoffTeams = teams.filter(t => !playoffTeams.has(t.abbreviation));
   const playoffTeamsList = teams.filter(t => playoffTeams.has(t.abbreviation));
 
@@ -277,13 +296,19 @@ function buildActualDraftOrder(
     entries.push(makeDraftEntry(pick++, e.team, e.tiebreaker));
   }
 
+  // Season is complete when exactly 1 playoff team was never eliminated (the champion).
+  const undefeated = [...playoffTeams].filter(t => eliminationWeek.get(t) === maxWeek + 1);
+  const seasonComplete = undefeated.length === 1;
+
   for (const week of [...byEliminationWeek.keys()].sort((a, b) => a - b)) {
     const sorted = sortGroup(byEliminationWeek.get(week)!, games);
     for (const e of sorted) {
+      // In-progress: don't set eliminatedRound for still-active teams (week is synthetic)
+      const isStillActive = !seasonComplete && week > maxWeek;
       entries.push(
         makeDraftEntry(pick++, e.team, e.tiebreaker, {
           madePlayoffs: true,
-          eliminatedRound: week,
+          ...(isStillActive ? {} : { eliminatedRound: week }),
         }),
       );
     }
@@ -355,7 +380,8 @@ export function buildDraftOrder(
   games: Game[],
   postseason: PlayoffGame[],
 ): DraftEntry[] {
-  return postseason.length > 0
-    ? buildActualDraftOrder(teams, games, postseason)
+  const playedPostseason = postseason.filter(g => g.winner !== null);
+  return playedPostseason.length > 0
+    ? buildActualDraftOrder(teams, games, playedPostseason)
     : buildProjectedDraftOrder(teams, games);
 }

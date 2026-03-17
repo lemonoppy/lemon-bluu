@@ -24,9 +24,9 @@ export type PlayoffGame = {
   week: number;
   homeTeam: string;
   awayTeam: string;
-  homeScore: number;
-  awayScore: number;
-  winner: 'home' | 'away';
+  homeScore: number | null;
+  awayScore: number | null;
+  winner: 'home' | 'away' | null;
 };
 
 export type StandingsResponse = {
