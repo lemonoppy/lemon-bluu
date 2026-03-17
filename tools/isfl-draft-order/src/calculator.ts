@@ -1,5 +1,7 @@
 import { DraftEntry, Game, PlayoffGame, Team } from './types';
 
+export type { DraftEntry };
+
 function formatRecord(wins: number, losses: number, ties: number): string {
   const w = String(wins).padStart(2);
   const l = String(losses).padStart(2, '0');

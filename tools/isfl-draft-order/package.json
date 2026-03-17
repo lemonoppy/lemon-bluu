@@ -2,6 +2,8 @@
   "name": "@lemon-bluu/isfl-draft-order",
   "version": "1.0.0",
   "private": true,
+  "main": "src/calculator.ts",
+  "types": "src/calculator.ts",
   "scripts": {
     "start": "ts-node src/index.ts",
     "build": "tsc",

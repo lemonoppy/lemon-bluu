@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@lemon-bluu/discord": "*",
+    "@lemon-bluu/isfl-draft-order": "*",
     "@discordjs/rest": "^2.2.0",
     "@google-cloud/local-auth": "2.1.0",
     "@google/genai": "^0.13.0",
