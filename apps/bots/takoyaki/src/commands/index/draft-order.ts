@@ -5,12 +5,19 @@ import { BaseEmbed } from 'src/lib/embed';
 import { withErrorHandling } from 'src/lib/helpers/command';
 import { SlashCommand } from 'typings/command';
 
-function getPlayoffNote(entry: DraftEntry, maxElimRound: number): string {
-  if (entry.eliminatedRound !== undefined) {
-    if (entry.eliminatedRound === maxElimRound) return 'Champion';
-    if (entry.eliminatedRound === maxElimRound - 1) return 'Runner-up';
-    if (entry.eliminatedRound === maxElimRound - 2) return 'Lost: Conf';
-    return 'Lost: WC';
+function getPlayoffNote(
+  entry: DraftEntry,
+  maxElimRound: number,
+  minPlayoffWeek: number,
+  seasonComplete: boolean,
+): string {
+  if (entry.madePlayoffs) {
+    if (entry.eliminatedRound === undefined) return 'Active';
+    if (seasonComplete && entry.eliminatedRound === maxElimRound) return 'Champion';
+    const round = entry.eliminatedRound - minPlayoffWeek; // 0 = WC, 1 = Conf, 2 = Runner-up
+    if (round === 0) return 'Lost: WC';
+    if (round === 1) return 'Lost: Conf';
+    return 'Runner-up';
   }
   if (entry.projectedRound !== undefined) {
     if (entry.projectedRound === 1) return 'Proj: WC';
@@ -21,12 +28,17 @@ function getPlayoffNote(entry: DraftEntry, maxElimRound: number): string {
 }
 
 function formatDraftOrder(entries: DraftEntry[]): string {
-  const actualPlayoffEntries = entries.filter(
+  const eliminatedEntries = entries.filter(
     e => e.madePlayoffs && e.eliminatedRound !== undefined,
   );
+  const seasonComplete = !entries.some(e => e.madePlayoffs && e.eliminatedRound === undefined);
   const maxElimRound =
-    actualPlayoffEntries.length > 0
-      ? Math.max(...actualPlayoffEntries.map(e => e.eliminatedRound!))
+    eliminatedEntries.length > 0
+      ? Math.max(...eliminatedEntries.map(e => e.eliminatedRound!))
+      : 0;
+  const minPlayoffWeek =
+    eliminatedEntries.length > 0
+      ? Math.min(...eliminatedEntries.map(e => e.eliminatedRound!))
       : 0;
 
   const nonPlayoff = entries.filter(e => !e.madePlayoffs);
@@ -36,7 +48,7 @@ function formatDraftOrder(entries: DraftEntry[]): string {
     const pick = String(e.pick).padStart(2);
     const abbr = e.abbreviation.padEnd(5);
     const record = e.record.padEnd(9);
-    const playoffNote = getPlayoffNote(e, maxElimRound);
+    const playoffNote = getPlayoffNote(e, maxElimRound, minPlayoffWeek, seasonComplete);
     const note = [playoffNote, e.tiebreaker ? `(${e.tiebreaker})` : '']
       .filter(Boolean)
       .join(' ');

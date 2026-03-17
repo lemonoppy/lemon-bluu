@@ -2,12 +2,18 @@ import { buildDraftOrder } from './calculator';
 import { fetchCurrentSeason, fetchStandingsData } from './scraper';
 import { DraftEntry } from './types';
 
-function getActualPlayoffNote(eliminatedRound: number, maxElimRound: number): string {
-  if (eliminatedRound === maxElimRound) return 'Champion';
-  if (eliminatedRound === maxElimRound - 1) return 'Runner-up';
-  if (eliminatedRound === maxElimRound - 2) return 'Lost: Conference';
-  if (eliminatedRound === maxElimRound - 3) return 'Lost: Wild Card';
-  return `Lost: Week ${eliminatedRound}`;
+function getActualPlayoffNote(
+  eliminatedRound: number | undefined,
+  maxElimRound: number,
+  minPlayoffWeek: number,
+  seasonComplete: boolean,
+): string {
+  if (eliminatedRound === undefined) return 'Active';
+  if (seasonComplete && eliminatedRound === maxElimRound) return 'Champion';
+  const round = eliminatedRound - minPlayoffWeek; // 0 = WC, 1 = Conf, 2 = Runner-up
+  if (round === 0) return 'Lost: Wild Card';
+  if (round === 1) return 'Lost: Conference';
+  return 'Runner-up';
 }
 
 function getProjectedNote(projectedRound: number): string {
@@ -17,12 +23,17 @@ function getProjectedNote(projectedRound: number): string {
 }
 
 function printDraftOrder(season: number, entries: DraftEntry[]): void {
-  const actualPlayoffEntries = entries.filter(
+  const eliminatedEntries = entries.filter(
     e => e.madePlayoffs && e.eliminatedRound !== undefined,
   );
+  const seasonComplete = !entries.some(e => e.madePlayoffs && e.eliminatedRound === undefined);
   const maxElimRound =
-    actualPlayoffEntries.length > 0
-      ? Math.max(...actualPlayoffEntries.map(e => e.eliminatedRound!))
+    eliminatedEntries.length > 0
+      ? Math.max(...eliminatedEntries.map(e => e.eliminatedRound!))
+      : 0;
+  const minPlayoffWeek =
+    eliminatedEntries.length > 0
+      ? Math.min(...eliminatedEntries.map(e => e.eliminatedRound!))
       : 0;
 
   const title = `ISFL Season ${season} Draft Order`;
@@ -38,8 +49,10 @@ function printDraftOrder(season: number, entries: DraftEntry[]): void {
     const record = entry.record.padEnd(10);
 
     const notes: string[] = [];
-    if (entry.eliminatedRound !== undefined) {
-      notes.push(getActualPlayoffNote(entry.eliminatedRound, maxElimRound));
+    if (entry.madePlayoffs) {
+      notes.push(
+        getActualPlayoffNote(entry.eliminatedRound, maxElimRound, minPlayoffWeek, seasonComplete),
+      );
     } else if (entry.projectedRound !== undefined) {
       notes.push(getProjectedNote(entry.projectedRound));
     }
