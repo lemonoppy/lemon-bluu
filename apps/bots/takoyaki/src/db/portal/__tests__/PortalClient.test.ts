@@ -275,11 +275,14 @@ describe('PortalClient', () => {
         .mockResolvedValueOnce({ ok: true, json: async () => mockPlayers })
         .mockResolvedValueOnce({ ok: true, json: async () => mockSeason })
         .mockResolvedValueOnce({ ok: true, json: async () => mockHeaderInfo })
-        .mockResolvedValueOnce({ ok: true, json: async () => mockManagers });
+        .mockResolvedValueOnce({ ok: true, json: async () => mockManagers })
+        .mockResolvedValueOnce({ ok: true, json: async () => null })
+        .mockResolvedValueOnce({ ok: true, json: async () => [] })
+        .mockResolvedValueOnce({ ok: true, json: async () => [] });
 
       await PortalClient.reload();
 
-      expect(global.fetch).toHaveBeenCalledTimes(5);
+      expect(global.fetch).toHaveBeenCalledTimes(8);
     });
   });
 });
