@@ -269,11 +269,13 @@ function buildActualDraftOrder(
   }
   for (const confTeams of byConf.values()) {
     const sorted = sortGroup(confTeams, games).map(e => e.team);
-    for (const team of sorted.slice(-PLAYOFF_PER_CONF)) {
-      if (!playoffTeams.has(team.abbreviation)) {
-        playoffTeams.add(team.abbreviation);
-        eliminationWeek.set(team.abbreviation, maxWeek + 1);
-      }
+    // Only seed 1 (best record) gets a bye in a 6-team bracket.
+    // Seeds 2/3 always play Wild Card, so if they're missing from postseason
+    // data it means those games aren't in the portal yet — not a bye.
+    const seed1 = sorted[sorted.length - 1];
+    if (!playoffTeams.has(seed1.abbreviation)) {
+      playoffTeams.add(seed1.abbreviation);
+      eliminationWeek.set(seed1.abbreviation, maxWeek + 1);
     }
   }
 
