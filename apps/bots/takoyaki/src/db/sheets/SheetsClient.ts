@@ -340,7 +340,8 @@ class SheetsApiClient {
       logger.info(`Web app response headers:`, Object.fromEntries(response.headers.entries()));
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const body = await response.text().catch(() => '(could not read body)');
+        throw new Error(`HTTP error! status: ${response.status} — ${body.substring(0, 500)}`);
       }
 
       const responseText = await response.text();
