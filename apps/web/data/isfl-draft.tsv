@@ -1,0 +1,3544 @@
+season	round	pick	pid	type	originalTeam	owningTeam	username	name	highestTPE
+1	1	1	632		OCO	OCO	Shaka	J.J. Reigns	168
+1	1	2	200		YKW	YKW	Ballerstorm	Josh Garden	0
+1	1	3	548		COL	COL	enigmatic	Philippe Carter	492
+1	1	4	641		SJS	SJS	Tomen	Alexander Selich	116
+1	1	5	619		BAL	BAL	GoodLeftUndone	Damian West	170
+1	1	6	624		AZ	AZ	Kendrick	Mayran Jackson	479
+1	2	7	201		AZ	AZ	Esa77	Reg Mackworthy	0
+1	2	8	612		BAL	BAL	princekyle	Gabriel Tenzini	88
+1	2	9	605		SJS	SJS	RainDelay	Bailey Cook	210
+1	2	10	555		COL	COL	Law	D.J. Law	180
+1	2	11	542		YKW	YKW	EvanR123	Lindarius Shelton	123
+1	2	12	656		OCO	OCO	Jbearly	Adamle Tomlinson	207
+1	3	13	564		OCO	OCO	Nick	Stanislaw Maddox	151
+1	3	14	602		YKW	YKW	Anti-Hype	Mark Ramrio	134
+1	3	15	611		COL	COL	Gooney	Vinny Cox	335
+1	3	16	596		SJS	SJS	dropbear	Ben Longshaw	205
+1	3	17	534		BAL	BAL	Apache_Chief	Franklin Harris	330
+1	3	18	550		AZ	AZ	ErMurazor	Jayce Tuck	548
+1	4	19	582		AZ	AZ	adam2552	Lincoln Jefferson	582
+1	4	20	655		BAL	BAL	Bafetimbi Gomis	Khalifa Al Mahrouqi	50
+1	4	21	537		SJS	SJS	ztevans	Greg Taylor	80
+1	4	22	658		COL	COL	Ltsmashie	Luke Tiernan	163
+1	4	23	631		YKW	YKW	CaptainCats	Dirk Cutter	145
+1	4	24	202		OCO	OCO	daBenchwarmer	Gosh Jarden	0
+1	5	26	633		YKW	YKW	Jogn	Jogn Floggity	144
+1	5	27	522		COL	COL	Rich	Alex Hayden	210
+1	5	28	579		SJS	SJS	Bengals1Fan	Vick Bowers Jr.	164
+1	5	29	585		BAL	BAL	DollarAndADream	Scrub Kyubee	200
+1	5	30	553		AZ	AZ	Pandar	Alex Thomas	141
+1	6	31	547		AZ	AZ	theFlock	Ryan Flock	208
+1	6	32	616		BAL	BAL	Peterson	Matthew Peterson	118
+1	6	33	531		SJS	SJS	LT21	Timote Shoate	161
+1	6	34	657		COL	COL	BenderRodriguez	Bender Rodriguez	146
+1	6	35	576		YKW	YKW	Bzerkap	Mat Akselsen	701
+1	6	36	635		OCO	OCO	WisconsinBadgers	Arby Krimlaw	128
+1	7	37	205		OCO	OCO	Molarpistols	Ian Bavitz	0
+1	7	38	538		YKW	YKW	BasedPooter	Jason Spearhead	85
+1	7	39	206		COL	COL	TheWoZy	Fuego Wozy	0
+1	7	40	543		SJS	SJS	Electraspace	Daniel Robicheaux	81
+1	7	41	659		BAL	BAL	Ghostspeed	Cooper Christmas	214
+1	7	42	207		AZ	AZ	youngcricket	Jaylon Lee	0
+1	8	43	603		AZ	AZ	701	Vincent Draxel	107
+1	8	44	520		BAL	BAL	samee	Jordan Weal	80
+1	8	45	629		SJS	SJS	CamBrady	Josh Cameron	93
+1	8	46	559		COL	COL	deadendpath27	Kendrick Hendrix	317
+1	8	47	574		YKW	YKW	Dinklburger01	Sinjin Flimjollywop	109
+1	8	48	208		OCO	OCO	JBLAZE_THE_BOSS	Mike Boss	0
+1	9	49	570		OCO	OCO	dave	Omar Wright	265
+1	9	50	575		YKW	YKW	SimmerDownBruhh	Ricky Maddox	157
+1	9	51	524		COL	COL	TheLoopster	Mike McNoodle	81
+1	9	52	577		SJS	SJS	Leafer	Sensabaughdy Leafer	96
+1	9	53	567		BAL	BAL	SundayShowcase	Sunday Showcase	50
+1	9	54	209		AZ	AZ	Stormblessed	- Stormblessed	0
+1	10	55	617		AZ	AZ	Evolution	Samuel Watson	50
+1	10	56	210		BAL	BAL	HENDRIX	Kurt Hendrix	0
+1	10	57	568		SJS	SJS	Sweetwater	John Canton	231
+1	10	58	211		COL	COL	jparks98	Johnathon Saint	0
+1	10	59	627		YKW	YKW	Aenir	Chris Orosz	695
+1	10	60	634		OCO	OCO	Jiggly_333	Leroy Jenkins	389
+1	11	61	557		OCO	OCO	Professorpayne69	Marcus Boyd	61
+1	11	62	212		YKW	YKW	Zoone16	Alexandre LeClair	0
+1	11	63	529		COL	COL	Billieck	Bill Weller	50
+1	11	64	615		SJS	SJS	Deusolis	AC Hackett	178
+1	11	65	213		BAL	BAL	37thchamber	Antoine Delacour	0
+1	11	66	214		AZ	AZ	DeathOnReddit	Arbin Asipi	0
+1	12	67	651		AZ	AZ	BasedGase	Saggitariutt Jefferspin	74
+1	12	68	539		BAL	BAL	King	Devin Speed	56
+1	12	69	650		SJS	SJS	Symmetrik	Shane Weston	170
+1	12	70	521		COL	COL	Bojo	Bojo Kicksit	158
+1	12	71	563		YKW	YKW	acki	Alex Hansen	183
+1	12	72	215		OCO	OCO	Bwestfield	Bradley Westfield	0
+1	13	73	643		OCO	OCO	DrunkenTeddy	Robert Phelps	472
+1	13	74	610		YKW	YKW	CosmicAtom	Adam Bennett	101
+1	13	75	618		COL	COL	Lainncli	Kieran O’Connell	164
+1	13	76	626		SJS	SJS	Saliva^	Clee Hardrool	449
+1	13	77	216		BAL	BAL	Raven	Turk Turkleton	0
+1	13	78	593		AZ	AZ	Durden	Jack Durden	206
+1	14	79	217		AZ	AZ	Valtookan	Harrif Ernston	0
+1	14	80	583		BAL	BAL	KalaVouna	Bisquiteen Crocker	90
+1	14	81	645		SJS	SJS	Blake Bortles	Break Bottles	119
+1	14	82	565		COL	COL	TheAliensAreCumming	Jimmy Darkapple	84
+1	14	83	623		YKW	YKW	Zdot	Reginald Hampshireton	115
+1	14	84	580		OCO	OCO	Copenhagen	Brandon Walsh	50
+1	15	85	600		OCO	OCO	Evans	Romeo Devitt	100
+1	15	86	530		YKW	YKW	mjdharder	D’Brickashaw Ferguson	105
+1	15	87	218		COL	COL	Vikain	Vikian Marmeladov	0
+1	15	88	219		SJS	SJS	7hawk77	Dan Miller	0
+1	15	89	601		BAL	BAL	andybj	Levon Novel	164
+1	15	90	630		AZ	AZ	galatix	Adrienne Nugent	50
+1	16	91	533		AZ	AZ	Foompin	Dental Dam	157
+1	16	92	528		BAL	BAL	WinstonKodogo	Stephen Harris	218
+1	16	93	220		SJS	SJS	tootboots12	Kentillan Laces	0
+1	16	94	621		COL	COL	xfactorx121	Everest Teagarden	50
+1	16	95	546		YKW	YKW	HazardouSpork	Rolf Larsendorf	67
+1	16	96	608		OCO	OCO	Merica	Josh Bercovici	272
+1	17	97	519		OCO	OCO	jeter137	King Arthur	50
+1	17	98	573		YKW	YKW	Desu	Jack Stats	75
+1	17	99	222		COL	COL	PigSnout	Boss Tweed	0
+1	17	100	535		SJS	SJS	:.Elite.:	Demetrius Wiley	79
+1	17	101	581		BAL	BAL	Noppadet	Stephen Harrison	162
+1	17	102	561		AZ	AZ	Ramadeus	Luke Pierce	94
+1	18	103	536		AZ	AZ	Destroyer	Isaiah Rashad	126
+1	18	104	646		BAL	BAL	GilfredTheGreat	Gilfred Harrison	50
+1	18	105	648		SJS	SJS	Storm	RFFO Mademe	58
+1	18	106	541		COL	COL	Viktor1980	Mark Hargrove	56
+1	18	107	613		YKW	YKW	mosacra	Henri Rivere	50
+1	18	108	527		OCO	OCO	Player1	George Wright Jr.	206
+1	19	109	640		OCO	OCO	breakingthe4THWALL	Cliff Hamilton	50
+1	19	110	221		YKW	YKW	WizardStephen	Wizard Stephen	0
+1	19	111	223		COL	COL	redguy22	William Nasher	0
+1	19	112	540		SJS	SJS	Bertiswho	Bert Metas	182
+1	19	113	544		BAL	BAL	Bingbongday	Wren Piper	54
+1	19	114	556		AZ	AZ	Theo667	Joseph Tkachuk	138
+1	20	115	607		AZ	AZ	RayCobaine	Jason Williams	162
+1	20	116	649		BAL	BAL	WiSeIVIaN	Ezekiel "Easy" Bishop	50
+1	20	117	636		SJS	SJS	.wahala.	Tim Tebow	96
+1	20	118	554		COL	COL	OwenJH	Granit Lewis	50
+1	20	119	609		YKW	YKW	papap0st	Logan Ryder	50
+1	20	120	525		OCO	OCO	DefensiveJesus	Lightskin Thor	70
+1	21	121	599		OCO	OCO	Roshambo	Dominic Verns	178
+1	21	122	614		YKW	YKW	PoloPro	Archibald Booter	229
+1	21	123	594		COL	COL	J.shaloiko	Jonathan Shaloiko	93
+1	21	124	590		SJS	SJS	Plastic Bowl	Zed Richter	50
+1	21	125	224		BAL	BAL	ChicagoKid4Life	Alistair Amir	0
+1	21	126	586		AZ	AZ	mnewman19	Michael Newman	79
+1	22	127	639		AZ	AZ	WillW	Fernando Bessel	50
+1	22	128	569		BAL	BAL	MattSmith518	Matt Smith	50
+1	22	129	523		SJS	SJS	ESH	Eric Hansen	74
+1	22	130	560		COL	COL	Bronson	Rickey Mills	50
+1	22	131	545		YKW	YKW	baltimoreravens	Pablo Sanchez	57
+1	22	132	591		OCO	OCO	Glennie_p	Glennie Retro	50
+1	23	133	572		OCO	OCO	zerxiez	Josh Davidson	53
+1	23	134	598		YKW	YKW	GengarGoat	Trent Bender	50
+1	23	135	588		COL	COL	Atahualpa	Atahualpa Romero	50
+1	23	137	637		BAL	SJS	RealShimSlady	Emerald Wednesday	50
+1	23	138	642		AZ	BAL	scmsf49	Wes Washington	56
+2	1	1	227		LVL	YKW	White Cornerback	Dermot Lavelle	0
+2	1	2	687		SJS	COL	Blaster	Blaster Blade	355
+2	1	3	228		PHI	AZ	Admin	Tim Pest	0
+2	1	4	726		COL	SJS	Muford	Vincent Sharpei	799
+2	1	5	670		YKW	YKW	bovovovo	Bork Björnsson	562
+2	1	6	702		OCO	OCO	automatic	Greg Clegane	50
+2	1	7	704		BAL	PHI	Silver Fox	Fox North	164
+2	1	8	684		AZ	PHI	HalfEatenOnionBagel	Micah Hendrix	786
+2	2	9	667		AZ	BAL	Darnellthebeast	Darnell Turner	369
+2	2	10	229		BAL	BAL	BrokkLee	Brokk Lee	0
+2	2	11	695		OCO	SJS	jordan327	Jordan Yates	576
+2	2	12	672		YKW	PHI	Oles	Tyler Oles	1135
+2	2	13	710		COL	YKW	kckolbe	Kevin Cushing	838
+2	2	14	678		PHI	OCO	Ben	Ardie Savea	483
+2	2	15	664		SJS	COL	TheDangaZone	Roman Thomas	163
+2	2	16	671		LVL	AZ	AsylumParty	Dustin Evans	815
+2	3	17	666		LVL	PHI	sabills	Drew Davidson	150
+2	3	18	230		SJS	BAL	manicmav36	Owen Taylor	0
+2	3	19	688		PHI	SJS	mpclardy	Enchilada Charlton	77
+2	3	20	231		COL	BAL	GSD	Jorge Masvidal	0
+2	3	21	717		YKW	PHI	Perry87	Perry Tucker	157
+2	3	22	743		OCO	OCO	Kronen	Ragnar Kronen	160
+2	3	23	232		BAL	PHI	124715	Paul DiMirio	0
+2	3	24	685		AZ	AZ	scottyt	Scott Timlin	184
+2	4	25	701		AZ	YKW	Dangles13	Marcus Kane	321
+2	4	26	693		BAL	BAL	Big Baller Brand	Alonzo Charles	50
+2	4	27	708		OCO	BAL	Sleepy	Dieter Koch	199
+2	4	28	233		YKW	BAL	iamslm22	Avon Blocksdale	0
+2	4	29	700		COL	YKW	TyronSmith	Tyron Smith	106
+2	4	30	234		PHI	OCO	RedCydranth	Marc Spector	0
+2	4	31	692		SJS	PHI	Kristy95	Kristoffer O’Sullivan	334
+2	4	32	669		LVL	AZ	4D Chess	C.A Chess	269
+2	5	33	681		LVL	PHI	fish	Ottokar Von Gerhardt	104
+2	5	34	689		SJS	PHI	Den_Tex_Mix2	Luke Washington	163
+2	5	35	720		PHI	AZ	XxpurplepurpsxX	Allen Davis	153
+2	5	36	733		COL	BAL	Gwdaja	Darlane Farlane	193
+2	5	37	698		YKW	SJS	CubsFan19	Xavier Newman	108
+2	5	38	662		OCO	OCO	Bgreene21	Ben Green	76
+2	5	39	235		BAL	COL	loco	Big Bot	0
+2	5	40	236		AZ	AZ	Admin	Luke Luechly	0
+2	6	41	721		AZ	LVL	Kcobb9	Kyle Cobb	123
+2	6	42	682		BAL	PHI	MattJames	Matt James	113
+2	6	43	705		OCO	SJS	okonkwoco	Chidubem Okonkwo	595
+2	6	44	730		YKW	PHI	JasonMars	Brett Dodggy	89
+2	6	45	707		COL	BAL	PlotzkeA	James Wright	155
+2	6	46	740		PHI	OCO	Jepox	Isaiah McGinn	116
+2	6	47	665		SJS	COL	JR95	Jon Ross	292
+2	6	48	237		LVL	AZ	Admin	Christiano Ronaldo	0
+2	7	49	725		LVL	PHI	TheLastOlympian07	Shawn Brady	139
+2	7	50	742		SJS	SJS	TheRealBK	Christian Adams	173
+2	7	51	738		PHI	PHI	Damienj10	Damien Kroetch	184
+2	7	52	736		COL	BAL	sapp2013	Matthew Vincent	301
+2	7	53	238		YKW	YKW	tlk742	Darren Smallwood	0
+2	7	54	699		OCO	OCO	Joester09	Joey Langdon	50
+2	7	55	734		BAL	COL	MixAndMatch	Rich Gucci	153
+2	7	56	728		AZ	LVL	:.Elite.:	Johnny Rocket	122
+2	8	57	680		AZ	SJS	ElMachoNacho	Denzel Diaz	183
+2	8	58	675		BAL	BAL	SexualEarwax	Carmel Gibson	50
+2	8	59	744		OCO	SJS	njparker	Noah Parker	50
+2	8	60	706		YKW	BAL	Bakepiece	John Baker	101
+2	8	61	694		COL	YKW	Chunk	Luke Chunk	107
+2	8	62	691		PHI	OCO	Big Country	Shjom Finkenlarkin	156
+2	8	63	668		SJS	COL	Tech	Gadget Tech	168
+2	8	64	712		LVL	AZ	veritas	Connor MacManus	69
+2	9	65	713		LVL	PHI	CommunistSweden	Donovan Maric	70
+2	9	66	683		SJS	LVL	Bafetimbi Gomis	Wayne Gooney	152
+2	9	67	735		PHI	SJS	adamantium	Braden Sharp	117
+2	9	68	239		COL	BAL	Admin	Pat Pancake	0
+2	9	69	660		YKW	YKW	JasieJ	Jazzy J	50
+2	9	71	677		OCO	COL	CampinKiller	Steve Austin	100
+2	9	72	739		BAL	AZ	RandomDays	Busters Brownce	50
+2	9	73	718		AZ	LVL	Esarhaddon	Leon Morgan	107
+2	10	74	673		AZ	PHI	BradtheMadLad	Bradley T Madlad	156
+2	10	75	716		BAL	SJS	protooman	Manny Paz	83
+2	10	76	732		OCO	BAL	Lillico24	James Lillico	66
+2	10	77	674		YKW	YKW	Etolduso	Domantas Sabonis	50
+2	10	79	731		COL	COL	ImCokeZero	Bernard Forthward	50
+2	10	80	714		PHI	AZ	Colombiano	Hingle Mcringleberry	50
+2	10	81	711		SJS	PHI	hmason91	Hunter Mason	79
+2	10	82	715		LVL	LVL	Ephemeris	Ryan Lecavalier	59
+2	11	83	686		LVL	SJS	DRUNKmeerkat	John Goose	79
+2	11	84	696		SJS	BAL	Jharter94	Jesse Sanderson	52
+2	11	85	709		PHI	YKW	Julio	Rafael Reyes	127
+2	11	87	703		COL	COL	Hypodynamic	Torque Lewith	172
+2	11	88	719		YKW	AZ	Guy worthy	Gui Worthy	75
+2	11	89	737		OCO	LVL	Red_Staar	Typical Newenglander	52
+2	11	91	724		BAL	SJS	Honolulublue	Mac Donald	50
+2	11	92	722		AZ	BAL	The Wall	Frederick Smith	53
+2	12	93	729		AZ	YKW	SwagSloth	Eric Kennedy	769
+2	12	95	679		BAL	COL	Tyfeld93	Santana Moss	50
+2	12	96	723		OCO	AZ	Geh	Teez Tobin	50
+2	12	101	663		YKW	YKW	Baby_Reggie	Jason Jerek	50
+2	12	104	240		COL	AZ	Jack	Jack Vanderjagt	0
+3	1	1	797		LVL	COL	TheMemeMaestro	Antonio Sandoval	397
+3	1	2	771		SJS	AZ	Shadowz	Godfrey King	194
+3	1	3	789		PHI	YKW	Daybe	Brice Boggs	543
+3	1	4	241		COL	SJS	Bayley	Benson Bayley	0
+3	1	5	759		YKW	SJS	Rabidsponge21	Iyah Blewitt	581
+3	1	6	242		OCO	OCO	JuOSu	Julian O'Sullivan	0
+3	1	7	806		BAL	BAL	cosbornballboy	Ricardo Sandoval	474
+3	1	8	769		AZ	AZ	Apache_Chief	Franklin Harris Jr.	185
+3	2	9	243		AZ	YKW	Archon	Francois Lamoreux	0
+3	2	10	750		BAL	BAL	ItsJustBarry	Trey Willie	243
+3	2	11	778		OCO	PHI	Yurt6	Clifford Rove	221
+3	2	12	756		YKW	AZ	Zeegee	Vash Erikson	154
+3	2	13	749		COL	YKW	Kris	Eidur Gustavsson	159
+3	2	14	754		PHI	OCO	BoltyMcSpeedy	Erlich Burnsman	210
+3	2	15	776		SJS	AZ	AdamS	Charlie Law	587
+3	2	16	765		LVL	AZ	Schmarchee	Archetype Schmarchetype	81
+3	3	17	794		LVL	PHI	Meowls	Cesar Millan	146
+3	3	18	775		SJS	LVL	Evok	Wallace Stone	466
+3	3	19	793		PHI	YKW	MacTonight	William Ridley	201
+3	3	20	791		COL	COL	Elhomi	Rico Rodriquez	85
+3	3	21	767		YKW	SJS	Lendoris	Calkewlated Chambers III	199
+3	3	22	779		OCO	OCO	Waters	Jimmy Cox	186
+3	3	23	755		BAL	AZ	kcheng686	Samuel Zhang	201
+3	3	24	768		AZ	YKW	MixAndMatch	James Warner	57
+3	4	25	803		AZ	OCO	BOOM™	J.D. Boom	366
+3	4	26	764		BAL	AZ	OwlStrike13	Mark Strike	193
+3	4	27	751		OCO	YKW	runrunpasspunt	Ryan Fitzfatrick	138
+3	4	28	807		YKW	COL	jpd	Jaquan Young	73
+3	4	29	785		COL	PHI	PointGod	Sammy Walters	136
+3	4	30	766		PHI	YKW	jaskins811	Joseph Askins	397
+3	4	31	796		SJS	BAL	Unicorn	Vincent Valentine	556
+3	4	32	772		LVL	BAL	luchalibre	Juan Andres	145
+3	5	33	795		LVL	PHI	PDXBaller	Eli Kamaka	602
+3	5	34	747		SJS	SJS	Ducks	Arjen de Ligt	88
+3	5	35	780		PHI	OCO	ralams123	Jonathan King	462
+3	5	36	752		COL	COL	GilfredTheGreat	Jughead Jones	65
+3	5	37	777		YKW	YKW	luckymumbo	Kiko Bakari	74
+3	5	38	798		OCO	OCO	Askin	Al Sims	125
+3	5	39	801		BAL	BAL	ElMazgic	Mitch Maslin	50
+3	5	40	244		AZ	AZ	Admin	Jaxon Tuck	0
+3	6	41	774		AZ	LVL	Keyg_an	Connor Tanner	270
+3	6	42	763		BAL	LVL	gth66897	Tyler Grant	81
+3	6	43	770		OCO	PHI	Rindiee	Budda Browning	304
+3	6	44	800		YKW	COL	Armagetiton	Shi’terrick Marks	76
+3	6	45	802		COL	YKW	ralz9	Nicholas Pierno	197
+3	6	46	748		PHI	OCO	Yurio	Nate Atasuke	67
+3	6	47	792		SJS	BAL	Wheaties	Brian Wheat	183
+3	6	48	799		LVL	AZ	Swegkingu	Tony Flygare	79
+3	7	49	787		LVL	LVL	Howley	Crith Coalrange	87
+3	7	50	761		SJS	SJS	nijomemo	Matt Edilio	57
+3	7	51	784		PHI	PHI	bluesfan55	Joseph Lombardi	180
+3	7	52	758		COL	COL	Jepox	Sebastian Joyce	177
+3	7	53	810		YKW	YKW	Yung CJ	Dion Jacobs	50
+3	7	54	745		OCO	OCO	picklerick#33;#33;	Rick Sanchez	50
+3	7	55	782		BAL	BAL	MinusXP	Aaron Rasheed	50
+3	7	56	783		AZ	AZ	A Boogie Wit Da Hoodie	Artist Boogie	57
+3	8	57	760		AZ	SJS	BucksDude1	Ben Hartsock	50
+3	8	58	805		BAL	SJS	BypassedSal	Sal Ifedemi	50
+3	8	59	746		OCO	PHI	Creyes971	Gavin Graham	50
+3	8	60	788		YKW	BAL	NITROONE	Jordan Danvers	76
+3	8	61	753		COL	YKW	flight	Eddy Kim	50
+3	8	62	786		PHI	OCO	Ganjaroller	Stephon Simpson	78
+3	8	63	808		SJS	BAL	JamesBaker	James Baker	50
+3	8	64	762		LVL	AZ	Jakob	Jovan Grujicic	50
+3	9	65	790		LVL	LVL	Cocoa	Ash Saginaw	50
+3	9	66	757		SJS	SJS	Skatestorm	Victor DeMar	50
+4	1	1	820		LVL	AZ	toivo	Noah Goodson	405
+4	1	2	816		COL	LVL	Beaver	Blackford Oakes	485
+4	1	3	823		SJS	COL	ExemplaryChad	Haruki Ishigawa	224
+4	1	4	826		YKW	LVL	StevenOSullivan	Steven O’Sullivan	176
+4	1	5	814		OCO	OCO	EastBeast	William Sean	104
+4	1	6	245		PHI	LVL	Nonsense	Trey Lonzac	106
+4	1	7	825		BAL	LVL	Chukka	Andreas Waiters	50
+4	1	8	811		AZ	LVL	Luminous	Shawn Ariel	63
+4	2	10	824		COL	COL	tbrown0307	Tommy Brown	50
+4	2	11	819		SJS	SJS	YoloSwaggins	JR Vance	50
+4	2	12	821		YKW	LVL	BaveDenvis	Den Bavis	55
+4	2	13	817		OCO	OCO	liam2105	Zach Muntez	57
+4	2	14	813		PHI	PHI	laflamestr8up	Rakim Uchiha	57
+4	2	16	822		AZ	YKW	Peterson	Mitchell Stars	57
+4	3	17	815		LVL	SJS	greygoosevodka	Callum Grey	52
+4	3	18	818		COL	LVL	Brent	Brent Lane	50
+5	1	1	860		COL	COL	JKortesi81	Carlito Crush	834
+5	1	2	828		LVL	COL	sapp2013	Andre Bly Jr.	410
+5	1	3	842		BAL	BAL	JohnWachter	John Wachter	174
+5	1	4	845		SJS	YKW	CDub2	Cameron Taylor	683
+5	1	5	856		PHI	AZ	run_CMC	Dean Jackson	686
+5	1	6	864		AZ	BAL	The_Hero	Gregory Fletcher	229
+5	1	7	865		YKW	OCO	Battleborn	Ryan Sierra	175
+5	1	8	827		OCO	OCO	Jiggly_333	Tegan Atwell	589
+5	2	9	863		COL	COL	mmfootball	Michael Tillman	238
+5	2	10	841		LVL	LVL	tbone415	Terrell Brister	338
+5	2	11	847		BAL	LVL	PoloPro	Fresh Booter	160
+5	2	12	858		SJS	AZ	Roly	Darren Morris	553
+5	2	13	861		PHI	YKW	Walder Frey	Egor Medved	190
+5	2	14	854		AZ	LVL	Kristy95	Conall O’Sullivan	155
+5	2	15	246		YKW	AZ	Teriyaki God	Jacob Lattimore	0
+5	2	16	859		OCO	AZ	pulsedk	Bastion Barnhardt	135
+5	3	17	846		COL	COL	datboi	Isaac Brown	113
+5	3	18	851		LVL	LVL	CFJ	Kenny Omega	116
+5	3	19	857		BAL	BAL	Dahorner	Brandon Carter	113
+5	3	20	831		SJS	AZ	Trey331x	Ben Urlacher	99
+5	3	21	839		PHI	LVL	hockeyis66	Peg Leg	164
+5	3	22	862		AZ	PHI	Squeeze	Sydney Spinelli	140
+5	3	23	834		YKW	PHI	cwillis	Luis Elmarez	105
+5	3	24	866		OCO	AZ	mking22	Eric Forman	75
+5	4	25	829		COL	COL	Bgreene21	Luke Kraken	89
+5	4	26	848		LVL	AZ	ray35	Ray Riemann	60
+5	4	27	835		BAL	LVL	Official DT	Jett Winter	50
+5	4	28	832		SJS	LVL	jcfbey01	Victor Ball	87
+5	4	29	836		PHI	PHI	RavensFanFromOntario	Wolverine Justice	50
+5	5	33	833		COL	COL	x 23 o	Thomas Mango	58
+5	5	36	853		SJS	COL	ajyoungmark	LaMarcus Mills	50
+5	5	38	852		AZ	SJS	Corco	Nathan Clearwater	54
+5	5	39	838		YKW	COL	Hamesthegreat	John Mueller	50
+6	1	1	888		NOLA	NOLA	PaytonM34	Brian Mills	579
+6	1	2	886		SJS	SJS	Drizzy	Cordell Joshua	352
+6	1	3	893		COL	COL	Supersquare04	Dwayne Aaron	604
+6	1	4	877		PHI	PHI	bagwell	Norman Bagwell	201
+6	1	5	247		AZ	NOLA	speculadora	Jaylon Broxton	0
+6	1	6	898		BAL	BAL	Leafer	Austin Roenick	863
+6	1	7	879		YKW	YKW	Goretron	Borro Gore	150
+6	1	8	881		OCO	OCO	ElvinEnchant	Elvin Enchant	165
+6	2	9	882		NOLA	YKW	Alfredo_Pasta	Glenn McPoyal	336
+6	2	10	885		SJS	COL	ghostfacethrilla	Bobby Ruckus	176
+6	2	11	883		COL	AZ	DeathOnReddit	Arbin Asipi JR	649
+6	2	12	891		PHI	OCO	Squamish	Bogdan Wojcik	160
+6	2	13	894		AZ	AZ	Neckbishop	Jack Dwyer	164
+6	2	14	880		BAL	YKW	AzhekAhriman	Robby Rainey	565
+6	2	15	868		YKW	NOLA	bovovovo	Borkus Maximus III	901
+6	2	16	899		OCO	PHI	RavensFanFromOntario	Blessed Storm	126
+6	3	17	887		NOLA	AZ	Robigo_	Rob Anderson	139
+6	3	18	895		SJS	COL	infinitempg	Micycle McCormick	1009
+6	3	19	889		COL	YKW	KimJungBigDong	- Forfeit	197
+6	3	20	873		PHI	YKW	Sleepy	Willy Nyquist -	132
+6	3	21	878		AZ	COL	Sopath	Storm Woods	103
+6	3	22	892		BAL	BAL	MVick	Mike Vick	180
+6	3	23	896		YKW	YKW	samee	Gustav Rodriguez	150
+6	3	24	248		OCO	NOLA	Keyg_an	Antonio Legion	0
+6	4	25	884		NOLA	NOLA	Egan Winter	Egan Winter	76
+6	4	26	249		SJS	COL	Jonstradamus	Grey Slax	0
+6	4	27	872		COL	AZ	LDarke	Vernon Collins	79
+6	4	28	869		PHI	NOLA	M4TTSA	Jerry Ricecake	65
+6	4	29	250		AZ	NOLA	loco	Lil Bot	0
+6	4	30	900		BAL	BAL	adam2552	Carter Bush	501
+6	5	35	876		COL	SJS	Ace	Tor Tuck	50
+6	5	36	874		PHI	PHI	Gator	Max Dalton	50
+6	5	39	251		YKW	YKW	AFierceSpoon	Deez Nutts	0
+7	1	1	932		COL	COL	dropbear	Howard Miller	984
+7	1	2	931		NOLA	BAL	nunccoepi	Verso L’Alto	1248
+7	1	3	927		BAL	OCO	majesiu	Vladimir Fyodorovich	1226
+7	1	4	926		AZ	COL	keanex	Mark Grau	339
+7	1	5	902		YKW	COL	feve10	Ryan LeFevre	90
+7	1	6	924		SJS	COL	DestaDanger	Desta Danger	183
+7	1	7	928		PHI	COL	Daybe	Ryan Applehort	1251
+7	1	8	923		OCO	OCO	Toasty	Mason Brown	915
+7	2	9	908		COL	PHI	AwkwardCowboy	Mike Miles	141
+7	2	10	909		NOLA	YKW	cpetrella	Footballer Catcherman	193
+7	2	11	914		BAL	OCO	TrueTexican	Cole McCoy	246
+7	2	12	904		AZ	NOLA	Official DT	Stone Hans	121
+7	2	13	910		YKW	COL	andybj	Alvin Chipmunk	161
+7	2	14	925		SJS	SJS	greygoosevodka	Thomas Kane III	91
+7	2	15	919		PHI	YKW	Titan127	Zach Skinner	481
+7	2	16	929		OCO	OCO	Dannyxv17	Danny Vranos	77
+7	3	17	252		COL	COL	Angels_Otani	Bubba Beau-Boucher	0
+7	3	18	920		NOLA	NOLA	Shrodawg	Joel Shroeder	126
+7	3	19	903		BAL	AZ	Ramrod18	Dustin DeMarco	59
+7	3	20	905		AZ	AZ	Burd	Niraj Garrett	76
+7	3	21	906		YKW	COL	GridironGang	DeAndre Green	82
+7	3	22	911		SJS	NOLA	bennyboy_456	Ugandan Knuckles	76
+7	3	23	907		PHI	PHI	Pens	Sam Penner	134
+7	3	24	913		OCO	PHI	Nash	Nash Teller	50
+7	4	25	915		COL	NOLA	Super50	Jake Gore	67
+7	4	27	930		BAL	BAL	Tlindstrom15	Lucas Hendricks	62
+8	1	1	940		COL	COL	Ramero	Rickey Ramero	551
+8	1	2	947		NOLA	NOLA	Mongoose87	William H. Harrison	918
+8	1	3	944		SJS	SJS	Dawegg	Brad Pennington	688
+8	1	4	948		BAL	BAL	Renrut	Childish Gambino	1111
+8	1	5	955		YKW	YKW	caltroit_red_flames	Chad Pennington	1179
+8	1	6	943		SJS	SJS	iseedoug	Ben Horne	1054
+8	1	7	939		OCO	NOLA	dave	Omar Wrong	146
+8	1	8	936		PHI	PHI	BWIII	Brock Weathers III	1069
+8	2	9	937		COL	AZ	Durden	Viggo Squanch	789
+8	2	10	951		NOLA	YKW	Blastmeaway	Thad Pennington	768
+8	2	11	949		SJS	YKW	Kmarko	Ramadan Steve	152
+8	2	12	942		BAL	AZ	dub	Balthazar Crindy	510
+8	2	13	946		YKW	PHI	Loganjj21	Beat Meoff	170
+8	2	14	945		SJS	YKW	Scootalicious	James Brown	209
+8	2	15	934		OCO	NOLA	Penguin	Vance Sachs	81
+8	2	16	933		PHI	SJS	OptiimusPR1ME	D.J. Riddick	124
+8	3	17	941		COL	COL	JaPetFlo	Nick Sharper	79
+8	3	19	954		SJS	SJS	Mark D	Mark David	494
+8	3	20	935		BAL	AZ	Fonz nuno	Fonz Nuno	67
+8	3	21	957		YKW	AZ	TRAININDAY	Hammer Jack	73
+8	3	22	956		SJS	SJS	aceaviator	Justin Davis	55
+8	3	23	950		OCO	OCO	LattimoreIsland	Maxwell Macbeth	87
+8	3	24	938		PHI	BAL	ISiegel	Seth Wallace	50
+8	4	25	953		COL	COL	Blazer	Harry Balzac	50
+8	4	29	253		YKW	AZ	DELIRIVM	Alexander Overholt	0
+8	4	31	952		OCO	OCO	CompleteBelter	Klaus DerFisch	54
+9	1	1	966		SJS	SJS	Leafs4ever	Xavier Flash	1134
+9	1	2	969		AZ	AZ	Moosecop	Bucky Barnes	1232
+9	1	3	987		COL	PHI	YoungTB	Marquise Brown	1054
+9	1	4	973		PHI	SJS	GoonerBear	Kolby Deringer	1245
+9	1	5	960		BAL	BAL	OBESE	Declan Harp	740
+9	1	6	978		OCO	COL	RealWackolyte	Oskar Ludvig	130
+9	1	7	974		NOLA	COL	Jepox	Alexandre Thibault	170
+9	1	8	979		YKW	OCO	TheDangaZone	Ricky Adams	743
+9	2	9	962		SJS	SJS	JSS	Elijah Lagerfield	185
+9	2	10	982		AZ	AZ	kckolbe	Kevin Fitzpatrick	941
+9	2	11	970		COL	SJS	pazuzu	Zapp Brannigan	693
+9	2	12	983		PHI	BAL	Unicorn	Vinny Valentine	1214
+9	2	13	976		BAL	PHI	fusion247	Jesse Marchand	250
+9	2	14	965		OCO	OCO	Molarpistols	Gus T.T. Showbiz	1131
+9	2	15	975		NOLA	SJS	twiggin56	Barnaby Earl	214
+9	2	16	988		YKW	AZ	OwlStrike13	LaMarcus Strike	169
+9	3	17	985		SJS	SJS	kylecorbett42	Kyle Corbett	104
+9	3	18	968		AZ	YKW	daBenchwarmer	Andreas Metaxas	381
+9	3	19	984		COL	OCO	Vulgar	Young Spaghetti	110
+9	3	20	972		PHI	PHI	Youchmeister71	Tyler Griffin	86
+9	3	21	963		BAL	SJS	Dmann49	Daquan Richardson	77
+9	3	22	961		OCO	PHI	jlyman	Robert Jordan	60
+9	3	23	977		NOLA	SJS	CptSquall	Alsan Arshad	71
+9	3	24	958		YKW	PHI	IsaacJWeitkuhn	Jai Turner	76
+9	4	26	967		AZ	AZ	sicksnipes	Emilio Ramero	116
+9	4	28	990		PHI	NOLA	cosbornballboy	ShaDarrien LaMelllana	259
+9	4	29	971		BAL	PHI	RYLAND	Blake Marchand	94
+9	4	30	989		OCO	OCO	ruvimk98	Ricardo Jones	79
+9	4	31	981		NOLA	YKW	Sorceryy	Deion Jackson	57
+9	4	32	986		YKW	YKW	MegaSharkAttack411	Fin Jameson	57
+9	5	34	959		AZ	AZ	BPP96	John Springfield	57
+9	5	36	980		PHI	PHI	cdog0803	Deangelo Warren	50
+10	1	1	995		SJS	SJS	Muford	D’Pez Poopsie	1055
+10	1	2	1014		AZ	SJS	Oles	Kazimir Oles	1447
+10	1	3	1019		PHI	PHI	Official DT	Lucari Felix	468
+10	1	4	1023		YKW	SJS	AW13	Joliet L. Christ	1102
+10	1	5	1003		COL	PHI	enigmatic	Adriana Falconi	1213
+10	1	6	1017		OCO	OCO	Trautner	Danny Grithead	1400
+10	1	7	1007		BAL	PHI	HalfEatenOnionBagel	Achilles Hondo	707
+10	1	8	1008		NOLA	NOLA	Phobospwns	Lo Rax	734
+10	2	9	996		SJS	SJS	mabb	Xandra Troyski	1048
+10	2	10	1012		AZ	AZ	evryday	Shannon Hobbs	334
+10	2	11	1020		PHI	PHI	DELIRIVM	Felix Hasselhoff	338
+10	2	12	1001		YKW	PHI	JVMjrDOT	Jordan von Matt	967
+10	2	13	1006		COL	PHI	Nathan_Hall	A.J. Robertson	249
+10	2	14	1005		OCO	OCO	7hawk77	Seer Zephyrous	382
+10	2	15	1028		BAL	BAL	TheActualSlowpoke	Steven Oats	395
+10	2	16	991		NOLA	BAL	Grapehead	Damien Arnold	279
+10	3	17	1009		SJS	SJS	NamelessNate	Nate Piazza	121
+10	3	18	1015		AZ	NOLA	okonkwoco	Chinwemma Yobanna-Kanayochukwu	377
+10	3	19	999		PHI	COL	DonnoMania	Devo Cansino	406
+10	3	20	992		YKW	YKW	TheWoZy	Zenyou Wozy	358
+10	3	21	1032		COL	YKW	Prepare2pie	Jake Verden	138
+10	3	22	1021		OCO	PHI	Wally	Avery Woodham	202
+10	3	23	993		BAL	PHI	RicoTheRB	Ricky Flores	90
+10	3	24	1027		NOLA	SJS	TannerH	Tanner Hendrix	90
+10	4	25	1000		SJS	SJS	Aenir	Chris Orosz	461
+10	4	26	1030		AZ	AZ	True Pierce	True Pierce	76
+10	4	27	1018		PHI	PHI	Preza	Emilia Rudd	153
+10	4	28	1016		YKW	YKW	trslick	Ray Slick	57
+10	4	29	1022		COL	SJS	datboi	Taylor Peterson	108
+10	4	30	1013		OCO	OCO	Nobody	Adam Anderson	140
+10	4	31	1002		BAL	PHI	Keyg_an	Juan Atatyme	128
+10	4	32	998		NOLA	NOLA	RYLAND	Ryland Morley	90
+10	5	33	1004		SJS	SJS	slowpoke	Odell Marrett	97
+10	5	34	994		AZ	AZ	honeyrobot	Lanoi Arnold	50
+10	5	35	997		PHI	PHI	Adam Krossman	Adam Krossman	76
+10	5	37	1025		COL	COL	Doctor Topher	Chris Bennett	50
+10	5	39	1010		BAL	BAL	Connair	Con Nair	50
+11	1	1	1055		PHI	PHI	37thchamber	Lennox Garnett	1089
+11	1	2	1045		SJS	AZ	Tomen	Alex Selich	1217
+11	1	3	1034		AZ	AZ	SwagSloth	Andrew Reese	1336
+11	1	4	254		YKW	YKW	mckee29	Antonio Summer	0
+11	1	5	1044		OCO	OCO	ADwyer87	Sunnycursed -	1266
+11	1	6	1065		COL	NOLA	Ben	Tana Keïta	655
+11	1	7	1056		NOLA	BAL	Rabidsponge21	Kwame Abayomi Mbanefo	858
+11	1	8	1067		BAL	BAL	LGMForever	Dan Schneider	1109
+11	2	9	255		PHI	PHI	Tinkler	Ryan Cobalt	0
+11	2	10	1059		SJS	AZ	cpetrella	Footballer Sackerman	463
+11	2	11	1039		AZ	NOLA	tez	Thjalfi Halvorsen	212
+11	2	12	1071		YKW	YKW	Bzerkap	Bobson Dugnutt	345
+11	2	13	1053		OCO	AZ	maxcrazy	Steven Moore	316
+11	2	14	1033		COL	YKW	goilers	Josh Parker	861
+11	2	15	1061		NOLA	OCO	RedCydranth	Marc Spector	520
+11	2	16	1038		BAL	BAL	Vikain	Yulic Nagasawa	500
+11	3	17	1064		PHI	PHI	Kendrick	K.J. Becker	706
+11	3	18	1062		SJS	SJS	Sweetwater	Jerrod Canton	981
+11	3	19	1047		AZ	AZ	Radsin	Harvey Kindle	172
+11	3	20	1041		YKW	YKW	ztevans	Will Foster	271
+11	3	21	1049		OCO	OCO	ml002	Jonathan Rice	421
+11	3	22	1063		COL	PHI	Evok	Curtis Saul	453
+11	3	23	1037		NOLA	AZ	J.G.10	Slim Shady	545
+11	3	24	1036		BAL	PHI	Saliva^	Kulture Fulture	655
+11	4	25	1068		PHI	PHI	yoye	Roger Batoff	386
+11	4	26	1040		SJS	SJS	Justice	Ty Justice	284
+11	4	27	1060		AZ	NOLA	LattimoreIsland	Gordon Ramsey Jr.	213
+11	4	28	1052		YKW	YKW	samee	Thomas Carrasco	177
+11	4	29	1057		OCO	PHI	Jayhawk	Jaylin Hobbs	288
+11	4	30	1069		COL	SJS	DannyMethane	Danny Methane	216
+11	4	31	1043		NOLA	BAL	Swegkingu	Zoro Roronoa	168
+11	4	32	1051		BAL	BAL	HollowHead	Spencer Lawes	110
+11	5	33	1048		PHI	PHI	Waters	Johnson Cox III	258
+11	5	34	1035		SJS	SJS	AngelTwelve	Adrian Pitcher	256
+11	5	35	1066		AZ	NOLA	MarneMauler99	Franklin Townsend	94
+11	5	36	1058		YKW	YKW	NextGen85	Clark Kent	81
+11	5	37	1070		OCO	OCO	BoltyMcSpeedy	Kick Puncher	76
+11	5	39	1046		NOLA	OCO	AceBoogiieJr	Ace Boogie Jr.	62
+11	5	40	1050		BAL	BAL	JBLAZE_THE_BOSS	Jamal Slick	50
+11	6	44	1042		YKW	YKW	tbone415	Berrell Trister	67
+12	1	1	1100		SJS	SJS	Mavfatha	Freezer Riposte	1273
+12	1	2	1122		YKW	BAL	PigSnout	Errol Maddox	1461
+12	1	3	1121		AZ	AZ	jaskins811	Hike Mughes	397
+12	1	4	1114		PHI	PHI	Symmetrik	Luke Smyles	459
+12	1	5	1107		COL	COL	Bwestfield	James Bishop	1428
+12	1	6	1087		OCO	OCO	MrStennett	Thorian Skarsgard	1184
+12	1	7	1112		BAL	BAL	WannabeFinn	Grayson Kuusela	620
+12	1	8	1089		NOLA	NOLA	PDXBaller	Axel Hornbacher	1023
+12	2	9	1118		SJS	SJS	ckroyal92	Trey Staley	911
+12	2	10	1088		YKW	YKW	AdamS	Dick Wizardry	1164
+12	2	11	1123		AZ	AZ	DeathOnReddit	Arbin Asipi III	491
+12	2	12	1083		PHI	COL	PSanchez55	Logan Lejune	935
+12	2	13	1075		COL	COL	Dangles13	Beau Montgomery	637
+12	2	14	1109		OCO	COL	RainDelay	Rylant Wright	167
+12	2	15	1110		BAL	BAL	iamslm22	Charlie Trout	775
+12	2	16	1117		NOLA	OCO	StamkosFan	Tommy Helanen	1006
+12	3	17	1085		SJS	SJS	ErMurazor	Jorel Tuck	716
+12	3	18	1115		YKW	YKW	Whatistheinternet	Jeff Jefferson IV	182
+12	3	19	1097		AZ	AZ	karl	Raymond Vans	1025
+12	3	20	1102		PHI	PHI	Wasty	Ikaika Kalilimoku	270
+12	3	21	1120		COL	COL	YoungGreekBoy	Luke Boechler	282
+12	3	22	1105		OCO	OCO	JR95	Jon Gott	148
+12	3	23	1108		BAL	BAL	JSS	Aksel Danielsson	417
+12	3	24	1078		NOLA	PHI	Supersquare04	Jonathan Towers	196
+12	4	25	1092		SJS	SJS	Mack	Neo Donaldson	257
+12	4	26	1116		YKW	YKW	4D Chess	Beauregard Smallwood-Chess	136
+12	4	27	1082		AZ	AZ	Shrodawg	Roman Stakowski	227
+12	4	28	1106		PHI	BAL	wuma	Derek Bohne	278
+12	4	29	1094		COL	COL	SammyG	Sam Garrad	249
+12	4	30	1095		OCO	OCO	TommySalami	Tommy Salami	216
+12	4	31	1103		BAL	PHI	ralams123	Sam Hardwick	591
+12	4	32	1096		NOLA	YKW	duckberg	Pecker Cox	126
+12	5	33	1076		SJS	SJS	Keyg_an	Ja’brill Tuck	273
+12	5	34	1073		YKW	AZ	CaptainCup	Cole Walker	99
+12	5	35	1111		AZ	NOLA	slimthugga	Stayve Jerome Thomas	135
+12	5	36	1101		PHI	PHI	Snussu	Fast Boija	290
+12	5	37	1077		COL	COL	mcgriddleluver	Soupy McBrain	155
+12	5	38	1081		OCO	OCO	tlk742	Django Anoa’i	797
+12	5	39	1104		BAL	BAL	CoachEaux	Thomas Clark	125
+12	5	40	1093		NOLA	NOLA	NCISagent1	Devon Baxter	178
+12	6	41	1119		SJS	SJS	KingRonald	Ronnie Williams	124
+12	6	42	1084		YKW	AZ	WALDO	Jeffery Murphy	341
+12	6	43	1080		AZ	YKW	Doctor Topher	Grayson Wayne	50
+12	6	44	1090		PHI	PHI	Hoeforest	Krispy Kreme	178
+12	6	45	1091		COL	COL	jsachs	Joey Sachs	162
+12	6	46	1079		OCO	OCO	TheMemeMaestro	Daniel Amon	61
+12	6	47	1113		BAL	BAL	Shaggy28	CJ Henderson	81
+12	6	48	1098		NOLA	NOLA	hyreektill	James Wade	57
+12	7	49	1074		SJS	SJS	Avakael	Roderick Castleberry	95
+12	7	50	1086		YKW	AZ	AtomikaNova	Thomas Nova	50
+13	1	1	1145		YKW	YKW	manicmav36	Johnny Snuggles	1352
+13	1	2	1142		NOLA	NOLA	Rich	Benson Harris	419
+13	1	3	1133		COL	NOLA	AsylumParty	Spencer Castle	383
+13	1	4	1146		AZ	AZ	Noble	Lucius Kaine	276
+13	1	5	1147		PHI	PHI	Alkaiid	Blake McCargue	143
+13	1	6	1143		SJS	OCO	DavidCorperial	David Ginsberg	567
+13	1	7	1139		BAL	BAL	39alaska39	Alex Frost	141
+13	1	8	1148		OCO	OCO	JBLAZE_THE_BOSS	Johnny Blaze	847
+13	2	9	1131		YKW	YKW	Bigred1580	Nate Swift	1297
+13	2	10	1141		NOLA	NOLA	Bayley	Tyler Swift	604
+13	2	11	1132		COL	BAL	StickyRicky	Corey Trevor	190
+13	2	12	1125		AZ	AZ	Jepox	Corwin Davenport	155
+13	2	13	1140		PHI	PHI	AzhekAhriman	Chris Steele	142
+13	2	14	1135		SJS	YKW	Ason94	Knute Knurtsson	322
+13	2	15	1144		BAL	BAL	sarmo	J.N. Nova	108
+13	2	16	1137		OCO	OCO	Rise of Smitty	Vander Jones	646
+13	3	17	1138		YKW	YKW	JayWhy	Jaren Haden	69
+13	3	18	1136		NOLA	NOLA	toivo	Bona’beri Jones	640
+13	3	19	1127		COL	COL	TrueTexican	Caleb McCoy	243
+13	3	20	1130		AZ	AZ	Esso2264	Kyle Frost	74
+13	3	21	1126		PHI	PHI	BaseScoutX1	Dick Cheese Jr.	133
+13	3	22	1134		SJS	NOLA	harvey	Harvey Danger	67
+13	3	23	1149		BAL	BAL	ghostfacethrilla	Rembrandt Khalil-Bugatti	63
+13	3	24	1124		OCO	OCO	JM62	Jordan McCann	52
+13	4	26	1129		NOLA	NOLA	Ricecake	Eric McStrong	50
+14	1	1	1158		YKW	YKW	timeconsumer	Cooter Bigsby	1319
+14	1	2	1166		BAL	BAL	Raven	Corvo Havran	1419
+14	1	3	1169		AZ	AZ	soryantyler	Gekyume Stokeley	478
+14	1	4	1153		NOLA	NOLA	JuOSu	Stan Francisco	1136
+14	1	5	1165		PHI	PHI	Jonstradamus	Maxwell Beard	263
+14	1	6	1156		SJS	SJS	Player1	Sandip "Sandy" Bakshi	648
+14	1	7	1150		COL	BAL	uncleleo#39;skomrade	Joseph Henry	218
+14	1	8	1157		OCO	YKW	WinstonKodogo	Stephen Harris Jr	131
+14	2	9	1160		YKW	AZ	youngcricket	Leighton Lee	695
+14	2	10	1170		BAL	AZ	BeyondBeyonder	Dingus Hunk	82
+14	2	11	1159		AZ	AZ	atcovin	Drew Maddox	79
+14	2	12	1154		NOLA	NOLA	Ryan0413	Alfredo "Thighmaster" Crisco	481
+14	2	13	1173		PHI	PHI	Nickm0595	Brett Tacony	57
+14	2	14	1163		SJS	SJS	Jiggly_333	Rose Jenkins	1207
+14	2	15	1155		COL	BAL	BaronvonJobi	Ricky Enbalse	50
+14	2	16	1152		OCO	OCO	maskermind414	Buchanan Simons	50
+14	3	17	1167		YKW	YKW	awurm	Thad Castle	55
+14	3	18	1162		BAL	BAL	threemanweave	Cody Kupp	57
+14	3	19	1172		AZ	AZ	Ape	Ma Goomba	57
+14	3	20	1164		NOLA	BAL	cb9	Cam Poole	57
+14	3	21	1151		PHI	PHI	princekyle	Žak Korošec	50
+14	3	23	1171		COL	YKW	sableye	Stanley Marshall	50
+14	4	25	1161		YKW	YKW	reddude99	Adam Hardin	55
+14	4	26	1168		BAL	BAL	PopesDontRun	James Andrews	50
+15	1	1	1269		AZ	AZ	gucci	Brock Landers	631
+15	1	2	1201		NOLA	NOLA	terriblehippo	Quenton Bode	1257
+15	1	3	1189		COL	NOLA	slothfacekilla	Johnny Slothface	1021
+15	1	4	1175		YKW	YKW	shadyshoelace	Nero Alexander	1426
+15	1	5	1199		OCO	AUS	dizzyDC	Chase Jensen	893
+15	1	6	1186		BAL	CHI	flyeaglesfly29	Lightsout Lewis	1124
+15	1	7	1280		PHI	AZ	Roly	Ricardo Morris	606
+15	1	8	1276		SJS	OCO	TeyonSchavari	AJ Lattimer	1101
+15	2	9	1218		AZ	PHI	124715	Richard D’Attoria V	1181
+15	2	10	1180		NOLA	SJS	br0_0ker	Ahri Espeeyeeseetee	1014
+15	2	11	1260		COL	COL	Frick_Nasty	Mo Berry	1344
+15	2	12	1233		YKW	BAL	Eco	Fatih Terim	1199
+15	2	13	1206		OCO	NOLA	TomHanks	Forrest Gump	1336
+15	2	14	1246		BAL	YKW	Baron1898	Morgan Marshall	683
+15	2	15	1211		PHI	AUS	SDCore	Rod Tidwell	1056
+15	2	16	1256		SJS	CHI	plantane	Xerxes Ridley	573
+15	3	17	1273		AZ	BAL	Duilio05	Walt Green	1355
+15	3	18	1258		NOLA	OCO	Rising Equinox	Lanzer Grievous	1141
+15	3	19	1232		COL	PHI	BWIII	Emondov Emoji	1069
+15	3	20	1290		YKW	SJS	Rradum	Cameron Olsen	1049
+15	3	21	1264		OCO	AZ	ven_knight	Lucas Knight	1120
+15	3	22	1237		BAL	COL	shipwreckrising	Tony Gabagool	756
+15	3	23	1190		PHI	BAL	ScorpXCracker	Dorfus Jimbo	576
+15	3	24	1286		SJS	YKW	CalvinP	Logan Uchiha	867
+15	4	25	1238		AZ	AZ	SouljaBoy2007	Lamont McKinnie	1000
+15	4	26	1216		NOLA	CHI	Duress	Guy Nikko	422
+15	4	27	1279		COL	NOLA	BrewCrew	Deon Taylor	916
+15	4	28	1210		YKW	OCO	moonlight	Franklin Armstrong	1387
+15	4	29	1224		OCO	PHI	Fordhammer	Nacho Varga	1360
+15	4	30	1284		BAL	SJS	nickyvmlp	Dan Wright	1073
+15	4	31	1203		PHI	COL	KingCollins	Terry Taffy	462
+15	4	32	1231		SJS	AUS	Beaver	Edmond Beaver-Dantes	535
+15	5	33	1255		AZ	NOLA	Huskies311	Marquees Acho	900
+15	5	34	1251		NOLA	YKW	Air Crou	Giannis Kroustis	949
+15	5	35	1223		COL	AUS	Sir Earl	Troy Humuhumunukunukuāpuaʻa	175
+15	5	36	1291		YKW	CHI	oz3700	Jack Rambo	660
+15	5	37	1282		OCO	COL	MaxGnarland	Quentin Sinclair	674
+15	5	38	1244		BAL	NOLA	PaytonM34	Brave Ulysses	727
+15	5	39	1267		PHI	PHI	Rouchicus	Rock Hardshaft	184
+15	5	40	1272		SJS	AUS	Pizza-faith	Martavius Mack	223
+15	6	41	1200		AZ	AZ	contacts	Jammerson Irving	800
+15	6	42	1184		NOLA	OCO	BigKicks	Alex Dasistwirklichseinnachname	679
+15	6	43	1281		COL	COL	dropbear	Jay Longshaw	198
+15	6	44	1254		YKW	OCO	NylarthePhoenix	Apollo Reed	806
+15	6	46	1188		BAL	CHI	smaxx77	Timmy Hoss	191
+15	6	47	1207		PHI	BAL	TheWoZy	Ludicolo Bigby	543
+15	6	48	1274		SJS	AZ	NamelessNate	Allen Josh	158
+15	7	49	1239		AZ	PHI	Beebob	Farley Hank	768
+15	7	50	1228		NOLA	SJS	Rindiee	JoJo Burr-Kirven	136
+15	7	51	1225		COL	OCO	Claymore	Cale Clay	90
+15	7	52	1270		YKW	COL	TheFlash	Frasier Crane	106
+15	7	53	1185		OCO	BAL	Vedin	Jacob Rowan	166
+15	7	54	1209		BAL	YKW	ValorX77	Ryan Leaf Jr	1220
+15	7	55	1208		PHI	AUS	DCross	Michael Rood	112
+15	7	56	1242		SJS	CHI	spinarnie	Ben Bortboy	159
+15	8	57	1257		AZ	NOLA	Qux	Tobias Chase	99
+15	8	58	1293		NOLA	OCO	PratJ	RKANSAW N/A	118
+15	8	59	1230		COL	PHI	usarice	Momodou Jallow	83
+15	8	60	1196		YKW	SJS	Newbie	Tyler Janes	106
+15	8	61	1268		OCO	AZ	TheChroniclesOfFrog	Kermit Stronglegs	121
+15	8	62	1229		BAL	COL	feral squirrel	Mister Big Chest	82
+15	8	63	1283		PHI	NOLA	Shrodawg	Donte Shields	75
+15	8	64	1248		SJS	YKW	killerking	Franklin Cooper	73
+15	9	65	1271		AZ	AUS	Furrand	Rahm Kota	103
+15	9	66	1266		NOLA	CHI	Tyreke	Trevon Simmons	50
+15	9	67	1178		COL	COL	RohnJobert	Apollo Lange	139
+15	9	68	1182		YKW	AZ	TheKicker	Cameron Clutch	82
+15	9	69	1204		OCO	PHI	NuK3	Justin Tyme	50
+15	9	70	1277		BAL	AZ	yoyo13	Dashwan Jackson	57
+15	9	71	1292		PHI	AZ	sharksisback	Troy Bryant	79
+15	9	72	1234		SJS	AZ	MiniMan561	Lo Mein	78
+15	10	73	1278		AZ	NOLA	Skyandbray	Max Vaz	67
+15	10	74	1265		NOLA	YKW	rohanm	Cedric Parker	66
+15	10	75	1213		COL	AUS	BruceWaynner	Bruce Waynner	59
+15	10	76	1177		YKW	CHI	Tesoroano7	Avery Thomas	69
+15	10	78	1193		BAL	NOLA	Shaquill	Shaquill "The Thrill" Williams VII	64
+15	10	79	1253		PHI	PHI	Tydy22	Tigole Bitties	67
+15	10	80	1240		SJS	SJS	Jsag25	Kenny Jammer	50
+15	11	81	1198		AZ	NOLA	Ramrod18	Jay Quick	162
+15	11	82	1247		NOLA	PHI	Official DT	Lenard Marx	72
+15	11	83	1187		COL	NOLA	clt2s2	Charles Mudley	83
+15	11	84	1181		YKW	YKW	Sunshine	Bill Inohi	59
+15	11	85	1245		OCO	AUS	D4isyy	Khalil Sack	50
+15	11	86	1194		BAL	CHI	Drizzy	André Thornton	50
+15	11	87	1212		PHI	BAL	Ramero	Luca Ramero	50
+15	11	88	1222		SJS	OCO	Adrian1878	Proy Tolamalu	50
+15	12	89	1176		AZ	PHI	jms199456	Trey Aguilar	50
+15	12	90	1263		NOLA	SJS	RobKlev	Robert Kleven	57
+15	12	92	1226		YKW	PHI	VossSauce14	Gregor Clegaine	50
+15	12	93	1249		OCO	NOLA	VikingGT	Groovy Johnson	59
+15	12	94	1219		BAL	YKW	PapaPlatzack	Eric Lorentz	55
+15	12	96	1192		SJS	CHI	Nykonax	Paul DiMirio III	50
+15	13	97	1221		AZ	BAL	TJH	TJ Hendrix	65
+15	13	98	1285		NOLA	OCO	OldJerseyDog	Pablo Sanchez	50
+15	13	99	1227		COL	PHI	Crey23	Carlomagno Rey	62
+15	13	100	1236		YKW	SJS	ChuckDiesel86	CrayCray Lewis	60
+15	13	101	1289		OCO	AZ	Noahbrown	D’Angelo Thompson	50
+15	13	102	1235		BAL	PHI	Krelotelli	David Le Kre	55
+15	13	104	1262		SJS	YKW	nEEEEkolas	Mick Moekr	50
+15	14	106	1197		NOLA	CHI	kissthe6rings	Neon Demon	50
+15	14	107	1174		COL	BAL	ShackDad	Memphis Wilkerson	50
+15	14	108	1215		YKW	OCO	Thotiana	Lawalin Tae’orr	50
+15	14	109	1241		OCO	PHI	MB06	Michael Beckham	50
+15	14	110	1202		BAL	SJS	TF0017	Matteo Maximin	50
+15	14	111	1259		PHI	AZ	coffeebeard	Ronald St. James III	50
+15	15	114	1261		NOLA	YKW	ZoomerMcGee	Andrew Solomon	52
+15	15	116	1179		YKW	CHI	Thee_Autumn_Wind	Poster Nutbag	50
+15	15	117	1214		OCO	BAL	NextJamesHarrison	Jameis Harrison	50
+15	15	119	1243		PHI	PHI	Inbob27	Trey Moffat	50
+15	15	120	1217		SJS	SJS	Braydenthegoat	Brayden Larosee	50
+15	16	121	1288		AZ	AZ	UnluckyBandit	Luke South	50
+15	16	124	1275		YKW	YKW	Brookroyal	Thad Castle	50
+15	16	126	1250		BAL	CHI	BuddhaLebowski	Buddha Lebowski	50
+15	16	127	1252		PHI	BAL	hazi_snazzy	Christopher Loren	50
+15	17	129	1205		AZ	PHI	TebowFam15	John Tebow	50
+15	17	130	1183		NOLA	SJS	jimmyGOAT10	Gimmy Jaroppolo	50
+15	17	131	1195		COL	AZ	speedwolf27	Taters Johnson	50
+16	1	1	1322		COL	CHI	Jonny2x	Sam Torenson	1269
+16	1	2	1305		NOLA	CHI	AlexF	Blake Faux	734
+16	1	3	1298		AZ	COL	C9Van	Laszlo Forty-Two	1332
+16	1	4	1302		YKW	AUS	White Cornerback	Dermot Lavelle Jr.	1459
+16	1	5	1294		PHI	AUS	Tomasnz	Peter Larson	758
+16	1	6	1299		OCO	YKW	Graciejj2000	Chad Maulolo	247
+16	1	7	1310		SJS	PHI	kentuckycolonel	Alberto McGwire	146
+16	1	8	1303		BAL	AUS	Mooty99	Mako Mendonca	1303
+16	2	9	1318		COL	SJS	scharlachrot	William Tell	164
+16	2	10	1307		NOLA	COL	Starboy	Armor King	514
+16	2	11	1297		AZ	CHI	Ben	Ben Tu’inukuafe	573
+16	2	12	1324		YKW	SJS	ARJ04	Anthony Rowland	166
+16	2	13	1295		PHI	BAL	Renrut	ForThe Brand	348
+16	2	14	1313		OCO	COL	infinitempg	Wolfie McDummy	1404
+16	2	15	1321		SJS	COL	TheMemeMaestro	Antonio Sandoval Jr.	84
+16	2	16	1311		BAL	NOLA	DaftRaincloud	Chance Matthews	77
+16	3	17	1323		COL	PHI	OwlStrike13	DeMarcus Strike	119
+16	3	18	1320		NOLA	OCO	speculadora	Hugh Mongo	50
+16	3	19	1308		AZ	AUS	JKortesi81	Easton Cole	1358
+16	3	20	1315		YKW	YKW	Daybe	Jaylen Storm	531
+16	3	23	1300		SJS	COL	Judas_Iscariot	Judas Iscariot	74
+16	3	24	1306		BAL	COL	DrCiber	Maxim Booth	64
+16	4	25	1314		COL	AZ	Big Mac	Bobby Melvin	68
+16	4	26	1312		NOLA	YKW	Jobu22	Bo Hall	55
+16	4	27	1319		AZ	AZ	superwoman0688	Hakuna Matata	50
+16	4	28	1304		YKW	OCO	greygoosevodka	Evan Trigg	50
+16	4	29	1316		PHI	PHI	Stovy4x4ing	Jeremy Stovall	52
+16	4	30	1325		OCO	BAL	Upton0goode13	Lars Fredricksen	55
+16	5	33	1301		COL	COL	Blaster	Blaster Blade Jr	62
+17	1	1	1357		AUS	AUS	run_CMC	Ashley Owens	1032
+17	1	2	1339		COL	COL	woelkers	Bubba Thumper	1352
+17	1	3	1350		SJS	NOLA	RaiderNation	Jordan Andrews	705
+17	1	4	1341		NOLA	BAL	Buttersqauch101	Brayden Ennis	810
+17	1	5	1335		BAL	SJS	Lowlycrib	Tyron Brackenridge	1240
+17	1	6	1358		YKW	YKW	hihihi_62	Mervin Leonard	50
+17	1	7	1368		CHI	OCO	KillKillKill	Honda Edmond	974
+17	1	8	1375		OCO	OCO	TropicaliaCC	Dexter Banks II	1164
+17	1	9	1347		PHI	AZ	SabaDonutMan	Saba Donut	1178
+17	1	10	1346		AZ	PHI	TubbyTim69	Julian McMorris	644
+17	2	11	1332		AUS	AUS	Jaspers	Takeda Okura	407
+17	2	12	1340		COL	AZ	ShaneM86	Shane Masters	667
+17	2	13	1352		SJS	NOLA	KillaScrilla	Action Jackson	723
+17	2	14	1365		NOLA	NOLA	royalc90	Willie Woodson	164
+17	2	15	1327		BAL	SJS	Hydracronis	A.C. Payton	130
+17	2	16	1372		YKW	YKW	TickleTim	Kicky Bobby	128
+17	2	17	1356		CHI	OCO	mcgriddleluver	Max Lovote	209
+17	2	18	1373		OCO	AZ	idkman	Ducky Donut	92
+17	2	19	1328		PHI	PHI	Bauer	Jim McMahon	414
+17	2	20	1371		AZ	COL	JM62	Jordan McCann III	192
+17	3	21	1369		AUS	AUS	Yungbans23	Jackson Valadez	77
+17	3	22	1366		COL	COL	Gambit	Joshua Jones II	84
+17	3	23	1342		SJS	NOLA	BenDover	Ronald “The Watt” Watkins	243
+17	3	24	1338		NOLA	NOLA	GodSpeed11	Octavius Godspeed	106
+17	3	25	1349		BAL	AUS	cosbornballboy	Chase Osborn	59
+17	3	26	1360		YKW	YKW	Nash_Nash	Dominick Schultz	90
+17	3	27	1374		CHI	OCO	CFLSchooners	Joe Bobgarter	59
+17	3	28	1330		OCO	CHI	nairbretsamdaerb	LilCringer Kendrick	57
+17	3	29	1326		PHI	PHI	BionicGiraffe94	Michael Locatelli	59
+17	3	30	1351		AZ	AZ	SouljaLad	Tyrone Baker	55
+17	4	32	1359		COL	COL	BryceMolnar	Bryce Molnar	69
+17	4	33	1362		SJS	NOLA	trevmi99	Koda Adok	71
+17	4	34	1329		NOLA	SJS	Lazerus	Kyle Grimly	57
+17	4	35	1355		BAL	SJS	12bradys	DeeJay Dallas	52
+17	4	36	1353		YKW	YKW	maxlane	Brennen Biletnikoff	61
+17	4	39	1354		PHI	PHI	Miamifan2000	Balec Taylor	50
+17	4	40	1343		AZ	AZ	Thebrain515	Albert Garrett	52
+17	5	42	1370		COL	COL	Dancrave	Jason Carver	59
+17	5	43	1345		SJS	NOLA	Frugger	Michael Brown	50
+17	5	44	1348		NOLA	BAL	mdoud10	Michael Doud	50
+17	5	45	1364		BAL	SJS	HueJacksonSucks	Francis ’Franky LaFleur	50
+17	5	46	1337		YKW	YKW	BurritoHombre	Nate Oliver	50
+17	5	49	1333		PHI	PHI	Danglisack	Daniel Glisack	50
+17	5	50	1361		AZ	AZ	Frost	Dallas Decker	50
+17	6	52	1334		COL	COL	pb486	Bishop Berrian	50
+17	6	53	1363		SJS	NOLA	Marquette_Patterson	Landebert Stauss	50
+17	6	55	1331		BAL	SJS	DanielWoodenhead	Daniel Woodenhead	50
+17	6	56	1367		YKW	YKW	grok	Darius Ruckerberg	50
+18	1	1	1412		NOLA	NOLA	IsaStarcrossed	Bjørn Ironside	830
+18	1	2	1415		PHI	PHI	Hallmonitor_20	ILove Gimmy	541
+18	1	3	1430		COL	OCO	Revolution5	Tyrone Biggums	1381
+18	1	4	1376		AUS	COL	Modern_Duke	Louisiana Purchase	1226
+18	1	5	1402		SJS	SJS	bex	Marcella Tōriki	1346
+18	1	6	1462		CHI	NOLA	Dylandeluxe	Thudd Kassel	487
+18	1	7	1454		BAL	YKW	Murtsi	Maurice Virtanen	1199
+18	1	8	1478		AZ	COL	jsteele14	Pete Parker	884
+18	1	9	1439		YKW	OCO	.Laser	Korrin Abernathy	1383
+18	1	10	1418		OCO	AUS	UpperNet	Net Gaines	921
+18	2	11	1457		NOLA	NOLA	pazuzu	Bender B. Rodriguez	1093
+18	2	12	1419		PHI	PHI	goodvsevil1275	Jake Dropson	456
+18	2	13	1440		COL	AUS	TheDangaZone	Xavien Adams	880
+18	2	14	1483		AUS	AZ	Shadowz	Ruff Ruff	500
+18	2	15	1451		SJS	CHI	CDub2	Mike Hockhertz	913
+18	2	16	1477		CHI	OCO	BroicSilence	Marlo Smart	287
+18	2	17	1386		BAL	YKW	CLG Rampage	Mathias Hanyadi	1194
+18	2	18	1433		AZ	AZ	Opera_Phantom	Jay Cue	1443
+18	2	19	1469		YKW	SJS	illegaloctopus	Joseph Wozniak	345
+18	2	20	1429		OCO	COL	soppychico	Steco Ocewilder	763
+18	3	21	1448		NOLA	NOLA	ddrector	David Rector	1392
+18	3	22	1470		PHI	PHI	goodfortunecoffee	Fuzzy Dotson	814
+18	3	23	1456		COL	NOLA	BeneZero	Junior Lopez	206
+18	3	24	1437		AUS	OCO	RacgiMan	Howard Ryan	268
+18	3	25	1468		SJS	BAL	Sermokala	Fabricio Baldari	696
+18	3	26	1391		CHI	AUS	thunderbug	John-Caleb Bradberton	205
+18	3	27	1383		BAL	PHI	DeadlyPlayer	Mike Franchet	305
+18	3	28	1482		AZ	AZ	lamp_wizard	Samuel Bakhtiari	262
+18	3	29	1405		YKW	BAL	FleshBagSoup	Earl Sauce	1057
+18	3	30	1401		OCO	BAL	Jepox	Juan Marston	415
+18	4	31	1432		NOLA	PHI	dieselj123	Stuart Little IV	238
+18	4	32	1399		PHI	PHI	Frostbite	Baxter Frost	214
+18	4	33	1410		COL	AUS	JSteel	Wayne Howyanow	354
+18	4	34	1455		AUS	NOLA	caltroit_red_flames	Givussafare Rubbe	1284
+18	4	35	1442		SJS	SJS	Zeegee	Oswald Grimnir	200
+18	4	36	1417		CHI	CHI	cpetrella	Footballer Blockerman	198
+18	4	37	1453		BAL	YKW	Rublic	Orien Drake	414
+18	4	38	1396		AZ	COL	sapp2013	Michael Vincent	558
+18	4	39	1485		YKW	PHI	adam2552	Johnson Harding	308
+18	4	40	1394		OCO	OCO	Wally	Charles Allan	177
+18	5	41	1388		NOLA	NOLA	iWarAngel	Paco McTaco	197
+18	5	42	1471		PHI	CHI	PersonMann	Jake Utler	216
+18	5	43	1435		COL	CHI	Gibby	Scott Brewer	81
+18	5	44	1395		AUS	COL	RobCubed	Trae Bacon	159
+18	5	45	1428		SJS	SJS	Blaze	Caleb Beck	274
+18	5	46	1403		CHI	CHI	Nykonax	Caden Bright	74
+18	5	47	1392		BAL	AZ	Reon	Diego Espinosa	181
+18	5	48	1487		AZ	AZ	Quigonginger	Maximus Chungus	140
+18	5	49	1467		YKW	BAL	Dewalt27	Asher Quinn	1022
+18	5	50	1409		OCO	CHI	efiug	Benjamin Gordon	84
+18	6	51	1424		NOLA	NOLA	Conrose	Kreboktaflons Kwemen	89
+18	6	52	1414		PHI	PHI	sefthegoat	JimJam FlimFlam	81
+18	6	53	1488		COL	OCO	esilverm	Eeeee Silvveremm	114
+18	6	54	1465		AUS	YKW	calvins48	Jesse Jackson	89
+18	6	55	1413		SJS	SJS	Wizedex	Matt Ammons	118
+18	6	56	1420		CHI	AZ	Blastmeaway	Chas Thadsson	55
+18	6	57	1387		BAL	YKW	AbstractArtist3781	Phillip Helmet	65
+18	6	58	1407		AZ	CHI	Ocelot	Zach Bailey	101
+18	6	59	1446		YKW	CHI	cwjohnston	Connor Johnston	66
+18	6	60	1438		OCO	OCO	TheFlash	Hank McCoy	85
+18	7	61	1441		NOLA	NOLA	tommygun631	Ron Mexico	85
+18	7	62	1464		PHI	PHI	IWatchBrazzers69	Jah Harris	63
+18	7	64	1397		AUS	COL	DesireeLove97	Ram Bunchess	73
+18	7	65	1404		SJS	SJS	tylergenis	Tyler Genis	50
+18	7	66	1481		CHI	CHI	Otto	Otto VanJensen	70
+18	7	67	1480		BAL	YKW	kobegriffeysanders	Alexander Ryan	80
+18	7	68	1380		AZ	CHI	Pio15	Will Smith	79
+18	7	69	1486		YKW	BAL	SeanMcGinger	Jack Mahoff	50
+18	7	70	1398		OCO	OCO	Awesomejmk	Justin Kehoe	83
+18	8	71	1475		NOLA	NOLA	Quixote	Tony Tonogai	74
+18	8	72	1426		PHI	PHI	WrongSandwich	Rolo Tomassi	57
+18	8	73	1406		COL	CHI	ConMan_NH	William Mitchell	60
+18	8	74	1423		AUS	COL	tweety_bird	Big Mac	50
+18	8	75	1390		SJS	SJS	khabib	Clelin Ferrell	50
+18	8	76	1422		CHI	CHI	bluesfan55	Tore Andre Flø	50
+18	8	77	1411		BAL	YKW	Draconiannuke	Chuck Bartowski	57
+18	8	78	1443		AZ	AZ	aaronito	Charlie Day	84
+18	8	79	1379		YKW	BAL	combatcoldcuts	Sean Frost	57
+18	8	80	1476		OCO	OCO	Albob	Ricky Boomer	57
+18	9	81	1461		NOLA	NOLA	DDC#2888	Dorian Cope	50
+18	9	82	256		PHI	PHI	Admin	Clove Rhook	0
+18	9	83	1463		COL	CHI	Yoyo8484	James Lux	50
+18	9	84	1385		AUS	COL	Alienf00d	Lucky Dickerson	60
+18	9	85	1450		SJS	SJS	Fakefootballer27	Buck Buckington	50
+18	9	86	1459		CHI	AZ	JCUNLIFFE	Jim Bob Cooter	50
+18	9	87	1400		BAL	YKW	Gwdjohnson	Garfield Despacito	57
+18	9	88	1472		AZ	AZ	Conman	Deacon Koehler	50
+18	9	89	1452		YKW	BAL	HoweManDo	Jake Howe	50
+18	9	90	1444		OCO	OCO	Pavlovs_Dog_Of_War	Bug Daldwin	50
+18	10	91	1474		NOLA	NOLA	isenru	Baxter Chance	50
+18	10	92	1449		PHI	PHI	jaminup	Ivan Abramovich	50
+18	10	93	1408		COL	CHI	waywardson	Max Power	57
+18	10	94	1382		AUS	COL	Pooplouge	Joseph Tom	50
+18	10	95	1425		SJS	SJS	TheByzantineOttoman	Harrison Sherman	50
+18	10	96	1378		CHI	CHI	captaincrunch00	Victor Bravo	50
+18	10	97	1377		BAL	YKW	Scampoli	Bill Bono	50
+18	10	98	1473		AZ	AZ	Inf1d3l	Dudley Moore	50
+18	10	99	1484		YKW	BAL	Tubbville	Ransom Stoddard	50
+18	10	100	1389		OCO	OCO	jordanjgonzalez922	Chico De La Agua	50
+18	11	101	1416		NOLA	NOLA	HypnauticPegasus	Achilles Babcock	50
+18	11	102	1434		PHI	PHI	noahgrimmer	Noah Grimmer	50
+18	11	103	1381		COL	CHI	Ngrimmer21	Nicholas Grimmer	50
+18	11	104	1431		AUS	COL	himynameisroy	Abashai Williams	50
+18	11	105	1479		SJS	SJS	AustinUSC	Richard Dangle	50
+18	11	106	1447		CHI	CHI	Jspivey01	Big Jim Slade	50
+18	11	107	1436		BAL	YKW	Sereber	Chigg Bungus	50
+18	11	108	1458		AZ	AZ	Msdade	Robert Dade	50
+18	11	109	1393		YKW	BAL	woj34	DaQuarrion M’Wehwordson	50
+18	11	110	1460		OCO	OCO	Kaimer	Heinrich Meyer	50
+18	12	111	1421		NOLA	NOLA	Bigburgers	Dave Anima	50
+19	1	1	1507		SJS	NOLA	LordMacharius	Mack Arianlacher	728
+19	1	2	1515		PHI	SJS	AW13	Deondre Thomas-Fox	912
+19	1	3	1499		CHI	NOLA	Nokazoa	Austin McCormick	1126
+19	1	4	1512		COL	CHI	Blueline	Sean O’Leary	1210
+19	1	5	1497		NOLA	OCO	scorycory	Lord Beerus	1096
+19	1	6	1501		AUS	CHI	SweetJamesJones	Sweet James-Jones	314
+19	1	7	1490		BAL	YKW	RainDelay	Rayne Gordon	1097
+19	1	8	1514		AZ	NOLA	Jay_Doctor	Mason Blaylock	1370
+19	1	9	1504		YKW	YKW	JaytheGreat	Jayson Kearse	689
+19	1	10	1495		OCO	OCO	Sweetwater	Gary Lazer-Eyes	296
+19	2	11	1506		SJS	BAL	Libertines	Stevie Vassallo	321
+19	2	12	1518		PHI	SJS	Zeddez	Quindarius Tyerucker	278
+19	2	13	1498		CHI	NOLA	KC15	Jed Podolak	1098
+19	2	14	1508		COL	YKW	RavensFanFromOntario	Tormund Bjornsson	120
+19	2	15	1521		NOLA	COL	StevenOSullivan	Herbert Prohaska	345
+19	2	16	1496		AUS	COL	LiathTheSquirrel	Jordan Jackson	250
+19	2	17	1503		BAL	PHI	iamslm22	Avon Blocksdale Jr.	724
+19	2	18	1502		AZ	AZ	DonnoMania	Beat -	584
+19	2	19	1489		YKW	CHI	Toasty	Willie B. Hardagain	429
+19	2	20	1494		OCO	OCO	Leafs4ever	Brock Phoenix	1215
+19	3	21	1520		SJS	PHI	Bzerkap	Tiny Tim	67
+19	3	22	1493		PHI	SJS	Jacob	Jacob Andrews Jr	91
+19	3	23	1505		CHI	CHI	azimuthal-swift	Jeremiah Legend	50
+19	3	24	1519		COL	CHI	EarlEarl	OJ Littlewood	96
+19	3	25	1522		NOLA	AZ	WALDO	Zack Vega	422
+19	3	26	1509		AUS	COL	dropbear	Slim Dusty	50
+19	3	27	1491		BAL	AZ	I'll change this later	hunter Scott	65
+19	3	28	1513		AZ	AZ	cbw99	Bryant Alexander	50
+19	3	29	1510		YKW	YKW	SecondSucks22	Jean-Baptist Boivin	96
+19	3	30	1517		OCO	OCO	Jon Adams	Jon Adams	50
+19	4	31	1516		SJS	PHI	SmittyKkk	Terrance Smith	50
+19	4	33	1511		CHI	NOLA	oz3700	Left Toenail	55
+20	1	1	257		CHI	AUS	Kyle	Kyle Idlewyld	0
+20	1	2	1553		SJS	SJS	Unicorn	Desmond Scarlett	1372
+20	1	3	1531		AZ	AZ	evryday	Reggie Culbertson	305
+20	1	4	1542		AUS	PHI	roastfuego	Randy Vuxta	905
+20	1	5	1561		PHI	AUS	Vexatious	Jacoby Clay	481
+20	1	6	1554		COL	COL	Acsolap	Thor Kirkby	766
+20	1	7	1551		NOLA	BAL	Ry_	Darrel Williams	1327
+20	1	8	1541		BAL	AUS	tlk742	Hal Fassingit	235
+20	1	9	1532		YKW	YKW	Hydracronis	Blake Gragg	185
+20	1	10	1543		OCO	AUS	GreenArmy	Victor Moreno	328
+20	2	11	1560		CHI	OCO	BigUnitBabs	Bobby Boucher	442
+20	2	12	1528		SJS	SJS	W.Sconnie	Inspectah Deck	440
+20	2	13	1547		AZ	PHI	Ephenssta	Warren Stephens	725
+20	2	14	1550		AUS	PHI	Baron1898	Venus Powers	1303
+20	2	15	1534		PHI	OCO	siddhus	Siddhu Sarvepally	246
+20	2	16	1540		COL	COL	golden_apricot	Silver Banana	711
+20	2	17	1546		NOLA	AZ	Moosecop	Galf Wilf	1152
+20	2	18	1524		BAL	COL	DeathOnReddit	Ben Kenobi	144
+20	2	19	1529		YKW	SJS	riddlingminion	Ricardo Rose	167
+20	2	20	1552		OCO	AUS	AdamS	Awkward Sexjoke	691
+20	3	21	1558		CHI	AZ	soryantyler	Jah Bur’Berry	581
+20	3	22	1527		SJS	CHI	Rowdyyy	Kemorian Moore	133
+20	3	23	1525		AZ	CHI	Channel88	Vince Hammerson	57
+20	3	24	1535		AUS	PHI	casserole	Tash Thompson	122
+20	3	25	1536		PHI	AUS	bovovovo	Colonel Tushfinger	50
+20	3	26	1537		COL	AUS	MaxTheDog	Oliver McWigglebutts	72
+20	3	27	1539		NOLA	AZ	ITBret42	Barnabas Cole	62
+20	3	28	1559		BAL	NOLA	Kcobb9	David Donaldson	60
+20	3	29	1533		YKW	YKW	JumboBumbo	Randall Jimmerson	50
+20	3	30	1549		OCO	OCO	Sanchez801	Dave Casper jr	50
+20	4	32	1545		SJS	SJS	dylanjj37	Darnell Johnson	66
+20	4	33	1548		AZ	AZ	Drizzy	Jamie Nkiah	1250
+20	4	34	1544		AUS	PHI	Tolan33	George Bjornsson	50
+20	4	36	1523		COL	COL	Shaquill	Pancake Maker	50
+20	4	37	1556		NOLA	BAL	Quesadillananda	Hingle McCringleberry	50
+20	4	38	1555		BAL	NOLA	Penrod11	Bismo Funyuns	50
+20	4	39	1538		YKW	YKW	07ToyotaCamry	Miles Royal	50
+20	4	40	1557		OCO	OCO	BruhMaple	Emilio Cortez	50
+21	1	1	1675		CHI	OCO	jeffie43	Prince Vegeta	1430
+21	1	2	1638		SJS	SJS	KoltClassic	Otis Allen	1393
+21	1	3	1624		PHI	PHI	juniped	Flash Panda	1015
+21	1	4	1670		BAL	SJS	Vorshayla	HeHateMe PickSix	746
+21	1	5	1669		AZ	BAL	Voltaqe	Chris Kross	517
+21	1	6	1635		OCO	CHI	HalfEatenOnionBagel	Osiris Firestorm-Fjord	1195
+21	1	7	1592		COL	COL	nunccoepi	Immanuel Blackstone	1479
+21	1	8	1665		NOLA	NOLA	ScorpXCracker	Dorfus Jimbo Jr	607
+21	1	9	1571		YKW	YKW	HENDRIX 2.0	Douglas Quaid	1467
+21	1	10	1577		AUS	AUS	RilesMcGiles	Riles McTackle	258
+21	2	11	1576		CHI	AUS	SemiCharmedMike	Holden Summers	403
+21	2	12	1622		SJS	SJS	MN_Moosey	Leon McDavid	1415
+21	2	13	1627		PHI	OCO	rapideagle	Rapid Eagle	1123
+21	2	14	1629		BAL	AZ	BRNXB0MBERS	Pete "Plop" Miller	1418
+21	2	15	1674		AZ	BAL	josh30601	Sardine Bean	278
+21	2	16	1666		OCO	AZ	mrmouseman	Trevor Mouseman	258
+21	2	17	1630		COL	COL	RotticusScott	Rotticus Scott	1296
+21	2	18	1603		NOLA	NOLA	Wombat	Ed Barker	1252
+21	2	19	1582		YKW	YKW	iseedoug	Dougie Smalls	915
+21	2	20	1575		AUS	CHI	Get_Right	Jerome Davis	287
+21	3	21	1661		CHI	PHI	jeffpersonsacker	Jeff Personsacker	94
+21	3	22	1639		SJS	SJS	mcast55	Chip Otle	298
+21	3	23	1583		PHI	OCO	Lemon	Future Trunks	926
+21	3	24	1637		BAL	AZ	SwagSloth	Baby Yoda	986
+21	3	25	1619		AZ	PHI	Briedaqueduc	Simon Tremblay	878
+21	3	26	1625		OCO	OCO	TrickyTroy2	Larry Longshot	50
+21	3	27	1641		COL	COL	RedArrow12c	Red Arrow	444
+21	3	28	1616		NOLA	NOLA	thefrowntownclown	Rainier Wolfcastle	289
+21	3	29	1620		YKW	YKW	Frostbite	Chizuru Ichinose	1511
+21	3	30	1602		AUS	CHI	Perry87	Perry Tucker Jr.	342
+21	4	31	1605		CHI	COL	Muford	John "Tripod" Smirh	1030
+21	4	32	1640		SJS	SJS	GoonerBear	Rando Cardrissian	1054
+21	4	33	1563		PHI	PHI	lewislewes	Lefty Louis	232
+21	4	34	1568		BAL	AZ	Ultimacomanda47	Jaune Arc	261
+21	4	35	1657		AZ	OCO	MasterCashier	Ryan Scott	172
+21	4	36	1660		OCO	BAL	LiathTheSquirrel	Gregor Macgregor	756
+21	4	37	1562		COL	COL	SaborTheWaverunner	Alyx Sabor	194
+21	4	38	1652		NOLA	NOLA	frithjofr	Ugarth the Dissector	481
+21	4	39	1633		YKW	YKW	RamboHampster	Jon Bois	333
+21	4	40	1664		AUS	AUS	ap8333	Jeremy Quellers	122
+21	5	41	1611		CHI	BAL	Starboy	Chika Fujiwara	1377
+21	5	42	1642		SJS	SJS	Boomcheck	Reynaud Haugland	256
+21	5	43	1596		PHI	AZ	Pieanator	Atlas Quin	484
+21	5	44	1644		BAL	AZ	matt2930	Jackmerius Tacktheritrix	165
+21	5	45	1591		AZ	BAL	Hi_mynameis_Matt	Matt Hole	308
+21	5	46	1597		OCO	OCO	DynamicDoug	Douglas Quail	405
+21	5	47	1671		COL	AZ	Leafer	George O’Donnell	1284
+21	5	48	1573		NOLA	NOLA	Tequila	Tequila Sunrise	193
+21	5	49	1626		YKW	BAL	fballturkey	Rick Skuff	332
+21	5	50	1623		AUS	AUS	Reno	Tree Gelbman	1068
+21	6	51	1590		CHI	CHI	Bubba Twatford	Bubba Twatford	131
+21	6	52	1588		SJS	SJS	ItsJustBarry	Logan Noble Jr	594
+21	6	53	1566		PHI	PHI	Cal Lidous	Cal Lidous	114
+21	6	54	1580		BAL	COL	Iamdumberdore	Gronk Robertoswki	290
+21	6	55	1578		AZ	BAL	CowboyOnPatrol	Shepherd Marshall	197
+21	6	56	1618		OCO	OCO	Shak24	Shakir Ahmed	82
+21	6	57	1574		COL	COL	schauer	Andrew Nova	171
+21	6	58	1604		NOLA	NOLA	Big Trusss	Smolder Bravestone	97
+21	6	59	1595		YKW	YKW	PointGod	Chris Ramos	317
+21	7	61	1565		CHI	CHI	Raheem James	Raheem Okusi	365
+21	7	62	1631		SJS	SJS	Grand Salami	Grand Salami	71
+21	7	63	1655		PHI	PHI	Dillon Cheer	Dillon Cheer	72
+21	7	64	1634		BAL	AZ	hannahg32	J.J. “Jay” Jay-Jaymison	446
+21	7	65	1587		AZ	BAL	3lewsers	James Lewandowski	1172
+21	7	66	1567		OCO	OCO	Confusion	Hunter Young	88
+21	7	67	1606		COL	YKW	Kekar	Robin Reynolds	71
+21	7	68	1613		NOLA	NOLA	Vulfzilla	Herb Altee	90
+21	7	69	1612		YKW	COL	club_toasty	Dixon Uraz	50
+21	8	71	1600		CHI	CHI	H0PPY75	Emmett Higgins	82
+21	8	72	1628		SJS	SJS	Jagsfootball51	Ty Palmatier	57
+21	8	73	1617		PHI	PHI	rubachikin	Rub A. Chikin	82
+21	8	74	1649		BAL	AZ	YoungTB	Justice Green	62
+21	8	75	1572		AZ	BAL	MisObvious	Dillard Holcombe	100
+21	8	76	1584		OCO	OCO	dpz1156	Cam’ron West	71
+21	8	77	1658		COL	COL	EpicMowse	Horacio Espinoza	57
+21	8	78	1668		NOLA	NOLA	Bobby “Freakin” Portis	Bobby “Freakin” Portis	50
+21	8	79	1653		YKW	YKW	The Xekutioner	The Xekutioner	71
+21	9	81	1579		CHI	CHI	TheloniusJunk	Thelonius Junk	57
+21	9	82	1645		SJS	SJS	Henson7247	Micheal Henson	50
+21	9	83	1614		PHI	PHI	Deusolis	Vance Amado-Hackett	52
+21	9	85	1593		AZ	BAL	jmarnette	Jack Marnette	80
+21	9	86	1589		OCO	OCO	ChocolateNipples	Churro Chest	50
+21	9	87	1656		COL	COL	DylanG5	Dylan Green	76
+21	9	88	1648		NOLA	NOLA	wildcard09	Kubee Krusher	76
+21	9	89	1659		YKW	YKW	TankAlpha	Jay Palmer	74
+21	10	92	1569		SJS	SJS	GoldenFoot9	Richard “Dick” Gardner	57
+21	10	95	1585		AZ	BAL	ziekthemanupnext25	Jade Bridges	58
+21	10	96	1598		OCO	OCO	scissorstree	Matt Meagher	59
+21	10	97	1646		COL	COL	Speedo Meter	Speedo Meter	50
+21	10	98	1672		NOLA	NOLA	Naki	Christopher Prince	50
+21	10	99	1601		YKW	YKW	c272	Hank Crowell	50
+21	11	102	1673		SJS	SJS	CoolEverett	Everett Woodward	50
+21	11	105	1636		AZ	BAL	Joecrack0321	Joe "CRACK" Torres	50
+21	11	106	1621		OCO	OCO	JZKITTY21	JZ -	50
+21	11	107	1564		COL	COL	the_suave1	Rico Suave	50
+21	11	108	1643		NOLA	NOLA	howiejriii	Rusty Nails	57
+21	11	109	1654		YKW	YKW	munkysnuflz	Daniel Winkler	77
+21	12	112	1667		SJS	SJS	msnmllr	Colbourne Frost	50
+21	12	115	1615		AZ	BAL	Zyrok	Bruno Young	50
+21	12	116	1581		OCO	OCO	brehio	Austin Brehio	74
+21	12	117	1607		COL	COL	Drunkinthunder	Rusty Shackleford	57
+21	12	118	1662		NOLA	NOLA	CosmosAblaze	Keval Shah	57
+21	12	119	1586		YKW	YKW	nfspeedypur	Scotty McGuy	57
+21	13	122	1651		SJS	SJS	lukejm37	Luke McMaster	50
+21	13	125	1570		AZ	BAL	NickNation	Nick Nation	50
+21	13	126	1610		OCO	OCO	PapaKhan	Nick Domenichini	50
+21	13	127	1594		COL	COL	Crkluck	Leonard Jacobs	50
+21	13	128	1609		NOLA	NOLA	sael	Buster Hyman	50
+22	1	1	1764		PHI	AUS	iStegosauruz	Colt Mendoza	1378
+22	1	2	1871		AZ	NOLA	Tesla	Magnus Rikiya	1484
+22	1	3	1782		SJS	PHI	J0EB	Matt "Son of Havoc" Cross	1347
+22	1	4	1909		CHI	PHI	Memento Mori	Brandon Booker	1488
+22	1	5	1863		AUS	SJS	revuhlution	Chester Sweets	321
+22	1	6	1728		COL	AZ	majesiu	Stanislaw Koniecpolski	1042
+22	1	7	1927		BAL	HON	BadLck	Momona Keiki-Kāne	393
+22	1	8	1782		OCO	COL	J0EB	Matt "Son of Havoc" Cross	1347
+22	1	9	1856		YKW	BAL	Exilizer	Derred de Ville	1295
+22	1	10	1690		NOLA	OCO	DrunkenTeddy	Jeffrey Phillips	820
+22	2	11	1772		PHI	YKW	Colabear	Johnny Hellzapoppin	1180
+22	2	12	1868		AZ	NOLA	mithrandir	Andrew Witten	1449
+22	2	13	1791		SJS	HON	gucci	Keʻokeʻo Kāne-Maikaʻi	1329
+22	2	14	1924		CHI	COL	Bauer	Thubba Bumper	460
+22	2	15	1946		AUS	AZ	Thor	Heath Evans	1255
+22	2	16	1731		COL	AZ	Oles	Tyler Oles JR	1031
+22	2	17	1852		BAL	NOLA	slothfacekilla	Ben Slothlisberger	1378
+22	2	18	1967		OCO	PHI	Lightnoir	Wesley Eriksen	1052
+22	2	19	1916		YKW	AUS	Troen	Troen Egghands	1486
+22	2	20	1970		NOLA	SAR	Billybolo53	Cuco Clemente	1483
+22	3	21	1936		PHI	CHI	Bayley	Benson Bayley Jr.	1056
+22	3	22	1817		AZ	OCO	Big Edd	BigEddi ForeverYeti	975
+22	3	23	1683		SJS	YKW	flyeaglesfly29	Colby Jack	1511
+22	3	24	1760		CHI	SJS	Rradum	Monterey "Monty" Jack	1294
+22	3	25	1875		AUS	HON	FurFurFurson	Buck Thornton	467
+22	3	26	1684		COL	SAR	furiousPanda	Haha Mango-Panda	1189
+22	3	27	1851		BAL	BAL	RansackTheUniverse	Eldrick Avery	1170
+22	3	28	1799		OCO	AZ	s4ndr0p	Sandro Ryeu	827
+22	3	29	1955		YKW	SJS	RussDrivesTheBus	Lawrence Bass	1403
+22	3	30	1721		NOLA	AZ	Isidore94	Quinn Hughes	401
+22	4	31	1872		PHI	AUS	QuirkyTurtle	Eddie Jeeta	906
+22	4	32	1776		AZ	COL	yonggarius	William Lim	1428
+22	4	33	1701		SJS	BAL	Symmetrik	Byron Dolls	994
+22	4	34	1706		CHI	OCO	Forty Jordy	Deshun Jones	1096
+22	4	35	1744		AUS	YKW	cho1325	James Cho	940
+22	4	36	1975		COL	SAR	sakrosankt	Michael Witheblock	1490
+22	4	37	1934		BAL	HON	Number 82	Shawn Dawkins	1478
+22	4	38	1947		OCO	SAR	Booger	Fawn Dillmiballs	1258
+22	4	39	1836		YKW	AZ	NicholasTheGreat	Bruce Buckley	1374
+22	4	40	1761		NOLA	AZ	CalvinGolladay	Calvin Golladay	971
+22	5	41	1775		PHI	SJS	Warner	Cadillac Harris	535
+22	5	42	1867		AZ	AUS	howsour	Kichwa Jones	545
+22	5	43	1931		SJS	AUS	TommyThaMan	Tommy Sacamano	234
+22	5	44	1753		CHI	AZ	StamkosFan	Thomas Passmann	1147
+22	5	45	1902		AUS	BAL	benstackinpaper	Ben Stackinpaper	873
+22	5	46	1903		COL	OCO	qWest	Tatsu Nakamura	1458
+22	5	47	1738		BAL	YKW	Skyline	Acura Skyline	949
+22	5	48	1777		OCO	NOLA	JPach	LiterallyJust A. Hexagon	760
+22	5	49	1762		YKW	HON	morsy	William Alexander	594
+22	5	50	1895		NOLA	SAR	tMuse	James Angler	1429
+22	6	51	1896		PHI	COL	Ismael8907	Ismael Sanchez	390
+22	6	52	1699		AZ	AZ	Bruins10	Claude Miller II	1019
+22	6	53	1722		SJS	SJS	Matty7478	Matthew McDairmid	1347
+22	6	54	1756		CHI	AZ	retrospace111	Zamir Kehla	926
+22	6	55	1843		AUS	HON	TheRocheLimit	Jack Banks	1290
+22	6	56	1827		COL	PHI	NamelessNate	Tom Sofa	262
+22	6	57	1714		BAL	BAL	Highhaschdi	Nick Kaepercolin	1500
+22	6	58	1803		OCO	OCO	dk87gaming	Daniel George	310
+22	6	59	1771		YKW	YKW	PMoney	Patrik Money	1463
+22	6	60	1912		NOLA	PHI	ralams123	Jonathan Altidor	239
+22	7	61	1940		PHI	HON	muse316	Luke Skywalker	917
+22	7	62	1811		AZ	SAR	Thiath	Ragnar Rok	380
+22	7	63	1704		SJS	PHI	xbijin	Spike Suzuki	465
+22	7	64	1694		CHI	AZ	Shiznit19	Slinky Claxton	796
+22	7	65	1724		AUS	SJS	AL_GRINGO	George ’Corpse Grinder’ Fisher	995
+22	7	66	1819		COL	CHI	indonesianhusker	Julio Tirtawidjaja	706
+22	7	67	1854		BAL	BAL	Brucehum	Nuniq Annastesia	547
+22	7	68	1876		OCO	SAR	Benthicc_Biomancer	Joey McCabe	231
+22	7	69	1935		YKW	BAL	Dagumpa	Dex Kennedy	1309
+22	7	70	1918		NOLA	OCO	Gwdjohnson	Garfield Despacito Jr.	1088
+22	8	71	1855		PHI	YKW	2Burkeulosis	Susan Cash.Jr	687
+22	8	72	1682		AZ	NOLA	DrChops	Hank Steel	962
+22	8	73	1774		SJS	HON	sensual-snickers-bar	Bayden Brosley	240
+22	8	74	1809		CHI	SJS	BenDover	Jamar Lackson	1495
+22	8	75	1754		AUS	PHI	Jangorhino	Mario VonPebbles	1330
+22	8	76	1948		COL	COL	SwankyPants31	Richard Gilbert	1304
+22	8	77	1839		BAL	SJS	jdourtled	Brendan Lanier	896
+22	8	78	1951		OCO	CHI	IthicaHawk	Hamish MacAndrew	949
+22	8	79	1962		YKW	COL	dahayn	Leeroy Jenkins	936
+22	8	80	1734		NOLA	PHI	lamboalfredo	Donatello Arrabiata	369
+22	9	81	1840		PHI	CHI	juicychase	Simeon Works	374
+22	9	82	1719		AZ	OCO	Coterminity	Kevin Koh	154
+22	9	83	1801		SJS	YKW	KamiCommie	Magnus Valdyr	1100
+22	9	84	1825		CHI	SJS	SomeSay...	Matt Krause	1279
+22	9	85	1720		AUS	HON	Kalakar	Kal Solarin	131
+22	9	86	1969		COL	SAR	Phalanx32	Sebastian Vettel	179
+22	9	87	1808		BAL	AZ	Tigerfan895	Jacoby Batista	210
+22	9	88	1972		OCO	AZ	gargaroff	Taylor Cooper	648
+22	9	89	1847		YKW	SJS	DigitalMole	Jamie Watson	129
+22	9	90	1781		NOLA	CHI	Evok	Sam Sidekick	1123
+22	10	91	1857		PHI	HON	ForSucksFake	Daymond Brooks	1068
+22	10	92	1898		AZ	COL	SnowyWolfz	Sim SnowBow	293
+22	10	93	1974		SJS	NOLA	Ortecam	Samuel L Sackson Sr.	190
+22	10	94	1749		CHI	PHI	Blasoon	Suleiman Ramza	1415
+22	10	95	1768		AUS	YKW	youngcricket	Mike Lee	475
+22	10	96	1837		COL	NOLA	AlexF	Blake Alexander	198
+22	10	97	1941		BAL	HON	Ozamataz	Ozamataz Buckshank	116
+22	10	98	1901		OCO	SAR	Soup_man89	Aaron Feels	112
+22	10	99	1922		YKW	PHI	Apollo	J.B. Apollo	126
+22	10	100	1746		NOLA	AZ	Sutj	Friedrich Vequain	837
+22	11	101	1829		PHI	SJS	nick900	Nick Marksman	269
+22	11	102	1780		AZ	COL	nated4444	Nat Wright	225
+22	11	103	1861		SJS	CHI	stupiduglyidiot	Abbas Muhammad	242
+22	11	104	1960		CHI	HON	Ayyylmao	Mark Radson	157
+22	11	105	1835		AUS	BAL	tan5o4	Tan Johnson	119
+22	11	106	1892		COL	OCO	popop143	Jimmy Frackerson	118
+22	11	107	1758		BAL	YKW	ZootTX	Zee Rechs	1194
+22	11	108	1870		OCO	NOLA	DatSmolBoi	Sean Snyder	993
+22	11	109	1845		YKW	HON	siddhus	Jim Waters	1197
+22	11	110	1710		NOLA	SAR	bjkman	Jacob Small	1057
+22	12	111	1688		PHI	PHI	WateringCan	Tristan Gronlie	175
+22	12	112	1717		AZ	AZ	sayitundefined	Zed Keppler	416
+22	12	113	1778		SJS	SJS	Jacob.bilyeu18	Buster Brownce	128
+22	12	114	1928		CHI	CHI	LimJahey	Von Hayes	1219
+22	12	115	1926		AUS	SAR	Toastydata	Kevin Fakon	50
+22	12	116	1937		COL	PHI	Alexander Hamilton II	Alexander Hamilton II	143
+22	12	117	1942		BAL	BAL	infyy	Godrick Fallstrum	79
+22	12	118	1885		OCO	OCO	ACEPATS	Jorcher Minor	60
+22	12	119	1877		YKW	YKW	Qball710	Ed Ball	175
+22	12	120	1879		NOLA	NOLA	Dropology	Beef Buckets	67
+22	13	121	1743		PHI	HON	hexify	Tristian Hex	507
+22	13	122	1894		AZ	SAR	Cheech65	Clark Boyd	1239
+22	13	123	1919		SJS	CHI	sreddy969	Shawn Ansari	120
+22	13	124	1685		CHI	AZ	jaskins811	Danielle Hunter	87
+22	13	125	1713		AUS	SJS	Superpig	Silas Meissner	50
+22	13	126	1824		COL	CHI	TheCC	Tyron Shields	1297
+22	13	127	1890		BAL	SAR	ThiccestBaboon	Cody Martin	101
+22	13	128	1785		OCO	COL	devaunte	Devaunte Sackpieder	97
+22	13	129	1953		YKW	BAL	Sorrel	Michael Lee	73
+22	13	130	1914		NOLA	OCO	IronWall	Rondo Jones	83
+22	14	131	1735		PHI	YKW	otto74	Cadillac Mitchell	85
+22	14	132	1730		AZ	NOLA	Moooooose	Streetlamp LeMoose	57
+22	14	133	1961		SJS	HON	Birb	Le Kick	57
+22	14	134	1893		CHI	SAR	Gazoid	Bo Jangles	115
+22	14	135	1765		AUS	CHI	sebsal	D’Brickashaw Cannon	67
+22	14	136	1933		COL	HON	gold2855	James Carson	69
+22	14	137	1733		BAL	SJS	KingAmazing	Douglas MacArthur	72
+22	14	138	1950		OCO	CHI	ronanb23	Ronan Briscoe	69
+22	14	139	1874		YKW	SAR	seanod123	Sean O’Donohue	76
+22	14	140	1773		NOLA	COL	Epitaxi	Sylvester Berlin	86
+22	15	141	1679		PHI	BAL	blakae8	A-Aron Balakae	59
+22	15	142	1878		AZ	OCO	xxxbruhxxx	Pseudo QB	317
+22	15	143	1889		SJS	YKW	SweetPot8erFrys	Clayton Jones	71
+22	15	144	1858		CHI	NOLA	slim-pickens	Slim Pickens	57
+22	15	145	1832		AUS	HON	Saturnation	Landon Moore	59
+22	15	146	1929		COL	SAR	NoahFinn	Anthony Brewer	62
+22	15	147	1838		BAL	CHI	Ramiochoa730	Joe Montania	57
+22	15	148	1750		OCO	HON	Lockeddown217	Xaq Schiaparelli	81
+22	15	149	1795		YKW	SJS	Ktown93	Ricky Boomhauer	59
+22	15	150	1859		NOLA	CHI	PaoPao02	Nathan Bourne	57
+22	16	151	1813		PHI	SAR	ThisAlexIngram	Alex Ingram	50
+22	16	152	1736		AZ	COL	mmfootball	Thunder Cat	57
+22	16	153	1790		SJS	BAL	Mons00n	Winston Bragg	50
+22	16	154	1899		CHI	OCO	Chunk	Loin Stake	70
+22	16	155	1759		AUS	YKW	Darklux	Lucas Faucher	74
+22	16	156	1904		COL	NOLA	dmr1011	Da Owl	57
+22	16	157	1686		BAL	HON	Embrace_Fitz_Magic_39	Rico Martinez	71
+22	16	158	1952		OCO	SAR	Cdoubleu	Hengwei Luo	57
+22	16	159	1864		YKW	CHI	that_guy_you_kno	Justice Wolfe	52
+22	16	160	1702		NOLA	HON	Hydrojason	Jason Kreuscher	50
+22	17	161	1741		PHI	SJS	Bommer238	Dick Daniels	50
+22	17	162	1888		AZ	CHI	rawdawg30	Xavier O’Doyle	50
+22	17	163	1739		SJS	SAR	wuhkuhh	Will-Barry Underground	61
+22	17	164	1869		CHI	COL	MongrelQuill5	Meep Meep	55
+22	17	165	1681		AUS	BAL	enchurito	Frank Ngyuen	58
+22	17	166	1711		COL	OCO	slacjr	Jimmy Cooks	67
+22	17	167	1677		BAL	YKW	Soleom	Valor Gilmore	61
+22	17	168	1939		OCO	NOLA	william90	Sulu Candles	50
+22	17	169	1910		YKW	HON	Rise of Smitty	Swift Willy	50
+22	17	170	1932		NOLA	SAR	fcruz	Fernando Cruz	57
+22	18	171	1833		PHI	CHI	Dean	Cavalier Craighorn	50
+22	18	172	1818		AZ	HON	Slizzard16	Pierre Voodoo	50
+22	18	173	1958		SJS	SJS	ClimbToSafety	Cosmo Kramer	50
+22	18	174	1697		CHI	CHI	Reverb	Adrian Hamsh	50
+22	18	175	1789		AUS	SAR	HiramAbiff	Hiram Abiff	50
+22	18	176	1949		COL	COL	Rusty	Fatso Wombat	57
+22	18	177	1821		BAL	BAL	hyphenjack	Calvin McMann	50
+22	18	178	1715		OCO	OCO	sweeticlayd	Ayden Bayden	60
+22	18	179	1881		YKW	YKW	Astonic	Kennedy Cannon	50
+22	18	180	1880		NOLA	NOLA	foolybooly	Anthony De Luca	57
+22	19	181	1810		PHI	HON	brojam	Chauncey Morrison	57
+22	19	182	1748		AZ	SAR	Benster713	Patrick Holding	50
+22	19	183	1915		SJS	CHI	BDKIAFau	Gabriel Graves	70
+22	19	184	1763		CHI	HON	xBradyy	Nick Jones	50
+22	19	185	1757		AUS	SJS	Chihawks	Jordan Davis	50
+22	19	186	1966		COL	CHI	ArtichokeDip	John Doe	57
+22	19	187	1698		BAL	SAR	LanceBangs	Lance Bangs	50
+22	19	188	1802		OCO	COL	MehoyMinoy7	Colin Vance	50
+22	19	189	1804		YKW	BAL	His Dark Materials	Henry Saxe-Coburg-Gotha	50
+22	19	190	1740		NOLA	OCO	CDWaldo	C.D. Waldo	57
+22	20	191	1783		PHI	YKW	Griff001	Moe Willis	50
+22	20	192	1707		AZ	NOLA	mcloud313	Vince Waterhouse	50
+22	20	193	1882		SJS	HON	Nezzi	John Nesbitt	57
+22	20	194	1787		CHI	SAR	aspooner5	Allen Spooner	50
+22	20	195	1718		AUS	CHI	TheGrapist	Malcom Jenkins	50
+22	20	196	1794		COL	HON	Hater	Montgomery Mantooth	66
+22	20	197	1959		BAL	SJS	MadCashFlow	Danshawn Jenkins	59
+22	20	198	1816		OCO	CHI	Tesoroano7	Kade Hines	52
+22	20	199	1796		YKW	SAR	LegBeg	Chudds Whittaker	55
+22	20	200	1964		NOLA	COL	swlane	Swlane Train	50
+22	21	201	1943		PHI	BAL	SethLindsey	Seth Lindsey	50
+22	21	202	1830		AZ	OCO	GabeNickson63	Gabe Nickson	50
+22	21	203	1826		SJS	YKW	Raistlin	Logan Marshall	50
+22	21	204	1865		CHI	NOLA	Tp3480	Troy Pressing	50
+22	21	205	1755		AUS	HON	CJPJD	Cal Cutta	126
+22	21	206	1680		COL	SAR	trav56	Titus Lincoln	57
+22	21	207	1841		BAL	CHI	tbone415	Terrell Brister Jr.	50
+22	21	208	1712		OCO	HON	Born_to_die	David Banner	57
+22	21	209	1930		YKW	SJS	Guess911	Craig Royal	50
+22	21	210	1925		NOLA	CHI	SwishaSteve	Steve Alvarado	50
+22	22	211	1834		PHI	SAR	harreth	Bobby Boomski	59
+22	22	212	1923		AZ	COL	STarantelli	Tony Baloney	59
+22	22	213	1703		SJS	BAL	icebananas	Chad Zhao	57
+22	22	214	1873		CHI	OCO	Julius1304	Julius Andersson	50
+22	22	215	1884		AUS	YKW	apocalypsedenim	Ronnie "The Bone Crusher" Schultz	50
+22	22	216	1732		COL	PHI	bob	Cashrinski blödenheimer	50
+22	22	217	1906		BAL	HON	MushroomMan89	Scott Scott	50
+22	22	218	1705		OCO	SAR	crazyandwavy	Sawyer Brutalitops	50
+22	22	219	1693		YKW	CHI	boshjailey	Jay Signs	50
+22	22	220	1709		NOLA	HON	Falcondancer	Rickety Cricket	57
+22	23	221	1886		PHI	SJS	Armadillq	Amadeus Green	50
+22	23	222	1770		AZ	CHI	FootballGuru	Daniel Ross	57
+22	23	223	1883		SJS	SAR	Obscure	Nathan Bigelow	50
+22	23	224	1971		CHI	COL	Honeybaby	Leland Breeland	60
+22	23	225	1769		AUS	BAL	TheSnorkel	Cameron Tova	50
+22	23	226	1853		COL	OCO	jsho574	Eugene McEvan	50
+22	23	227	1806		BAL	YKW	Sloppyjoe83	Cam "Burrito" Burto	57
+22	23	228	1800		OCO	NOLA	Ted	Toshihide Matsumoto	50
+22	23	229	1725		YKW	HON	zoferrari14	BooBoo Rodgers	50
+22	23	230	1891		NOLA	SAR	DWinchester	Dean Winchester	50
+22	24	231	1700		PHI	CHI	Sunshine32	Zakary Duke	50
+22	24	232	1689		AZ	HON	Matrix	Dude Doggo	50
+22	24	233	1908		SJS	SJS	RainmanL	Rainman Legends	59
+22	24	234	1784		CHI	CHI	Bullmastiff	Evan Riley	50
+22	24	235	1729		AUS	SAR	Dat_Puff	Raiden Briggs	61
+22	24	236	1792		COL	COL	penbleezus	Bobby Black	50
+22	24	237	1692		BAL	BAL	senseichen	Bryant Moreland	50
+22	24	238	1957		OCO	OCO	birdleaf	Archideld Bonzales	59
+22	24	239	1913		YKW	YKW	oceanisadesert	Montgomery Burns	50
+22	24	240	1812		NOLA	NOLA	New2this69	Julius Augustus	50
+22	25	241	1842		PHI	HON	braddletoad	Farrior Deschain	59
+22	25	242	1708		AZ	SAR	eao134	Carlos Woods	57
+22	25	243	1828		SJS	CHI	JR_Maverick	JR Maverick	67
+22	25	244	1742		CHI	HON	GreenBayWatty	Max McClure	65
+22	25	245	1862		AUS	SJS	NaTek27	Elias Ziegler	50
+22	25	246	1676		COL	CHI	EliteFlame7	Curious George	50
+22	25	247	1907		BAL	SAR	MillerTime1803	Colin Miller	50
+22	25	248	1911		OCO	COL	Brody	Matt Elam	50
+22	25	249	1956		YKW	BAL	SG2Tall4You	Seth Goepferich	50
+22	25	250	1944		NOLA	OCO	JVanger	Joshua Vanger	50
+22	26	251	1727		PHI	YKW	RMEYNELL	Regan Meynell	50
+22	26	252	1807		AZ	NOLA	madeinbrazil123	Michael Smydzyck	50
+22	26	253	1752		SJS	HON	NickyWhit	Buster Nelson	50
+22	26	254	1938		CHI	SAR	acoccia	Anthony DiNapoli	50
+22	26	255	1921		AUS	CHI	Leoben	A.J. Warren	58
+22	26	256	1860		COL	HON	Dustao	Johnnie McCartney	50
+22	26	257	1747		BAL	SJS	Semi-CharmedKindaGuy	Thom Shaylor	50
+22	26	258	1798		OCO	CHI	Tugles	Tom Thorne	50
+22	26	259	1822		YKW	SAR	joe	Perry King	50
+22	26	260	1814		NOLA	COL	bigDUB	Willis Cannon	50
+22	27	261	1920		PHI	BAL	isteelers11	Samuel Miller	50
+22	27	262	1965		AZ	OCO	JacobPCGaming	Jacob Caine	50
+22	27	263	1900		SJS	YKW	Earf	Paul Novotny	50
+22	27	264	1823		CHI	NOLA	EarsoftheWolf	Denarius Krackle	57
+22	27	265	1716		AUS	HON	StormFlow	Buster Holiday	57
+22	27	266	1945		COL	SAR	FryO	Caloe Peara	50
+22	27	267	1963		BAL	CHI	GoochThunder	Bucky Laurence	57
+22	27	268	1737		OCO	HON	daguerro	Nicolas Stone	57
+22	27	269	1788		YKW	SJS	ronan	Ronan McDonagh	50
+22	27	270	1844		NOLA	CHI	Polygeekism	Calum Auron	60
+22	28	271	1687		PHI	SAR	TheLordPred	Donovan Smith	50
+22	28	272	1815		AZ	COL	Btultz06	Ike Oscar	50
+22	28	273	1723		SJS	BAL	.simo	Banjo May	50
+22	28	274	1848		CHI	OCO	TMoney	Tyler Curtis	50
+22	28	275	1954		AUS	YKW	MysteriousStranger	Bartholomew Castor	50
+22	28	276	1691		COL	NOLA	Redbird	Raheem Bird	57
+22	28	277	1678		BAL	HON	NoobPanda	DeSean Hill	50
+22	28	278	1786		OCO	SAR	TheBeast95	Lee Jordan	50
+22	28	279	1805		YKW	CHI	Dilios	Matthew Curran	57
+22	28	280	1973		NOLA	HON	RyanTrax	DeShawn Jones	57
+22	29	281	1917		PHI	SJS	leman363	Leo Browning	50
+22	29	282	1726		AZ	CHI	YVNGREED	Patrick Hardy	50
+22	29	283	1797		SJS	SAR	William89	Brent Blackmon	50
+22	29	284	1887		CHI	HON	AverageHero	Dan Jackson	50
+23	1	1	2048		CHI	COL	Sylphreni	Greedy Sly	1083
+23	1	2	1979		BAL	BAL	Amidships	Tyler Montain	1552
+23	1	3	1983		HON	HON	gbfn	Heinrich Kackpoo	1504
+23	1	4	1990		AZ	AZ	hotdog	DB Jadakiss	1337
+23	1	5	1980		PHI	PHI	Mysa	Tycker Om	397
+23	1	6	2040		SAR	SJS	Tylus	Tychondrius Hood	1441
+23	1	7	1977		SJS	SAR	Naosu	Son Goku	1356
+23	1	8	2017		NOLA	SAR	KenitohMenara	Raphael d’Alcott	379
+23	1	9	2071		AUS	HON	Jason	Ray-Ray Jackson	657
+23	1	10	2065		YKW	YKW	notorioustig	L’Carpetron Dookmarriot	395
+23	1	11	1978		OCO	OCO	nickyvmlp	Bob Bob	779
+23	1	12	2027		COL	COL	PersonMann	Dick Thruster	516
+23	2	13	2021		CHI	CHI	Jmac NCheese	Hingle McCringleberry	533
+23	2	14	2068		BAL	PHI	Nhamlet	Eugene Smoothie	1427
+23	2	15	2060		HON	AZ	24redcrayons	Julio Jones	1134
+23	2	16	2032		AZ	AUS	AsylumParty	Griffin Porter	780
+23	2	17	2050		PHI	BAL	Huskies311	IHeart Syracuse	674
+23	2	18	2009		SAR	SJS	ckroyal92	Water Chestnut III	463
+23	2	19	2034		SJS	AZ	Jo3fish5	Danny King Jr.	1235
+23	2	20	2047		NOLA	BAL	The_Kidd	Lesean Paris Crooks	1423
+23	2	21	1981		AUS	HON	ADwyer87	Bane Kaʻanāʻanā	483
+23	2	22	2030		YKW	YKW	DarknessRising	Kai Sakura	1479
+23	2	23	2024		OCO	OCO	LGMForever	Carl Wheezer	498
+23	2	24	2028		COL	NOLA	IsaStarcrossed	Adélie de Pengu	1489
+23	3	25	2007		CHI	CHI	enigmatic	Luca Scabbia	1213
+23	3	26	2059		BAL	COL	Daybe	Jackson Kingston	1452
+23	3	27	2042		HON	HON	Faded	Nicholas Ayers	1141
+23	3	28	1998		AZ	AZ	xQCFamous	Benoit Blanco	467
+23	3	29	1984		PHI	PHI	Confictional	Dre Matthews	588
+23	3	30	2063		SAR	SAR	puolivalmiste	Mike Karpaasi	965
+23	3	31	2055		SJS	SAR	Pavel Pipowitsch	Mikel van Perkins	318
+23	3	32	2044		NOLA	BAL	Rufio_NZ	Doug Howlett	828
+23	3	33	2062		AUS	AZ	dieselj123	Rigby Raccoon	438
+23	3	34	1987		YKW	SAR	Nykonax	Running Back	415
+23	3	35	2016		OCO	AZ	PDXBaller	Reginald Covington III	333
+23	3	36	2067		COL	AUS	ValorX77	Videl-San -	1463
+23	4	37	1985		CHI	AUS	Philliesphan96	Tomage McGullager	852
+23	4	38	2066		BAL	BAL	Rabidsponge21	Datsum PhastBawls	421
+23	4	39	1994		HON	HON	Rindiee	Tyrone Woods	284
+23	4	40	2019		AZ	CHI	Aenir	Griff Oberwald	470
+23	4	41	1989		PHI	PHI	.simo	Achtfünf -	1181
+23	4	42	2012		SAR	SJS	IHateBobNutting	Philip Stein	1095
+23	4	43	1999		SJS	CHI	WildfireMicro	Eric Richards	496
+23	4	44	1988		NOLA	NOLA	toivo	Brock Bodenhamer	985
+23	4	45	2010		AUS	CHI	Saliva^	Quanter Skrills	268
+23	4	46	1982		YKW	YKW	Lost_Kelu	Braxton Sinclair	185
+23	4	47	2014		OCO	OCO	PSanchez55	Keynel McZeal	271
+23	4	48	2000		COL	COL	kentakira	Yuuto Kira Cloudera	851
+23	5	49	2033		CHI	CHI	bk1689	Brennan Kennedy	178
+23	5	50	1992		BAL	BAL	dylanjj37	Dick Thunder	93
+23	5	51	2020		HON	HON	Blaster	Blade McCoy	236
+23	5	52	2051		AZ	CHI	Ace	Arik Eller	478
+23	5	53	2058		PHI	HON	JSS	3’ Jeffrey	444
+23	5	54	2038		SAR	SJS	mcgriddleluver	Mac Griddle	737
+23	5	55	2064		SJS	SAR	SouljaBoy2007	Deonte Washington	138
+23	5	56	2018		NOLA	NOLA	Judas_Iscariot	Judas The White	67
+23	5	57	2029		AUS	AUS	MCP_	Mordecai Morrisey	93
+23	5	58	2053		YKW	YKW	Gamaliel	Joe Exotic	50
+23	5	59	2069		OCO	OCO	DanE got dis	Danny King	575
+23	5	60	2031		COL	COL	dave	Omar Wright Jr.	277
+23	6	61	1993		CHI	CHI	Keyg_an	Bradley Owens	126
+23	6	62	2046		BAL	BAL	Esmith4358	Ethan Smith	59
+23	6	63	2045		HON	HON	tree	Mike Afton	96
+23	6	64	2008		AZ	AZ	thecanadiancanuck	Byron Blackwell	245
+23	6	65	2070		PHI	HON	A Duck On Quack	Jason Young	145
+23	6	66	2036		SAR	SJS	noahjohng51	CJ Hopkins	76
+23	6	67	2049		SJS	SAR	Dizzman	Bob Murphy	161
+23	6	68	2039		NOLA	NOLA	loco	Broken Bot2draftfinalasdasd	77
+23	6	69	2022		AUS	OCO	ml002	Mr. Large Sternum	223
+23	6	70	1991		YKW	YKW	earlbacher	Brian Earlbacher	117
+23	6	71	1995		OCO	OCO	nairbretsamdaerb	Charmin Glassley	78
+23	6	72	2052		COL	COL	Preston_99	Brady Matthis	59
+23	7	73	2011		CHI	CHI	K Dot	Kayleb Dotson	98
+23	7	74	1976		BAL	BAL	Harrison.Leavers	Harrison Leavers	50
+23	7	75	2003		HON	HON	FlyinHawaiian	Jahlani Kelekolio	55
+23	7	76	2043		AZ	AZ	bertogarce	Diego Hernandez	59
+23	7	77	2056		PHI	HON	Uprisingslash	Atossa Atlas	50
+23	7	78	2015		SAR	SJS	I'll change this later	Unoriginal Name	56
+23	7	79	2061		SJS	SAR	SeanReynolds	Sean Reynolds	119
+23	7	80	1997		NOLA	PHI	BaseScoutX1	Dick "Dickie" Cheese III	50
+23	7	81	2041		AUS	OCO	Carnie #3	Killian Carnahan	69
+23	7	82	2026		YKW	YKW	EvrybdyzRussian	Joseph May	77
+23	7	83	2013		OCO	OCO	ycstefano	Rice Ahoc-Machine	74
+23	7	84	2005		COL	COL	PancakesAllDay	Made Cays	57
+23	8	85	2057		CHI	CHI	Trickiefella1	Jim Namen Jr	50
+23	8	86	2037		BAL	BAL	Jagajaga222	Moe Johnston	52
+23	8	87	2023		HON	HON	cpetrella	I Hop	50
+23	8	88	2054		AZ	OCO	AzxCards	Rick Casey	57
+23	8	89	2025		PHI	HON	M.Dawg3.0	Mac Mobley	50
+23	8	90	2006		SAR	SJS	youngkingabdul	Damien Hands	67
+23	8	91	1996		SJS	SAR	Rocketman	Benji Raji	50
+23	8	92	2002		NOLA	NOLA	yhaiat	Geykume Onfroy	50
+23	8	93	2001		AUS	HON	ChazMichaels	Chaz Michaels	50
+24	1	1	2080		CHI	CHI	Yeenoghu	Juan Domine	1527
+24	1	2	2144		SJS	SJS	Buttersqauch101	Joshua Campbell	1098
+24	1	3	2142		HON	HON	Attopax	Asher Montain	1357
+24	1	4	2094		SAR	SAR	abh89	Harrison Andrews	1529
+24	1	5	2135		BAL	BAL	Tonzy	Maverick Bowie	1346
+24	1	6	2078		AZ	AZ	Z-Whiz	Deadly Memes	1501
+24	1	7	2133		NOLA	NOLA	pppaul317	Quentin Button	414
+24	1	8	2146		PHI	AUS	Kyamprac	Zoe Watts	1537
+24	1	9	2112		COL	COL	SchwarzNarr	Melvin Murder-Moose	1480
+24	1	10	2134		OCO	OCO	Lime	Joseph Joestar	1082
+24	1	11	2147		AUS	PHI	Slothman07	Dorothy Zbornak	942
+24	1	12	2105		YKW	YKW	RDBSouthPaw	Brach Thomaslacher	1379
+24	2	13	2091		CHI	CHI	Mavfatha	Icebox Riposte	1211
+24	2	14	2114		SJS	COL	Rusfan	Joel Drake	1286
+24	2	15	2126		HON	HON	Mongoose87	Sigismund Sternenstaub	342
+24	2	16	2130		SAR	BAL	TeyonSchavari	Captain Rogers	1155
+24	2	17	2140		BAL	NOLA	crow19	Busch Light	705
+24	2	18	2111		AZ	AZ	Cincyfan96	Adam Schell	1475
+24	2	19	2119		NOLA	NOLA	MobiausGrander	Azarius Ranger	1001
+24	2	20	2088		PHI	AZ	xTri	Taro Raimon	1494
+24	2	21	2137		COL	COL	PigSnout	Mattathias Caliban	1566
+24	2	22	2115		OCO	OCO	Sushi	Ne Mo	429
+24	2	23	2100		AUS	PHI	Hallmonitor_20	Jeremiah Zelos	679
+24	2	24	2104		YKW	YKW	Trautner	Sam Howitzer	1582
+24	3	25	2074		CHI	AZ	MrStennett	Charlemagne Cortez	1389
+24	3	26	2116		SJS	SJS	supertardis101	Rickie Vaughne	1017
+24	3	27	2125		HON	HON	CementHands	Ragnar Krashwagen	984
+24	3	28	2141		SAR	SAR	JBLAZE_THE_BOSS	Mike Boss Jr	1413
+24	3	29	2131		BAL	SAR	Haseo	Zack Mouse	267
+24	3	30	2095		AZ	AZ	WannabeFinn	Sergio Kitchens	286
+24	3	31	2093		NOLA	NOLA	Birdman	LeBong Simwell	1152
+24	3	32	2077		PHI	PHI	Nictox	Macaroni “Mac” Elephant	319
+24	3	33	2083		COL	COL	Skyfish	Nerdy Name	202
+24	3	34	2150		OCO	PHI	bigbluex02	Thomas Rose	535
+24	3	35	2089		AUS	AUS	YoungTB	Korbin Brown	597
+24	3	36	2148		YKW	YKW	Sermokala	Alejandro Chainbreaker	1132
+24	4	37	2082		CHI	CHI	Net	Oliver Sloan	569
+24	4	38	2086		SJS	SJS	GotDatWeeFee	Rashad Hilliard	733
+24	4	39	2096		HON	HON	Hooperorama	Ajay Krishna	125
+24	4	40	2079		SAR	SAR	MisObvious	Arlington Heights	403
+24	4	41	2129		BAL	SAR	Blastmeaway	Thad Pennington, Jr.	589
+24	4	42	2084		AZ	AZ	MattressCadaire	Mattress Cadaire	401
+24	4	43	2113		NOLA	NOLA	Garnuk	Woodrow Brooks	135
+24	4	44	2108		PHI	BAL	TheManWhoSoldTheWorld	Myles Smith	155
+24	4	45	2143		COL	BAL	Jiggly_333	Mai Fukushū	899
+24	4	46	2127		OCO	OCO	Jepox	Chad "The Rig" Simpson	246
+24	4	47	2109		AUS	BAL	Walder Frey	Sasha Medved	134
+24	4	48	2075		YKW	YKW	DeadlyPlayer	Frank Michell	432
+24	5	49	2123		CHI	CHI	BWIII	Crowbar Theeks	202
+24	5	50	2139		SJS	SJS	SaborTheWaverunner	Petra Sabor	146
+24	5	51	2076		HON	HON	Rise of Smitty	Tre’Darius J’Vathon	1047
+24	5	52	2124		SAR	SAR	Goat_Whisperer	Blago Kokot	1084
+24	5	53	2121		BAL	BAL	DeanoBamBeano	Thomas "The Tank" Engine	145
+24	5	54	2097		AZ	AZ	Snussu	James Pazos	137
+24	5	55	2132		NOLA	NOLA	Luke	Juke Thomason	127
+24	5	56	2073		PHI	BAL	Cristóbal	Bob Smith	98
+24	5	57	2118		COL	BAL	Apple Bee#39;s Manager	Logan Hex	63
+24	5	58	2149		OCO	OCO	Grum	Grummy Bear	234
+24	5	59	2136		AUS	AUS	Blue	John Price	67
+24	5	60	2120		YKW	YKW	delta	Delta Airlines	50
+24	6	61	2098		CHI	CHI	Eliajah	Eliajah Williams	50
+24	6	62	2101		SJS	SJS	JoshMcNabb	Michael Cera	50
+24	6	63	2110		HON	HON	100stars	Greg Young	50
+24	6	64	2122		SAR	SAR	R-Jeff	Timothy Martins III	50
+24	6	65	2106		BAL	BAL	Ode2U	Axel E. Ratione	77
+24	6	66	2138		AZ	AZ	Piggboye	Alpha Centauri	59
+24	6	67	2092		NOLA	NOLA	BigDongFunkyKong	Sebastian Low	57
+24	6	68	2103		PHI	BAL	Ruhu	Ruhu Rush	57
+24	6	69	2117		COL	BAL	TheGodfather	Jordan Waffle	57
+24	6	70	2102		OCO	OCO	Garry Winthorpe	Garry Winthorpe	50
+24	6	71	2099		AUS	AUS	envie808	Nessie Joans	50
+24	6	72	2128		YKW	YKW	Terel	Nacho Davis	50
+24	7	73	2085		CHI	CHI	RattyBal21	Jason Polinger	50
+24	7	74	2107		SJS	SJS	Kelsier	Ashweather Cett	50
+24	7	75	2145		HON	HON	j_birdie	Jay McCowski	57
+25	1	1	2253		PHI	BER	Swanty	Swantavius Jones	1354
+25	1	2	2194		BAL	YKW	Arkz	Daniel Foster	1499
+25	1	3	2218		AUS	PHI	209tacos	Tex Wrecks	1319
+25	1	4	2163		HON	SJS	Asked Madden	Raylan Crowder	1511
+25	1	5	2209		YKW	COL	katarn22	Albert Ruschmann	1502
+25	1	6	2225		CHI	BAL	GlimsTC	Felix Archstone	953
+25	1	7	2220		NOLA	HON	r0tzbua	Guy Fields	1492
+25	1	8	2195		AZ	AZ	Crunk	Tayshawn Crunk	1534
+25	1	9	2153		OCO	CHI	Beefstu409	James Gath	388
+25	1	10	2293		SAR	NOLA	JuOSu	Medicinal Toblerone	1513
+25	1	11	2257		SJS	OCO	Eldorian	Goat Tank	1508
+25	1	12	2184		COL	SAR	slate	Peter Patterson	1408
+25	2	13	2264		PHI	NYS	timeconsumer	Hank Winchester	987
+25	2	14	2202		BAL	SJS	Kotasa	Rich Triplet	1538
+25	2	15	2152		AUS	YKW	UberBJ	Sulaiman Kazi	1133
+25	2	16	2156		HON	AZ	zeagle1	Chuck Roth	1473
+25	2	17	2230		YKW	PHI	charlit	Killian Chambers	1057
+25	2	18	2255		CHI	BAL	frazzle14	Annie May	1369
+25	2	19	2158		NOLA	NOLA	GuitarMaster116	Adam Mellott	1346
+25	2	20	2268		AZ	OCO	ReverendOReily	Richard Leaking	1353
+25	2	21	2175		OCO	HON	Raven	Davriel Lavigne	1490
+25	2	22	2159		SAR	AZ	Pat	Doy Fieri	1429
+25	2	23	2236		SJS	HON	LancedJack	Rusty Rucker	1319
+25	2	24	2285		COL	NYS	Bwestfield	Dukburg QuakStak	1248
+25	3	25	2269		PHI	AUS	Mooty99	Jackie Daytona	1476
+25	3	26	2167		BAL	SAR	Gravtx	Clay Stallworth	333
+25	3	27	2294		AUS	COL	Frick_Nasty	Dave Batista	664
+25	3	28	2289		HON	SJS	ConnorM123	Xmus Flaxon Jaxon-Waxon	1285
+25	3	29	2171		YKW	COL	SDCore	NationalSimulation FootballLeague	1075
+25	3	30	2243		CHI	YKW	Vainknight13	Jameson Vermillion	598
+25	3	31	2234		NOLA	PHI	Jimi64	Jimi DeSoto	1346
+25	3	32	2179		AZ	CHI	ThunderTitan82	Damian Blackfyre	921
+25	3	33	2301		OCO	YKW	bjbren17	Donald McBobby	457
+25	3	34	2249		SAR	PHI	jzajenius36	Honky-Tonk Haywood	1331
+25	3	35	2241		SJS	CHI	Crodyman	Wasrabi Gleel	1301
+25	3	36	2267		COL	AZ	y2bobman	L’Gazzy Burfict	1511
+25	4	37	2296		PHI	BER	TMosura	Ananda Adyan	873
+25	4	38	2266		BAL	HON	Oneski	Lionel Rumper	315
+25	4	39	2275		AUS	OCO	speculadora	Owen Holloway	824
+25	4	40	2226		HON	OCO	PaytonM34	Bronko Mills	311
+25	4	41	2231		YKW	NYS	zaynzk	Bob Roberts	1393
+25	4	42	2190		CHI	SJS	ajtigger	Zach Crossley	1295
+25	4	43	2240		NOLA	YKW	deadlunatic	Mark Walker	1316
+25	4	44	2261		AZ	AZ	ztarwarz	Darren Pama	1426
+25	4	45	2280		OCO	PHI	Roezam	Sam Roes	390
+25	4	46	2288		SAR	BAL	Cody	Gary Goodman	1400
+25	4	47	2287		SJS	YKW	nutbarspadge	Sheed Thebaw	50
+25	4	48	2206		COL	AUS	Ben	Ben Alexander-Arnold	647
+25	5	49	2258		PHI	HON	NylarthePhoenix	Alex Reed	291
+25	5	50	2276		BAL	AZ	kingsleigher	James Hoffman	574
+25	5	51	2254		AUS	SAR	Cynoblaze	Cleg Manclaw	334
+25	5	52	2232		HON	NOLA	SchoolboyShue	Mike Rotchburns	879
+25	5	53	2177		YKW	NYS	Beebob	Harley Fank	670
+25	5	54	2178		CHI	CHI	Tylar	Timmy Dimbi	732
+25	5	55	2286		NOLA	COL	angeloc	Angelo Cerilli	233
+25	5	56	2281		AZ	NYS	snazzlepuss22	Brick Van Sanzo	1113
+25	5	57	2259		OCO	BER	LewisMelville	Jeeeeroy Lenkins	1365
+25	5	58	2224		SAR	NYS	lespoils	Marc Hamel	880
+25	5	59	2246		SJS	PHI	xenosthelegend	Jake Fencik	1221
+25	5	60	2260		COL	AUS	WhatAmUs	Connor Quigley	915
+25	6	61	2229		PHI	YKW	Bkfootball	Milk Mann	267
+25	6	62	2247		BAL	AZ	EMPER0R	Mason Gillion	572
+25	6	63	2284		AUS	NOLA	AdamS	Adam C. Spencer	1056
+25	6	64	2162		HON	AZ	Doomraider	Terry Yaki	633
+25	6	65	2297		YKW	CHI	McCransky	Mark Callous	297
+25	6	66	2300		CHI	SAR	KillaScrilla	Dexter Jackson	457
+25	6	67	2214		NOLA	SAR	teddyoojo	Teddy Utterstruzen	703
+25	6	68	2282		AZ	SAR	Arvot	Steven Wadham	1248
+25	6	69	2205		OCO	BER	Air Crou	Cmon Skiuuup	1249
+25	6	70	2185		SAR	CHI	Thiath	Etrigan T. Slayer	772
+25	6	71	2298		SJS	NYS	ryd029aird13	Buster Bawlls	812
+25	6	72	2154		COL	BER	gav	Gavin Leclerc	146
+25	7	73	2248		PHI	PHI	Brentmeister69	Brent Silva	728
+25	7	74	2160		BAL	COL	bluesfan55	Anders Christiansen	720
+25	7	75	2223		AUS	CHI	DunkinDuncan	Duncan Donuts	141
+25	7	76	2196		HON	AUS	oji3001	Owen Isaac	768
+25	7	77	2207		YKW	HON	Peterson	Matt Peterson	306
+25	7	78	2192		CHI	BER	Newty	Lebby Newton	160
+25	7	79	2210		NOLA	CHI	Richard_Hooklip	Clay Clark	160
+25	7	80	2176		AZ	NYS	platanocat	Marlon Alexander	1087
+25	7	81	2219		OCO	AUS	BloomeyGB	Leo Bloomfield	355
+25	7	82	2211		SAR	SAR	Toasty	Elijah Torres	245
+25	7	83	2203		SJS	COL	goodvsevil1275	Jake Sackson	97
+25	7	84	2204		COL	SJS	Sl1nny92	Matty Martinsson	217
+25	8	85	2273		PHI	BER	TheBlanken	Caleb Judge	126
+25	8	86	2245		BAL	NYS	Jguy	Joe Show	136
+25	8	87	2169		AUS	PHI	BenGroseclose	Brian Nelson	152
+25	8	88	2221		HON	BAL	DELIRIVM	Noah Akerele	138
+25	8	89	2213		YKW	YKW	itztimg	Alexander Johnson	124
+25	8	90	2197		CHI	AUS	Nowordofalie	Smitty McGhee	102
+25	8	91	2283		NOLA	HON	sovietseph	Curtis Blackshear	77
+25	8	92	2173		AZ	AZ	DNeon	Ben Anabender	196
+25	8	93	2274		OCO	CHI	Montegue	Crayne Whebet	134
+25	8	94	2151		SAR	NOLA	Egglton	Henry Grant	67
+25	8	95	2263		SJS	OCO	bj_owns	Bulldog Willard	79
+25	8	96	2242		COL	SAR	Weasel07	Willy Weasel	91
+25	9	97	2199		PHI	COL	SPK	Lukas Hinsetzen	59
+25	9	98	2292		BAL	SJS	Southie	T.J Evans	85
+25	9	99	2304		AUS	NYS	soryantyler	Sory An'Tyler	67
+25	9	100	2262		HON	BER	mpressive23	Bobby Hoffman	94
+25	9	101	2265		YKW	PHI	Flapinchick	Flap N’Chick	71
+25	9	102	2186		CHI	BAL	Rehnx	Tyrone Biggums	62
+25	9	103	2172		NOLA	YKW	SportingMoose	Sterling Moss	59
+25	9	104	2256		AZ	AZ	rsquared	Dean McBean	61
+25	9	105	2235		OCO	HON	chronoshot	Hugh McGree	63
+25	9	106	2164		SAR	AZ	dakotag108	Dakota Grossman	63
+25	9	107	2165		SJS	CHI	Kai	D’Brickashaw Minshew Sr.	60
+25	9	108	2168		COL	NOLA	Ubergestern	Stephon Trummer	69
+25	10	109	2166		PHI	OCO	WALDO	King Tutankhamun	212
+25	10	110	2250		BAL	SAR	quavonermonics	Naman Fletcher	65
+25	10	111	2238		AUS	COL	JoeCrool	Jack Burton	62
+25	10	112	2161		HON	SJS	billbrasky	Bill Brasky	65
+25	10	113	2279		YKW	BER	Turpentine	Hank Antilles	66
+25	10	114	2290		CHI	NYS	DirtyBirdD	Hank Sakner	67
+25	10	115	2270		NOLA	PHI	trentblackburn	Trent Blackburn	58
+26	1	1	2306		BER	BER	manicmav36	BamBam McMullet	1405
+26	1	2	2315		NYS	NYS	dogwoodmaple	Dogwood Maple	1429
+26	1	3	2326		NOLA	BAL	Mojojojo	Ernest Lover	1480
+26	1	4	2368		PHI	YKW	wonderful_art	Arthur Naught	373
+26	1	5	2376		YKW	NOLA	huck24	Vincent Jones	1300
+26	1	6	2360		AUS	PHI	negs	Ryan Negs	1442
+26	1	7	2317		BAL	HON	OrbitingDeath	Cobra Kai	1565
+26	1	8	2344		HON	CHI	Hordle	Alexander Franklin	859
+26	1	9	2343		AZ	AZ	TheDude83	Moe Skeeter	494
+26	1	10	2314		SAR	SAR	LB3737	David Moyes	1384
+26	1	11	2337		CHI	BER	Legally_Blind_Gamer	Derek Wildstar	764
+26	1	12	2334		OCO	YKW	Tayjay	Leonard Taylor	1222
+26	1	13	2348		COL	COL	Ephenssta	Redbeard McFredbeard	1125
+26	1	14	2321		SJS	SJS	ComebackZak	Tugg Speedman	1520
+26	2	15	2367		BER	CHI	37thchamber	Raphael Delacour	1403
+26	2	16	2323		NYS	BAL	Alucas	A.J Lucas	1078
+26	2	17	2327		NOLA	AUS	SlurmsMckenzie	Slurms Mckenzie	475
+26	2	18	2357		PHI	AZ	pauadrian	Tom Teboat	424
+26	2	19	2340		YKW	NOLA	C9Van	Botty -	779
+26	2	20	2305		AUS	BAL	KingSean	Mario Messi	1193
+26	2	21	2309		BAL	HON	Fordhammer	Lalo Salamanca	629
+26	2	22	2342		HON	BAL	MacDaddy	Caven McRae	671
+26	2	23	2307		AZ	AZ	DApolloS	Logan Sarrasin	472
+26	2	24	2313		SAR	SAR	Orhanello	LeBron James III	534
+26	2	25	2371		CHI	CHI	Faelax	Evan Jones	1090
+26	2	26	2355		OCO	NYS	TubbyTim69	Makoto Otawara	1008
+26	2	27	2331		COL	BER	SnowyWolfz	"Captain" John Price	266
+26	2	28	2375		SJS	SJS	ckroyal92	Jaja Ding Dong	1293
+26	3	29	2320		BER	YKW	moonlight	Big Slammu	1452
+26	3	30	2312		NYS	OCO	Beaver	Maiteers Rico-Shea	655
+26	3	31	2352		NOLA	BAL	Tomasnz	Chet Larson	1085
+26	3	32	2353		PHI	BER	Bauer	Schumi Hulkenvettel	322
+26	3	33	2339		YKW	NOLA	mee	Jonathan Shuffleboard	732
+26	3	34	2374		AUS	PHI	AJay887	Laxus Dreyar	346
+26	3	35	2338		BAL	HON	LatinViking	Richard Littlewood	427
+26	3	36	2350		HON	SAR	DoIHaveTheSause	Quavious McGrady	255
+26	3	37	2362		AZ	AZ	Count chocula	Akil Ozymandias	310
+26	3	38	2351		SAR	SAR	The_Mediocre_Pigeon	Big Chungus	255
+26	3	39	2324		CHI	BAL	FrostBeard	Sirdsvaldis Miglasķēms	381
+26	3	40	2322		OCO	NYS	Primo Berto	Primo Berto	283
+26	3	41	2370		COL	HON	ThePope	Pope Francis	274
+26	3	42	2329		SJS	SJS	ToastCharger	Byakuya Togami	137
+26	4	43	2316		BER	BER	Pythonic	Erik Kirkland	118
+26	4	44	2336		NYS	AUS	UpperNet	Gluteus Maximus	567
+26	4	45	2333		NOLA	NYS	gls	Jalen Washington	156
+26	4	46	2319		PHI	BER	RockyBaljoa0804	Rocky Jackman	172
+26	4	47	2310		YKW	NOLA	cstarr2245	Julian Jurevicius	150
+26	4	48	2369		AUS	PHI	Emi	Emi Rune	143
+26	4	49	2330		BAL	HON	DaDillPickle	John Johnson	62
+26	4	50	2347		HON	BAL	nexus1353	Something McDerpants	120
+26	4	51	2366		AZ	AZ	The__Y-man__100	Bismo Funyuns	139
+26	4	52	2335		SAR	SAR	I'll change this later	Owmy Back	216
+26	4	53	2361		CHI	CHI	Splatoon is not anime.	H. H. Hopkins	50
+26	4	54	2358		OCO	OCO	Sticks	Ty Tyson	198
+26	4	55	2325		COL	CHI	bsiegel	Ben Siegel	65
+26	4	56	2365		SJS	SJS	Wackeo	Dick Grayson	91
+26	5	57	2356		BER	BER	Glizzy	Kemorian Moore	64
+26	5	58	2308		NYS	NYS	cpetrella	Johnathan Smith	74
+26	5	59	2346		NOLA	AUS	SteelCurtain3324	Jackson Maine	67
+26	5	60	2364		PHI	BER	Bilar	Dimitrius Rogers	69
+26	5	61	2332		YKW	NOLA	PuttingMCBedsTogether	Tater Tosser	62
+27	1	1	2434		HON	HON	124715	Eleven Kendrick-Watts	1369
+27	1	2	2394		PHI	BAL	overdoo	Lawrence Miller	755
+27	1	3	2424		BAL	PHI	Bandit239	Xander Creed	355
+27	1	4	2426		BER	BER	Menace0528	Marlon Brando	1233
+27	1	5	2418		SJS	COL	FleshBagSoup	SparkySparky Boom-man	906
+27	1	6	2383		AZ	SJS	TropicaliaCC	Duke Cheeks	854
+27	1	7	2420		COL	OCO	Seymour	Bean Beanman	1387
+27	1	8	2407		OCO	YKW	Sabremike	Kita Chiasa	419
+27	1	9	2441		AUS	OCO	Guunar	Ace Savage	407
+27	1	10	2393		CHI	CHI	sve7en	Madison Hayes	1239
+27	1	11	2412		SAR	BAL	excelsior	Maui Waialiki	730
+27	1	12	2428		NYS	NYS	treant	James Wilkinson	638
+27	1	13	2402		NOLA	AUS	TheRealMazatt	Candice D. Fitinyomouf	648
+27	1	14	2377		YKW	AZ	H0PPY75	Fergus Callaghan Jr.	574
+27	2	15	2416		HON	HON	Gumbaman	Jason Bradshaw	685
+27	2	16	2380		PHI	PHI	AgentSmith	Borgo San Lorenzo	1159
+27	2	17	2403		BAL	BAL	TheDangaZone	Preston Parker	1038
+27	2	18	2419		BER	CHI	Vorshayla	HeHateMe PickSix II	1202
+27	2	19	2445		SJS	COL	Drip	Drip Dad	911
+27	2	20	2381		AZ	CHI	TheSparkyDee	Mike Hunt	1139
+27	2	21	2414		COL	AZ	LSUFAN101	Cade York	562
+27	2	22	2413		OCO	NOLA	thecanadiancanuck	Kevin Morrison	341
+27	2	23	2421		AUS	SAR	SamTwoSix	Giovanni Bianchi	543
+27	2	24	2438		CHI	SJS	jsteele14	Bobby Tarantino	254
+27	2	25	2409		SAR	SAR	StevenOSullivan	Joseph Radetzky	889
+27	2	26	2399		NYS	NOLA	Voltaqe	Buck Nekkid	618
+27	2	27	2442		NOLA	AUS	Kyle	Jim The Vampire	1242
+27	2	28	2397		YKW	YKW	Master_Chief_DB	Tre Washington	206
+27	3	29	2385		HON	HON	AW13	Joliet Christ Jr.	1310
+27	3	30	2431		PHI	PHI	WildfireMicro	Tsuyu Asui	1264
+27	3	31	2408		BAL	BAL	BigUnitBabs	Armando Galarraga	283
+27	3	32	2422		BER	BER	Guriinwoodo	Cheese Farley	390
+27	3	33	2440		SJS	COL	SirBongo	Benjamin Ankers	176
+27	3	34	2429		AZ	SJS	Griff001	Mills Wallace	170
+27	3	35	2386		COL	AZ	kingjwm57	Daquan Madison	165
+27	3	36	2427		OCO	AUS	FuzzISFL	Carter Fox	271
+27	3	37	2425		AUS	OCO	TheloniusJunk	Thelonius Junk	103
+27	3	38	2379		CHI	CHI	Southie	Devonte Crook	408
+27	3	39	2423		SAR	SAR	benELF	Vilhjálmur Kueblerson	73
+27	3	40	2435		NYS	OCO	RainDelay	Cayson Nzeocha	177
+27	3	41	2396		NOLA	SAR	Boo_T	Boo Tee	109
+27	3	42	2389		YKW	BER	TheMemeMaestro	Shane Benjamin	159
+27	4	43	2405		HON	HON	Retuperkele	Demetre Elliott	101
+27	4	44	2388		PHI	PHI	Exogorthian	Exo Cortal	82
+27	4	45	2392		BAL	BAL	Dabbadad	Massimo Rocco	86
+27	4	46	2443		BER	BER	Zane Cruz	Zane Cruz	113
+27	4	47	2404		SJS	COL	Keckers	Henrik Von Pigeon	75
+27	4	48	2444		AZ	SJS	bruhbruhbruh	Dash Smith	96
+27	4	49	2382		COL	AZ	Eagle Eye	Pink Panther	72
+27	4	50	2432		OCO	NYS	rotorwash	Rotor Wash	81
+27	4	51	2439		AUS	OCO	kmatt	Joe Bay	192
+28	1	1	2477		BAL	BAL	Bigred1580	Luke Quick	1362
+28	1	2	2512		AUS	BAL	infinitempg	Busch Goose	1518
+28	1	3	2474		PHI	OCO	Gragg9	Anton Bruckner	1041
+28	1	4	2461		BER	PHI	xtitanxmvpx	Xavier Walls	1294
+28	1	5	2510		OCO	AZ	Pib	Glenn Smart	1158
+28	1	6	2456		NYS	NYS	MachineEarnedRuns	Mongo -	591
+28	1	7	2462		SJS	SJS	j00	Juno Hu	1100
+28	1	8	2498		YKW	YKW	Skorch	Andrew Warthol	351
+28	1	9	2467		AZ	BER	noanic	Troy Abed	1281
+28	1	10	2513		CHI	CHI	firstfray	Dexter Hall	1214
+28	1	11	2459		COL	COL	Modern_Duke	Manhattan Project	1340
+28	1	12	2455		HON	HON	z0rem	Prof. Godfrey Gravity	329
+28	1	13	2500		NOLA	NOLA	dude_man	Cade Williams	1495
+28	1	14	2468		SAR	BAL	UltimateYeehaw	Chunt The Badger	756
+28	2	15	2469		BAL	PHI	Amulos	Romulus Roman	922
+28	2	16	2482		AUS	AUS	JKortesi81	Bayley Cowabunga	1215
+28	2	17	2475		PHI	OCO	shrub02	Bender Rodriguez	1454
+28	2	18	2525		BER	SAR	FootballIsCool	Stumpy Jones	1538
+28	2	19	2472		OCO	BER	.Laser	Dexter Zaylren	1518
+28	2	20	2453		NYS	NOLA	Vaelynn	Remus Roman	903
+28	2	21	2447		SJS	BAL	King Jellyfish	Makoa Mahiʻai	1332
+28	2	22	2457		YKW	YKW	maupassant	Erik Gaare	335
+28	2	23	2526		AZ	OCO	Duilio05	Sam the Onion Man	1274
+28	2	24	2454		CHI	CHI	Painted	Tim Soulja	1335
+28	2	25	2523		COL	COL	Alcott	Cole Maxwell	1319
+28	2	26	2503		HON	HON	bex	Raeni Clarke	1203
+28	2	27	2490		NOLA	NOLA	JPach	IsHe... ReallyInvisible	1018
+28	2	28	2491		SAR	SAR	Astrophy058	Kelvin Harris	341
+28	3	29	2496		BAL	PHI	Ace	C.J. Sonjack	821
+28	3	30	2492		AUS	AUS	mango8154	Daniel O’Leary	747
+28	3	31	2520		PHI	SAR	StadiumGambler	Saleem Spence	1429
+28	3	32	2504		BER	PHI	Exilate	Lonnie Jackson	1222
+28	3	33	2489		OCO	BER	Cklues	Logan Anderson	376
+28	3	34	2507		NYS	NYS	xQCFamous	DeAndre Chuggs	297
+28	3	35	2465		SJS	SJS	Sebster	Willie Miller	1331
+28	3	36	2481		YKW	BAL	Shiny	David Ramczyk	415
+28	3	37	2516		AZ	BER	CLG Rampage	Jacob Raske	947
+28	3	38	2483		CHI	SJS	RedArrow12c	Red Arrow Jr.	333
+28	3	39	2479		COL	COL	pazuzu	Amy Wong	315
+28	3	40	2476		HON	AUS	cjmccarley	Siege Cameron	853
+28	3	41	2480		NOLA	NOLA	Thatguy91	Taipan Pete	424
+28	3	42	2517		SAR	OCO	Dallypole	Dallas Dole	582
+28	4	43	2460		BAL	YKW	EzraYeet	Luke Watterson	253
+28	4	44	2463		AUS	AUS	Rockiesfan4ever	Chathack’rius Smith IV	670
+28	4	45	2501		PHI	OCO	grok	Toy Robot	138
+28	4	46	2508		BER	PHI	Magnet	Rudy Gray	265
+28	4	47	2527		OCO	BER	soryantyler	Henny Tingzpahcbol	571
+28	4	48	2487		NYS	COL	Quail	Lux Opal	430
+28	4	49	2524		SJS	SJS	Jackers41	Lebron Brady Jr.	176
+28	4	50	2470		YKW	AZ	jhatty8	Brooks Bane	162
+28	4	51	2458		AZ	AZ	Peterson	Rainbow Dash	291
+28	4	52	2452		CHI	BAL	jackkmart	Kacper Puntky	259
+28	4	53	2509		COL	NYS	Hummus God	Tay Heenie	160
+28	4	54	2515		HON	BAL	ilmari07	Beefcake Johnson	239
+28	4	55	2499		NOLA	NOLA	FunnyManLuke	Gyles Marrett	231
+28	4	56	2502		SAR	BAL	Miller	Gritt Gurdur	196
+28	5	57	2449		BAL	BAL	SippyCupz	Kenzie Cupz	101
+28	5	58	2488		AUS	AUS	aimbotalex	Aleksandr Vasiliev	120
+28	5	59	2478		PHI	OCO	Forthefight	Lawrence McCoy	89
+28	5	60	2518		BER	NYS	Void_DCXI	Brandon Prince	740
+28	5	61	2506		OCO	BER	Ayso24	Bjørn Borg	65
+28	5	62	2485		NYS	NYS	marklol	Mark Higgins	74
+28	5	63	2471		SJS	SJS	Hurles02	Don Bradman	67
+28	5	64	2495		YKW	YKW	Archinity	Archie Griffin	83
+29	1	1	2579		BAL	BAL	shadyshoelace	Dante King	1497
+29	1	2	2538		NOLA	NOLA	hihihi_62	Quinton Crash	1366
+29	1	3	2532		SJS	BAL	fever95	Lip Gallagher	1500
+29	1	4	2570		PHI	PHI	Luciddreams702	Lucid Dreams	1069
+29	1	5	2577		CHI	PHI	musha6570	Chevvy Bronko	626
+29	1	6	2541		OCO	OCO	Suggs	Suggs Upshar	293
+29	1	7	2572		COL	COL	EricNCSU	Sam Squanch	726
+29	1	8	2563		HON	HON	IceBear32	David Frank	1446
+29	1	9	2584		NYS	SJS	furiousPanda	Panda McKyle	1056
+29	1	10	2529		SAR	BAL	itztimg	Will "Brick Wall" Smyth	676
+29	1	11	2536		AZ	YKW	Opera_Phantom	Jay Cue Jr.	1537
+29	1	12	2562		BER	AZ	Drizzy	Marcus Jones	721
+29	1	13	2560		AUS	BAL	allbetsonjames	Tre’ Mendus Johnson	1200
+29	1	14	2585		YKW	BER	KezKincaid	Gronku Muerto	916
+29	2	15	2576		BAL	SJS	BOOM™	Buffalo Hunter	1411
+29	2	16	2561		NOLA	NYS	Capt_Blitzkrieg	Joey Marston	404
+29	2	17	2569		SJS	SAR	Fronk	John Huntsman	1412
+29	2	18	2550		PHI	CHI	Bayley	Rejoignez LOrdreSombre	1149
+29	2	19	2556		CHI	CHI	Oles	Kazimir Oles JR	1293
+29	2	20	2528		OCO	OCO	Haseo	Goat Tank Jr.	1117
+29	2	21	2540		COL	COL	Sylphreni	Emperor de Pengu	620
+29	2	22	2539		HON	HON	Trashae	Teddy Murphy	491
+29	2	23	2551		NYS	NOLA	ddrector	Sir Peter Jackson	1138
+29	2	24	2535		SAR	SAR	Moodles	Keane Lover	679
+29	2	25	2566		AZ	YKW	CmdrWalrus	Amadeus Redding	627
+29	2	26	2534		BER	BAL	Frick_Nasty	Gimmy Jaroppolo Jr.	1118
+29	2	27	2575		AUS	AUS	ToastCharger	Ivan Toastovich	466
+29	2	28	2537		YKW	BER	Dewalt27	ILove HotSalads	1348
+29	3	29	2559		BAL	OCO	bowl0	Rean Schwarzer	1279
+29	3	30	2547		NOLA	NOLA	Hord300	Elliot Hord	201
+29	3	31	2587		SJS	SJS	Urq660	Guy Gibson	977
+29	3	32	2586		PHI	PHI	wuma	In Active	474
+29	3	33	2542		CHI	CHI	Fitted2106	Amabacus Fitted	274
+29	3	34	2574		OCO	OCO	legion of slugs	Will Stern	862
+29	3	35	2546		COL	NYS	Lukstins88	Janis Lux	243
+29	3	36	2589		HON	HON	sapp2013	Freddy Bly	391
+29	3	37	2568		NYS	CHI	Cnelly	Dick Thickum	126
+29	3	38	2564		SAR	OCO	Yetiman	Yetiman Beardstien	59
+29	3	39	2582		AZ	BER	Gtpk4	Izuku Campbell	317
+29	3	40	2544		BER	AZ	cpetrella	Fitted Cuddles	187
+29	3	41	2533		AUS	AUS	LiathTheSquirrel	Jean-Jacques Leroy	417
+29	3	42	2549		YKW	YKW	numberonedork	Charity Beaver	166
+29	4	43	2552		BAL	BAL	shanghai_kid	Darius Severance	160
+29	4	44	2573		NOLA	NOLA	nlj04	Noah Johns	352
+29	4	45	2567		SJS	SJS	.duckszy	Duck Awntop	127
+29	4	46	2558		PHI	PHI	Tomme100	Tomme Salami	349
+29	4	47	2578		CHI	CHI	Zephyrus1128	Hououin Kyouma	394
+29	4	48	2543		OCO	OCO	OrvalOverallOveralls	Malik F. Doom	88
+29	4	49	2531		COL	COL	Kevin5010	Beau Novak	58
+29	4	50	2580		HON	HON	DELIRIVM	Noel Akerele	58
+29	4	51	2583		NYS	NYS	CrazyCaityCat	Caitlyn Catowize	85
+30	1	1	2634		BAL	BAL	TomHanks	Sheriff Woody	1259
+30	1	2	2633		SJS	HON	MMFLEX	Miles Weperom	1498
+30	1	3	2655		CHI	CHI	Starboy	Jason Garciaparra	1329
+30	1	4	2635		PHI	CHI	Muford	Vincent Sharpei Jr.	1341
+30	1	5	2612		NOLA	AUS	Skindog44	Ioe Torrent	1464
+30	1	6	2638		HON	SJS	Tomen	Konstantin Selich	585
+30	1	7	2607		OCO	OCO	MattBake12	Dominos Pizzaman	1439
+30	1	8	2597		AUS	YKW	Dp-420	Dustin Parmelee	1334
+30	1	9	2594		YKW	NOLA	terriblehippo	Squidward Tentacles	790
+30	1	10	2662		COL	COL	JayWhy75	Jason Waterfalls	1326
+30	1	11	2640		AZ	CHI	Zoone16	Nick L. Back	573
+30	1	12	2658		SAR	SAR	krazko	Calvin Hobbes	1187
+30	1	13	2650		BER	BER	KenitohMenara	Mason Malone	781
+30	1	14	2668		NYS	BAL	golden_apricot	Pepelegs Johnson	562
+30	2	15	2595		BAL	BAL	goodfortunecoffee	Fuzzy George	743
+30	2	16	2643		SJS	HON	Beck	Sal Ami	1339
+30	2	17	2609		CHI	AZ	caltroit_red_flames	Bernie Sanders	632
+30	2	18	2618		PHI	COL	Dukemarriot	LaCarpetron Dukemarriot	485
+30	2	19	2626		NOLA	AUS	Thelastheraclid	Cliff Burton	677
+30	2	20	2608		HON	SJS	C9Van	The Laz	663
+30	2	21	2616		OCO	OCO	Revolution5	Tron Carter	1281
+30	2	22	2630		AUS	YKW	oilmandan	Stewart Hellraiser	457
+30	2	23	2663		YKW	NOLA	Tacoshoppe	Rex Crenshaw	933
+30	2	24	2641		COL	NOLA	Accka	Rocco Blade	1361
+30	2	25	2651		AZ	AZ	PhreshPhil	Richard Mansher	177
+30	2	26	2591		SAR	HON	hexify	Hex Aqua-Key’Kiann	620
+30	2	27	2665		BER	BER	Dolphins	Bradley Welch	495
+30	2	28	2600		NYS	CHI	TheCC	Dee Walt	1437
+30	3	29	2610		BAL	SAR	Tbone54	Miracle Whip	421
+30	3	30	2621		SJS	SAR	Unicorn	dont draft	1123
+30	3	31	2639		CHI	PHI	Pancakes	Jax Baker	274
+30	3	32	2659		PHI	PHI	TakaMori152	Kiara Tenoh	271
+30	3	33	2615		NOLA	AUS	unconfident	Tight End Eighty-Two	1340
+30	3	34	2664		HON	SJS	Lowlycrib	Andy Fantuz	421
+30	3	35	2604		OCO	BAL	Bauer	Madison Beer	319
+30	3	36	2605		AUS	YKW	NylarthePhoenix	Owen Reed	358
+30	3	37	2632		YKW	CHI	jeffie43	Yaji Robe	213
+30	3	38	2623		COL	COL	SirBongo	Clifford Wilson	250
+30	3	39	2667		AZ	CHI	Sloths1	Levy Tate	622
+30	3	40	2631		SAR	OCO	scorycory	Senbyō Korin	169
+30	3	41	2666		BER	NOLA	MrGoat1246	CMC’s Burner	747
+30	3	42	2661		NYS	SJS	SaviorHawkins	Savior Hawkins	180
+30	4	43	2598		BAL	AUS	hannahg32	JJ Jay Jay-Jaymison Jr	591
+30	4	44	2648		SJS	HON	TheCHEESE	Ripoff CheeseBrand	187
+30	4	45	2636		CHI	HON	Spartan	Caleb Watt	260
+30	4	46	2614		PHI	CHI	mtholf14	Matthew Holford	334
+30	4	47	2646		NOLA	AUS	Ry_	Ricky Stanzi	254
+30	4	48	2606		HON	SJS	Kendowalski	Sigo Hendricks	127
+30	4	49	2656		OCO	OCO	Big_Papi	Bill de La T. Dauterive	435
+30	4	50	2628		AUS	HON	Kobefromthefrobe	Deffo not Leroy Leroy	412
+30	4	51	2617		YKW	BER	nhlbeastmode_7777	Brent Suzuki	85
+30	4	52	2660		COL	COL	Brian_Taylor	Brian Taylor	67
+30	4	53	2644		AZ	AZ	Twinsfan87	Jeremy Crouse	287
+30	4	54	2602		SAR	SAR	wearingabear	Jimmy Nardello	112
+30	4	55	2627		BER	BER	Eagle Eye	Yondu Yorukan	92
+30	4	56	2599		NYS	HON	Adrest245	Joseph Charles Raymond	92
+30	5	57	2624		BAL	BAL	PDXBaller	Hercules Kamealoha	149
+30	5	58	2654		SJS	HON	ScorpXCracker	Dorfus Jimbo Jr Jr	81
+30	5	59	2642		CHI	CHI	pauadrian	Tay Swizzle	350
+30	5	60	2647		PHI	CHI	AlexF	Blake "BJ" Faux Jr.	50
+30	5	61	2620		NOLA	AUS	Darnellthebeast	Electric Squirrel	79
+30	5	62	2596		HON	SJS	Slick	DeAndre Henry	105
+30	5	63	2592		OCO	OCO	Squeak	Steve Atwater Jr.	88
+30	5	64	2619		AUS	YKW	Rigno	Ringo Starr	60
+30	5	65	2622		YKW	NOLA	Pooter	JJ Slasher	92
+30	5	66	2657		COL	COL	JoeyLegend	Joey McCarty	50
+30	5	67	2649		AZ	AZ	suley12	Sal Shaw	79
+31	1	1	2711		BAL	BAL	captjanko	Morpheus Czargyros	1116
+31	1	2	2716		PHI	SJS	HalfEatenOnionBagel	Orpheus Czargyros	1296
+31	1	3	2693		SJS	PHI	woelkers	Cedric Wilkins II	1294
+31	1	4	2710		NOLA	NOLA	Dagumpa	Amari Springer	1231
+31	1	5	2734		CHI	COL	g2019	Sconnie McHits	909
+31	1	6	2702		HON	HON	Dextaria	Beniri T’Chawama	1182
+31	1	7	2736		COL	CHI	Reno	Tessie Garciaparra	1322
+31	1	8	2740		OCO	OCO	Thor	Ken Oath	614
+31	1	9	2729		YKW	YKW	JaytheGreat	Jay Spears	1068
+31	1	10	2681		AUS	AUS	MN_Moosey	Malcolm Savage	1363
+31	1	11	2741		BER	CHI	LimJahey	Omni Man	909
+31	1	12	2683		NYS	NYS	Sonaclov	French Fries	429
+31	1	13	2671		AZ	AZ	.simo	Wendell Sailor	1609
+31	1	14	2714		SAR	SAR	Michiganonymous	Spike Daniels	1327
+31	2	15	2688		BAL	NYS	DELIRIVM	Sakeem Webb	810
+31	2	16	2689		PHI	SJS	Net	Jaycee Higgins	1070
+31	2	17	2691		SJS	PHI	Rangerjase	Zoltan -	534
+31	2	18	2686		NOLA	NOLA	CptGoosar	Mark Goodhead	1434
+31	2	19	2692		CHI	BER	Highhaschdi	Nick Kaepercolin Jr.	1355
+31	2	20	2684		HON	HON	siddhus	Ray the Manta Ray	920
+31	2	21	2674		COL	BER	TubaMasterFlex	Siaosi Multiauaopele	263
+31	2	22	2718		OCO	OCO	Jerms	Doc Holliday	404
+31	2	23	2700		YKW	BER	Helcim	Ben Delabaguette	278
+31	2	24	2701		AUS	CHI	LeatherneckMike	Michael Carimi	639
+31	2	25	2673		BER	BER	crazylemire	Tony Demonson	1105
+31	2	26	2731		NYS	BAL	Hallmonitor_20	Paul Monitor	438
+31	2	27	2687		AZ	AZ	.emfaith	Kotoni Staggs	1455
+31	2	28	2738		SAR	SAR	Frostbite	Carter Knight	1313
+31	3	29	2709		BAL	OCO	Vikain	Rodka Raskolnikov	829
+31	3	30	2721		PHI	SJS	DeadlyPlayer	Lennay Kekua	1018
+31	3	31	2697		SJS	PHI	SnowyWolfz	Malcador "The Hero"	597
+31	3	32	2680		NOLA	NOLA	Ismael8907	DeCarr Rek	235
+31	3	33	2733		CHI	BER	Pythonic	Anthony MacGuire	271
+31	3	34	2698		HON	SJS	NepNeppy	Nep Neppy	144
+31	3	35	2735		COL	BER	Huskies311	Marquees Acho Jr.	415
+31	3	36	2676		OCO	OCO	Sopath	Dumais Wells	263
+31	3	37	2715		YKW	YKW	Southie	Lot Smith VIII	395
+31	3	38	2725		AUS	AUS	Patey	Johnny Patey	876
+31	3	39	2704		BER	BER	Doornob	Billy Doornob	125
+31	3	40	2703		NYS	BAL	tlk742	Rookie Sensation	132
+31	3	41	2670		AZ	PHI	Tp3480	Ikick Ballz	422
+31	3	42	2705		SAR	SJS	shoxwon	Erick Bolanos	433
+31	4	43	2695		BAL	BAL	MisObvious	Doo Fus	113
+31	4	44	2719		PHI	SJS	Donkey	Donkey Johnson	96
+31	4	45	2672		SJS	PHI	Greenbaynathan	Nathan Claflin	710
+31	4	46	2685		NOLA	NOLA	nealpt	Cal Stevenson	117
+31	4	47	2724		CHI	CHI	kmatt	Warren Buffet	189
+31	4	48	2722		HON	HON	HuddleHussy	Anya Mind	182
+31	4	49	2678		COL	COL	JamesGames23	James Sharkey	111
+31	4	50	2739		OCO	OCO	Cook765	Johnny Bravo	81
+31	4	51	2717		YKW	YKW	danieldbook	Thomas Hollands	103
+31	4	52	2732		AUS	AUS	Toasty	R.L. Stine	61
+31	4	53	2696		BER	BER	zayanm	Eric Hall	77
+31	4	54	2726		NYS	NYS	TheManWhoSoldTheWorld	Kade Carlton	74
+31	4	55	2712		AZ	AZ	Luke_Is_Rox	Lucas Arnold	76
+31	4	56	2679		SAR	SAR	dev	Devin Boateng	60
+31	5	57	2720		BAL	BAL	Cool Kid	Jalen Hopkins	59
+32	1	1	2810		OCO	BAL	Trempale	Lenard Graf	1153
+32	1	2	2782		BAL	BAL	visceralpotamus	Pasta the Turtle	775
+32	1	3	2811		NOLA	NOLA	2Lzy	Doc Fireball	893
+32	1	4	2755		SJS	SJS	Pvtpenne	Deshawn Penne	1495
+32	1	5	2791		PHI	NYS	SwankyPants31	Live Laughlove	1570
+32	1	6	2813		YKW	PHI	LordEscanor	Escanor Sama	806
+32	1	7	2769		NYS	YKW	taterswc	Zephyr "Tater" GreyWolf	1222
+32	1	8	2746		AZ	HON	Vulfzilla	Modern Nazgûl	1163
+32	1	9	2775		BER	NOLA	SouljaBoy2007	De’Aaron Harper II	938
+32	1	10	2787		SAR	SAR	platanocat	Rocky Rhoads	1202
+32	1	11	2770		CHI	CHI	kentakira	Lalu Muhammad Zohri	1376
+32	1	12	2788		AUS	AUS	KC15	Tobias Worthington III	641
+32	1	13	2815		COL	AUS	PugWalrus	Spicy Ron	1356
+32	1	14	2763		HON	YKW	teddyoojo	Bernd D. Brot	1229
+32	2	15	2744		OCO	OCO	Gwdjohnson	Garfield Despacito III	335
+32	2	16	2774		BAL	OCO	Minnesotafine	Dallas Fort-Worth	519
+32	2	17	2817		NOLA	AZ	solas	Lance Witt	502
+32	2	18	2806		SJS	SJS	mcgriddleluver	Arnie Rufus	648
+32	2	19	2805		PHI	PHI	MamaB	Mrs. "Stacks" McHits	778
+32	2	20	2814		YKW	PHI	juniped	Mauler Panda	446
+32	2	21	2752		NYS	YKW	ZootTX	Kalam Mekhar	1472
+32	2	22	2786		AZ	SAR	Jay_Doctor	Troy Barnes	761
+32	2	23	2783		BER	AZ	cole6249	John Riggins	467
+32	2	24	2761		SAR	CHI	thevoicelesscreator	Franklin Turtle	806
+32	2	25	2753		CHI	BER	jackalewis229	Jack Lewis	242
+32	2	26	2747		AUS	AUS	yosh	Beeg Beeg Yoshi	380
+32	2	27	2798		COL	BAL	UberBJ	Theo AwardsSystemIsBad	777
+32	2	28	2795		HON	BER	dtg108	Dakota Grossman	140
+32	3	29	2745		OCO	YKW	FireKing10789	Dragazor Blaze	469
+32	3	30	2767		BAL	OCO	Fantobens	George Fantobens	275
+32	3	31	2780		NOLA	AZ	Big Newff	Toucan Sam	353
+32	3	32	2759		SJS	SJS	turkay	Jon Montroy	147
+32	3	33	2772		PHI	NYS	Pocketsand007	Owen Baker	117
+32	3	34	2773		YKW	PHI	Jobin	A Kicker	292
+32	3	35	2796		NYS	HON	CShockWave	Colin Kramer	168
+32	3	36	2760		AZ	BER	By-Tor	LaDamien Beck	377
+32	3	37	2771		BER	AZ	Acsolap	Herc Kirkby	922
+32	3	38	2789		SAR	SAR	W.Sconnie	Abed Nadir	63
+32	3	39	2776		CHI	CHI	BeastTakeover	Marques Brown	94
+32	3	40	2748		AUS	AUS	goodvsevil1275	Jake Endson	131
+32	3	41	2778		COL	CHI	SwagSloth	Booker Thomas	63
+32	3	42	2790		HON	OCO	YA_Tittle	Jessie Carson	71
+32	4	43	2762		OCO	BAL	SecondSucks22	Fenrir Greyback	115
+32	4	44	2757		BAL	OCO	Patty	Wilson Twist	147
+32	4	45	2766		NOLA	NOLA	Obese_taco	Ifa Balamwezi	67
+32	4	46	2793		SJS	SJS	riccidominic22	Dominic Ricci	69
+32	4	47	2784		PHI	NYS	WALDO	Jack Ryan	116
+32	4	48	2743		YKW	HON	bry.dailey	Don Keedic	74
+32	4	49	2781		NYS	YKW	dorkman	Eater Piefell	69
+32	4	50	2818		AZ	BER	SeattleSeahawksBest	Jackson Walsh	69
+32	4	51	2807		BER	AZ	Pablo Sanchez#5146	Pablo Sanchez	81
+33	1	1	2820		OCO	OCO	KaleSalad	Leonardo McTurtle	1573
+33	1	2	2834		YKW	CHI	Amadan	Greg Strongjaw	587
+33	1	3	2853		CHI	YKW	TubaDeus	Daron Arnold	1545
+33	1	4	2869		BAL	OCO	ThunderTitan82	President Camacho	1021
+33	1	5	2836		NOLA	NOLA	SomeSay...	The Stig	1484
+33	1	6	2857		SJS	OCO	CementHands	Raphael McTurtle	1417
+33	1	7	2827		COL	SJS	Talls	Nick Flint	998
+33	1	8	2840		HON	BER	mook	Marvin Toledo	366
+33	1	9	2858		SAR	SAR	sakrosankt	King Zeus	1444
+33	1	10	2846		AUS	AUS	Philliesphan96	Joe Smokes	692
+33	1	11	2850		PHI	PHI	TubbyTim69	DeAndre King	1040
+33	1	12	2828		AZ	AZ	Moosecop	D’Nickashaw Mangoldson	907
+33	1	13	2870		BER	OCO	Briedaqueduc	Molki Koivu	679
+33	1	14	2849		NYS	NYS	ValorX77	Videl Valor	814
+33	2	15	2860		OCO	PHI	Pat	Christian Marciano	1402
+33	2	16	2829		YKW	PHI	Matty7478	Kaguya Shinomiya	1038
+33	2	17	2868		CHI	YKW	3lewsers	Kahn Cussion	1499
+33	2	18	2852		BAL	COL	DrChops	Bud R. Fingers	437
+33	2	19	2826		NOLA	AZ	Napalm	Talen Farrens	301
+33	2	20	2839		SJS	PHI	Faded	Able Archer	611
+33	2	21	2822		COL	BAL	takethehorizon	Kellan Frost	189
+33	2	22	2821		HON	OCO	Bubba	Zane Cold	1050
+33	2	23	2866		SAR	YKW	sarah	Double Doink	1018
+33	2	24	2825		AUS	AUS	Will3	William Groves	205
+33	2	25	2847		PHI	OCO	Masu Chan	Mason Jones	253
+33	2	26	2844		AZ	OCO	TheBigDee12	Sandwich Maker	73
+33	2	27	2861		BER	BAL	Wombat	Daybe Downbad	154
+33	2	28	2831		NYS	NYS	TheRocheLimit	Dax Dangerfield	1529
+33	3	29	2819		OCO	OCO	IsaStarcrossed	Fairy de Pengu	210
+33	3	30	2859		YKW	CHI	Jiggly_333	Kawai Bartok	285
+33	3	31	2841		CHI	YKW	LANEFROST	Lane Frost II	773
+33	3	32	2837		BAL	BAL	egyeager	Ted Stevens	77
+33	3	33	2843		NOLA	NOLA	Fatfish89	Thokk The Scarred	69
+34	1	1	2892		NOLA	PHI	ctots	Theo Lariat	630
+34	1	2	2915		YKW	YKW	yonggarius	Simon The Frog	944
+34	1	3	2929		SJS	SJS	Gordon Bombay	Louis Blondin	1612
+34	1	4	2899		PHI	NOLA	GlimsTC	Ganyu -	967
+34	1	5	2883		NYS	NYS	slothfacekilla	Michaelangelo McTurtle	1363
+34	1	6	2916		COL	BER	Vaxlare	Zayne Dangle	1199
+34	1	7	2872		HON	COL	micool132	Nathan Explosion	1112
+34	1	8	2906		AUS	BER	rapideagle	Bageshwari Singh	984
+34	1	9	2940		BER	AUS	Dindog	Joey Din	1271
+34	1	10	2884		CHI	CHI	MrStennett	Rumble Ronson	780
+34	1	11	2936		SAR	SAR	ImSatanJunior	Lucius Salem	1439
+34	1	12	2902		AZ	AZ	BRNXB0MBERS	"Captain" Billy Stinkwater	1531
+34	1	13	2937		OCO	NOLA	MobiausGrander	Solace Avenger	1456
+34	1	14	2890		BAL	YKW	Drizzy	Darius Bailey	492
+34	2	15	2924		NOLA	OCO	Element	Alex Armstrong	266
+34	2	16	2910		YKW	BAL	Evok	Franz Udo Culman-Kaiser	958
+34	2	17	2882		SJS	YKW	TheNC206	Sam Sung	884
+34	2	18	2939		PHI	PHI	jdourtled	Erwin Kemp	1089
+34	2	19	2932		NYS	OCO	tommeson	Tom Taylor	366
+34	2	20	2897		COL	HON	TMosura	Spot RoboDog	173
+34	2	21	2887		HON	AUS	ConnorM123	Ozamataz Buckshank	581
+34	2	22	2873		AUS	BAL	Nokazoa	Boone McCoy	267
+34	2	23	2931		BER	COL	Tesla	- Cross-Eriksen	1572
+34	2	24	2941		CHI	CHI	BasserBurger	Virginia Emmet	243
+34	2	25	2919		SAR	SAR	Slippy	Titus Samson	250
+34	2	26	2876		AZ	AZ	Z-Whiz	Spottie O’Dopaliscious	1412
+34	2	27	2874		OCO	NOLA	mithrandir	Elessar Jones	1242
+34	2	28	2893		BAL	SJS	RussDrivesTheBus	Russet Buster	1509
+34	3	29	2905		NOLA	NOLA	Jangorhino	chim rickles	1376
+34	3	30	2877		YKW	SJS	RocketMan13	Dane Johnson Jr.	821
+34	3	31	2935		SJS	SJS	Lowlycrib	Tyron Brackenridge Jr.	366
+34	3	32	2900		PHI	NOLA	speculadora	Michael Patrick Porkins	262
+34	3	33	2917		NYS	NYS	NotSoGood88	Nacho Macho Man	276
+34	3	34	2912		COL	HON	fetchwell	Matthew Bee	163
+34	3	35	2898		HON	COL	Doomraider	Benny Hana	192
+34	3	36	2914		AUS	NYS	DatSmolBoi	Ian Cole III	215
+34	3	37	2921		BER	AUS	PaytonM34	Larry Jenkins	242
+34	3	38	2895		CHI	CHI	scorycory	Ains Ool Gown	175
+34	3	39	2926		SAR	SAR	Saliva^	Moustache Santoso	125
+34	3	40	2909		AZ	AZ	stupiduglyidiot	Cuttino Mobley	300
+34	3	41	2891		OCO	OCO	a_cupof_bread	JJ Lopez-Daniels	193
+34	3	42	2904		BAL	BAL	gatormatthew	Orange Justice	228
+35	1	1	2963		COL	COL	TeyonSchavari	Anthony Stark	1088
+35	1	2	3041		OCO	OCO	BenDover	Ace McAlister	1570
+35	1	3	2973		BAL	BAL	stein	Cob Corning	738
+35	1	4	3030		YKW	YKW	ReverendOReily	Kumquat Archipelago	1491
+35	1	5	2974		AUS	PHI	Swanty	Swantavius Payne	1547
+35	1	6	2948		SJS	AUS	Troen	Draft Steal	1576
+35	1	7	2954		PHI	SJS	Asked Madden	Owen Farrell	1541
+35	1	8	3025		NYS	NYS	Baron1898	Regina Ferraro	1564
+35	1	9	2943		NOLA	NOLA	mer	Carissa van Campen	1292
+35	1	10	3029		SAR	SAR	Yeenoghu	Swantavius King	1650
+35	1	11	3032		AZ	AZ	hotdog	Outlaw Mode Sicko	1165
+35	1	12	3044		BER	BER	bjkman	Johnny Delusional	783
+35	1	13	2988		HON	PHI	xenosthelegend	American Boot	1096
+35	1	14	3045		CHI	BER	LancedJack	Rab Thecrab	504
+35	2	15	2994		COL	COL	Ephenssta	Eeeeeeee phenssta	894
+35	2	16	2970		OCO	OCO	Ben	Donatello McTurtle	505
+35	2	17	3003		BAL	BAL	AL_GRINGO	Titty Juana	459
+35	2	18	3035		YKW	YKW	PMoney	Adebayo Akinfenwa	1362
+35	2	19	3014		AUS	HON	br0_0ker	Leek Mai-Heinous	1446
+35	2	20	2978		SJS	AZ	Hordle	Swantavius Torch	360
+35	2	21	3034		PHI	SJS	Jimi64	Pilot RedSun	404
+35	2	22	3017		NYS	YKW	Isidore94	Maximilian Hamilton	411
+35	2	23	2955		NOLA	NOLA	GuitarMaster116	Ttollem Mada	969
+35	2	24	3010		SAR	SAR	seafreddy	Mistah Freddy	414
+35	2	25	2960		AZ	BER	Faelax	Ollie O’Donnell	186
+35	2	26	2992		BER	AUS	frazzle14	Queen Elizabeth II	1434
+35	2	27	2985		HON	PHI	Cody	Barry Badman	1278
+35	2	28	2999		CHI	CHI	Crodyman	Art Deco	887
+35	3	29	3019		COL	COL	Aleris	Triple Option	415
+35	3	30	3012		OCO	OCO	H0PPY75	Trench Warfare	138
+35	3	31	2989		BAL	BAL	iamslm22	Aikeek Dafootbawl	208
+35	3	32	2986		YKW	YKW	domffl	Calvin Spiff	1311
+35	3	33	3006		AUS	NOLA	toivo	Alfonso Dos Santos	1120
+35	3	34	2984		SJS	COL	ScorpXCracker	Dorfus Jimbo Jr Jr Jr	74
+35	3	35	3004		PHI	SJS	ralams123	Jonathan Altidor	261
+35	3	36	2975		NYS	PHI	somuchjazz	So-Much Jazz	344
+35	3	37	2997		NOLA	AUS	Rylandb	Ryland Bunnell	166
+35	3	38	3007		SAR	BER	adison	Adison Bond	88
+35	3	39	3042		AZ	AUS	UpperNet	The Incredible Bulk	236
+35	3	40	3024		BER	HON	rickymartin_irl	Waluigi Gronkowski	768
+35	3	41	3043		HON	NYS	SneakyShadow71	Shinichi Kudo	80
+35	3	42	2983		CHI	PHI	Kw1	Kyzir Washington	260
+35	4	43	2945		COL	COL	Azjha_59	Sam Azjha	64
+35	4	44	3023		OCO	OCO	Phil	Phillip King	61
+35	4	45	2976		BAL	BAL	Dukemarriot	Longrod Von Hugendong	94
+35	4	46	3031		YKW	YKW	WildfireMicro	Jack McPherson	1147
+35	4	47	2991		AUS	CHI	DutchFF	Glenn Stockton	135
+35	4	48	2990		SJS	AUS	Timo	Timo Gamble	118
+35	4	49	2996		PHI	SJS	KelsBells	Patty Pumpernickel	241
+35	4	50	2947		NYS	NYS	Big Edd	Daddy Edd	50
+35	4	51	2949		NOLA	NOLA	Dab.exe	Richard Skinns	108
+35	4	52	3028		SAR	SAR	Insurgent1315	Daniel Sturgeon	112
+35	4	53	3036		AZ	AZ	Sen	Jayce Higins	67
+35	4	54	2956		BER	BER	crazykeyoung	Alexzander Moore	50
+35	4	55	2977		HON	HON	jaypc8237	Spencer Rasmus	81
+35	4	56	3038		CHI	CHI	Mvmitemwall	Tampa Hawthorne	73
+35	5	57	3027		COL	COL	NamelessNate	Inactive Player	50
+35	5	58	3018		OCO	OCO	Ironshadow213	Adam Graves	98
+35	5	59	2993		BAL	BAL	Edward Coats	Edward Coats	50
+35	5	60	2962		YKW	YKW	Roconator	Rocky Franklin Jr	76
+35	5	61	2995		AUS	CHI	Nobody69	Moussa Sy	50
+36	1	1	3064		COL	COL	PurpleReign	Graham Harper	410
+36	1	2	3065		AUS	AUS	Mooty99	Zaphod Beeblebrox	1462
+36	1	3	3088		NYS	NYS	Repgnar	Teemo Swift	1535
+36	1	4	3077		NOLA	NOLA	Jaywe88	PeePee Poop-Eater Sr.	1019
+36	1	5	3074		SAR	CHI	XaveValor	Xavier Valorian	814
+36	1	6	3062		BER	BER	Chucky	Kevin McThumper	1173
+36	1	7	3082		PHI	SJS	Friesen1520	Ja’uan Holland	557
+36	1	8	3175		YKW	PHI	Alikh	Aleksandr Milescu	1295
+36	1	9	3120		SJS	YKW	JoshiePoo	J.T. Kurbis	1180
+36	1	10	3165		OCO	OCO	infern8	Thomas Robinson	1574
+36	1	11	3146		CHI	CHI	Twenty6	Quendyn Quarterstorm	1640
+36	1	12	3128		AZ	AZ	yesboom	Ignatius Reilly	679
+36	1	13	3084		BAL	NOLA	Punk42AE	JR Frankenstero	1357
+36	1	14	3094		HON	BAL	g2019	Sconnie McSix	1527
+36	2	15	3183		COL	PHI	DREAMSLOTH	Jarvis Harbinger-Marjin	1535
+36	2	16	3083		AUS	AUS	TwoSocks	Zamir Kehla Jr.	1481
+36	2	17	3121		NYS	PHI	lordcoolcats	Jasper Fontaine	1511
+36	2	18	3073		NOLA	HON	Raven	Octavio Pérez	1544
+36	2	19	3133		SAR	CHI	soevil	Austin Morley	1603
+36	2	20	3159		BER	BER	Gage2	Tae Dawson	969
+36	2	21	3108		PHI	SJS	Pizza-faith	Mike Scott	497
+36	2	22	3057		YKW	AZ	sathona	Savathûn T. Witchqueen	1212
+36	2	23	3081		SJS	YKW	Arkz	Absolute Unit	1420
+36	2	24	3103		OCO	OCO	slate	Leandre Diarra	1534
+36	2	25	3150		CHI	AUS	Fordhammer	Jean-Ralphio Saperstein	589
+36	2	26	3052		AZ	SAR	abh89	Harley Andrews	1610
+36	2	27	3104		BAL	BAL	NicholasTheGreat	Bruce Buckley Jr.	1261
+36	2	28	3078		HON	NYS	zaynzk	Bonzi Buddy	1441
+36	3	29	3125		COL	COL	iStegosauruz	Mister Hogmally	1509
+36	3	30	3113		AUS	AUS	enigmatic	Raffaele Tommasi	425
+36	3	31	3105		NYS	NYS	Rusfan	Mandrews McHollywood	1568
+36	3	32	3079		NOLA	NOLA	Charple	Charles Chapman	1437
+36	3	33	3163		SAR	SAR	mikustan native	Aqeel Steele	1140
+36	3	34	3098		BER	BER	Liter	Fred Edison	994
+36	3	35	3117		PHI	SJS	AW13	Fat Jack	1181
+36	3	36	3167		YKW	COL	Agent Chaos	Ceti Pyxis	1226
+36	3	37	3063		SJS	YKW	josda_	Reece Wells II	399
+36	3	38	3050		OCO	OCO	Suggs	Suggs Upshar II	319
+36	3	39	3166		CHI	CHI	Reedy0rNot	Joseph Reed	1246
+36	3	40	3091		AZ	AZ	PBS	Dennis Rodman	801
+36	3	41	3071		BAL	AZ	Ulaire	Akaki Akayre	1512
+36	3	42	3129		HON	AUS	TheDangaZone	Jimmy Holding	1050
+36	4	43	3127		COL	COL	SDCore	Effoff IamYeti	218
+36	4	44	3178		AUS	AUS	dallasrogue21	Roma Amir-Kani	415
+36	4	45	3162		NYS	NYS	khkreator	Kaiden King	271
+36	4	46	3075		NOLA	HON	Seymour	Bean Delphine Jr	1398
+36	4	47	3089		SAR	SAR	JustCloud	Justin Cloud	302
+36	4	48	3160		BER	BER	Nathan	Nathan Meagher	1501
+36	4	49	3149		PHI	SJS	PurplePiratePoo	Will Nightingale	526
+36	4	50	3051		YKW	PHI	AnUnoriginalGuy	Derrick Prince	907
+36	4	51	3137		SJS	BER	C9Van	Laszlo Forty-Two	1439
+36	4	52	3139		OCO	NYS	lespoils	Pan Cakes	588
+36	4	53	3095		CHI	SAR	seal	Pete Zuh	1006
+36	4	54	3047		AZ	AZ	Chrundle	Emerson Quinn	395
+36	4	55	3049		BAL	NOLA	RockbotRockbo	Rockbot Rockbo	808
+36	4	56	3153		HON	PHI	bechtudo	Udo E Beaty	1156
+36	5	57	3072		COL	COL	Bunny	Orlando Doom	859
+36	5	58	3132		AUS	AUS	wuma	Sexy Wilfork	203
+36	5	59	3061		NYS	CHI	KingOfTheOzone	Walter McKinley	921
+36	5	60	3058		NOLA	NOLA	patsfreak27	Turt Golum	305
+36	5	61	3126		SAR	SAR	FL4K__	Malcom Graves	138
+36	5	62	3059		BER	BER	Air Crou	Roque Santa Cruz	1316
+36	5	63	3109		PHI	SJS	LIL MUNKEY	C.G Breezy	519
+36	5	64	3158		YKW	PHI	Jmsewa19	Jair Pharaoh	200
+36	5	65	3115		SJS	YKW	Alphavictory	Richard Harden	235
+36	5	66	3180		OCO	OCO	Twinsfan87	Jeremy Crouse Jr.	271
+36	5	67	3169		CHI	OCO	cluesman	Tyrod Iverson	104
+36	5	68	3136		AZ	NYS	Jo3fish5	Amadan Fool	133
+36	5	69	3070		BAL	BAL	dude_woman	Mabel Pines	1005
+36	5	70	3168		HON	HON	drewlikesthepanthers	Drew Stowe	73
+36	6	71	3102		COL	COL	CJ_the_M16	Rerry Jice	94
+36	6	72	3080		AUS	AUS	Thegreatbambino	Trigger Robinson	90
+36	6	73	3077		NYS	OCO	Jaywe88	PeePee Poop-Eater Sr.	1019
+36	6	74	3172		NOLA	NOLA	SmittyHextall	Nick Smith	73
+36	6	75	3147		SAR	SAR	gtg1994	Greg Givens	60
+36	6	76	3144		BER	BER	smitty_oom	Smitty Oom	67
+36	6	77	3100		PHI	SJS	Saltystew32	Payton Wilhelm	73
+36	6	78	3046		YKW	PHI	Buttersqauch101	Patrick Cunningham	263
+36	6	79	3140		SJS	YKW	deffmonk	Bunk McDunk	80
+37	1	1	3185		BER	BER	Amidships	Charlie Thorsen	1440
+37	1	2	3207		NYS	NYS	High Stick King	Matthew Mara	1428
+37	1	3	3256		COL	COL	Arctic	Grayson Yates	623
+37	1	4	3238		NOLA	AUS	Kyamprac	Delores Bickerman	1500
+37	1	5	3184		AUS	BAL	DarknessRising	Preston Beatz	1566
+37	1	6	3201		BAL	NOLA	Moldycheez4	Jason Oexius	455
+37	1	7	3221		OCO	NYS	TheHammer43	Bay Webb	1461
+37	1	8	3192		PHI	COL	Gadget	Inspector Gadget	889
+37	1	9	3224		YKW	YKW	dustywilson22	Dusty Wilson	1355
+37	1	10	3220		SJS	BER	RDBSouthPaw	Jordan Hartline	1155
+37	1	11	3196		AZ	HON	OrbitingDeath	Nova Montagne	1609
+37	1	12	3232		CHI	COL	qWest	Rocky Moreaux	1639
+37	1	13	3236		SAR	SAR	Dip	Dip Dhillon	624
+37	1	14	3244		HON	NYS	TacocaT	Michael Touchback	688
+37	2	15	3186		BER	BER	r0tzbua	Known Acquaintance	556
+37	2	16	3247		NYS	HON	xQCFamous	Monty Ward	304
+37	2	17	3193		COL	CHI	chxhawk	Stryker Brown	249
+37	2	18	3243		NOLA	AUS	Bmason0520	Brandon Mason	1409
+37	2	19	3202		AUS	CHI	gucci	Brock Landers Jr.	409
+37	2	20	3190		BAL	NOLA	MrMom	Adam Rage	281
+37	2	21	3218		OCO	PHI	negs	Creg Jerrith IV	1487
+37	2	22	3229		PHI	PHI	Hontier	Gribbuh Fister	179
+37	2	23	3252		YKW	YKW	RyanM1414	Ryan Murray	240
+37	2	24	3194		SJS	SJS	LutherVox	Luther Vox	160
+37	2	25	3227		AZ	AZ	Crunk	Danny Nedelko	1623
+37	2	26	3213		CHI	SAR	FleshBagSoup	Yummy HotDogPie	636
+37	2	27	3204		SAR	CHI	WhatAmUs	Blibby Shpoopy	100
+37	2	28	3231		HON	NOLA	deckerd	Deckerd DeShaw	172
+37	3	29	3246		BER	BER	WALDO	— Thwomp	166
+37	3	30	3222		NYS	HON	nunccoepi	Adrian St. Christmas	1536
+37	3	31	3239		COL	COL	gotothegym18	JarDarius Jones	114
+37	3	32	3191		NOLA	AUS	LSUFAN101	Cade York Jr. Jr.	115
+37	3	33	3254		AUS	BAL	Jabs	Wae Traynes	224
+37	3	34	3257		BAL	BAL	Ren_Solo	D’Sqarius Green V	177
+37	3	35	3219		OCO	NYS	ThePope	Paddy MacGuinness	98
+37	3	36	3203		PHI	BER	Aford9910	Aaron Ford	88
+37	3	37	3212		YKW	YKW	Vishy	Vader Page	68
+37	3	38	3249		SJS	SJS	CeeKay	Cornelius King III	548
+37	3	39	3187		AZ	AZ	McLovin	Mickey Lauvin	71
+37	3	40	3253		CHI	OCO	LarryFisherman	Larry Fisherman	50
+37	3	41	3211		SAR	SAR	Draco Thompson	Duke Smith	50
+37	3	42	3214		HON	NOLA	lamp_wizard	Cardorino Tarotino	82
+37	4	43	3242		BER	BER	Bacarri_Rambo	Bacarri Rambo	63
+37	4	44	3240		NYS	NYS	Zephyrus1128	Orion Jasper	100
+37	4	45	3199		COL	COL	Lemorse7	Dalibor Dvorsky	113
+37	4	46	3195		NOLA	HON	Southie	Dobromil Dvořák	82
+37	4	47	3215		AUS	BAL	JAC_	Jackson Cannon	57
+37	4	48	3208		BAL	NOLA	Damien823	Damien Chambers	50
+37	4	49	3261		OCO	OCO	chugganaut	Tyler Orator	50
+37	4	50	3217		PHI	PHI	JustPureLuck08	Toby Hays	57
+38	1	1	3293		AUS	AUS	MikeWhiskey	Tank McGibbons	1329
+38	1	2	3312		COL	COL	SchwarzNarr	Aidan Hutchinson Jr.	783
+38	1	3	3328		SJS	HON	Caleb_H	Caleb Hayden	1031
+38	1	4	3283		NYS	SJS	AK41	Zavier Perkins	448
+38	1	5	3326		BER	OCO	caravaggio	Walrus Jones	1616
+38	1	6	3271		BAL	BER	Eldorian	GOAT TANNK	1369
+38	1	7	3317		OCO	SJS	Exilizer	Cruella de Ville	1299
+38	1	8	3269		NOLA	NOLA	Starboy	Armor Queen	1192
+38	1	9	3270		PHI	OCO	Billybolo53	Teenie Hodges	667
+38	1	10	3265		CHI	CHI	AlbanianValor	Brian Duke	489
+38	1	11	3323		HON	BAL	H0PPY75	Sledge Hammer	1268
+38	1	12	3325		YKW	AUS	Lumosityfan	Jeff Newman	1260
+38	1	13	3311		SAR	BAL	Symmetrik	Shane Turnbull	1316
+38	1	14	3264		AZ	AZ	Murtsi	Fortified Fridge	1361
+38	2	15	3282		AUS	YKW	deadlunatic	Gore Done Ram Say	615
+38	2	16	3319		COL	COL	37thchamber	Remi Musgrave-Smythe	1252
+38	2	17	3295		SJS	NYS	drokeep	Siegmeyer OfCatarina	279
+38	2	18	3279		NYS	BAL	Big Newff	Casino Robin	721
+38	2	19	3274		BER	PHI	Eric Belmont	Eric Belmont	462
+38	2	20	3313		BAL	BER	Dewalt27	Diggs Sideline-touchdown	1349
+38	2	21	3315		OCO	BAL	BOOM™	Bridge Burner	1484
+38	2	22	3331		NOLA	PHI	Haloick	Haloick Oasis	340
+38	2	23	3321		PHI	BER	Cincyfan96	Really Creative-Name	892
+38	2	24	3305		CHI	CHI	Painted	Painted Penguin	1448
+38	2	25	3300		HON	AUS	unconfident	Carly Rae Jensen	1510
+38	2	26	3268		YKW	YKW	kaleb356	Teddy Rhinoback	277
+38	2	27	3309		SAR	SAR	JBLAZE_THE_BOSS	Johnny Blaze Jr	1233
+38	2	28	3296		AZ	AZ	Kotasa	Sherwin Blue Jr.	1466
+38	3	29	3273		AUS	YKW	Lord_Parquad	Kadillac Kane	116
+38	3	30	3276		COL	COL	Lumpz	Bong Stevens	458
+38	3	31	3324		SJS	OCO	LB3737	Ben Goodwood	243
+38	3	32	3288		NYS	SJS	ajtigger	Booter McGavin	1026
+38	3	33	3314		BER	BAL	NamelessNate	Jack Hammer	180
+38	3	34	3287		BAL	OCO	sapp2013	Zero Gibson II	276
+38	3	35	3316		OCO	BAL	Frick_Nasty	Mike Makmur	287
+38	3	36	3267		NOLA	SJS	QuirkyTurtle	Jimmy Jeeta	317
+38	3	37	3284		PHI	OCO	HenryBenry	twerky dingleberry	245
+38	3	38	3281		CHI	CHI	TheSparkyDee	David Doug	530
+38	3	39	3306		HON	HON	Kobefromthefrobe	Henry Oswald-Newman	433
+38	3	40	3330		YKW	YKW	PDXBaller	Bastian Weichselbraun	164
+38	3	41	3332		SAR	SAR	majesticwalrus8	Julius McMiller	140
+38	3	42	3286		AZ	AZ	SwagSloth	Reshad Morris	181
+38	4	43	3278		AUS	AUS	BloomeyGB	Alexander Lawrence	78
+38	4	44	3277		COL	COL	Cage	Camron Washington	72
+38	4	45	3280		SJS	NYS	Snussu	Fat Boija	86
+38	4	46	3308		NYS	PHI	Tak97	Toby Knerr	59
+38	4	47	3318		BER	OCO	LANEFROST	Aiden Frost	342
+39	1	1	3373		HON	HON	voxaroth	Seth Leavitt	740
+39	1	2	3338		COL	COL	fnordypsyduck	Waylen Greene	1431
+39	1	3	3356		PHI	OCO	SimmiZ	Sim Sunigh	1513
+39	1	4	3370		CHI	CHI	ComebackZak	Frank Dux	1613
+39	1	5	3364		NOLA	SAR	Sebster	Willier Miller	1414
+39	1	6	3377		AUS	BAL	dude_man	Jake Williams	1502
+39	1	7	3347		SAR	AUS	124715	Mario Moloka’i	1053
+39	1	8	3361		BAL	OCO	Lowkey	Johnson Lovehammer	565
+39	1	9	3376		OCO	BAL	Aneeqs	MC Hammer	1391
+39	1	10	3362		SJS	HON	JuOSu	Maxwell Jacob Friedman	1546
+39	1	11	3384		NYS	NYS	Void_DCXI	Donte Darius	1080
+39	1	12	3386		YKW	YKW	FTR	Mo Gago	1400
+39	1	13	3382		BER	HON	Thiath	Dick Grayson	416
+39	1	14	3350		AZ	AZ	zeagle1	Donovan Winters III	1512
+39	2	15	3369		HON	AUS	.Laser	Geralt -	1441
+39	2	16	3355		COL	COL	IsaStarcrossed	NCADV RAINN	1066
+39	2	17	3357		PHI	NYS	Tayjay	Blaine Falco	1451
+39	2	18	3333		CHI	CHI	Thor	Plant Based	453
+39	2	19	3374		NOLA	OCO	Beck	Smokin Jay	1623
+39	2	20	3390		AUS	OCO	Lego	Good Player	573
+39	2	21	3343		SAR	AUS	Kyle	Charlie Brown	237
+39	2	22	3371		BAL	OCO	RavensFanFromOntario	Hot Chocolate	140
+39	2	23	3348		OCO	SAR	Modern_Duke	Apollo Program	1226
+39	2	24	3379		SJS	SJS	ckroyal92	Brooks Piggott	1418
+39	2	25	3346		NYS	PHI	Luciddreams702	Kenny McCormick	734
+39	2	26	3336		YKW	HON	IceBear32	Luigi Lanikai	1493
+39	2	27	3359		BER	BAL	Trempale	Antoine Winfield Jr.	913
+39	2	28	3365		AZ	AZ	MrGoat1246	Gucci Gurley	424
+39	3	29	3341		HON	YKW	rbro18	Branden Rojas	607
+39	3	30	3367		COL	COL	a_cupof_bread	DeAndre Crover	161
+39	3	31	3344		PHI	PHI	hemhem	Malik Jordan	170
+39	3	32	3381		CHI	CHI	hexify	Hex Amofah	87
+39	3	33	3340		NOLA	SAR	Cook	Demarius Cook	717
+39	3	34	3385		AUS	NOLA	lennylyons	Lenny Lyons Jr.	246
+39	3	35	3342		SAR	AUS	Donkey	Saul McGill	65
+39	3	36	3375		BAL	OCO	Starchychaff	Anthony Simmons	64
+39	3	37	3351		OCO	BAL	JMoney762	Jay Money	938
+39	3	38	3389		SJS	HON	ChrisHalla0	Chris Halla	94
+40	1	1	3409		HON	HON	Bayley	Liv Elsathelookout	1524
+40	1	2	3433		BER	BAL	jeffie43	Money Tolliver	1195
+40	1	3	3450		OCO	OCO	kenvald	Jamdrian LeBayers	1621
+40	1	4	3452		BAL	BER	manicmav36	Clint Mustache	1201
+40	1	5	3432		NYS	NYS	Mojojojo	Lionel Scrimmage	1191
+40	1	6	3449		CTC	SJS	Duilio05	Alex Armstrong	1428
+40	1	7	3439		SJS	CTC	Akoustique	Kairo Knight	1476
+40	1	8	3413		COL	OCO	Hydrium	Big McLarge Huge	1195
+40	1	9	3425		SAR	BAL	KenitohMenara	Wälter Gunther	753
+40	1	10	3399		AUS	AUS	JKortesi81	Howard Coward	1541
+40	1	11	3393		NOLA	SAR	CLG Rampage	Ginand Toxic	956
+40	1	12	3396		CHI	CHI	AJW	Jimmy Ryder	528
+40	1	13	3435		AZ	AZ	Pib	Notso Smart	1046
+40	1	14	3460		YKW	HON	nickyvmlp	Florida Man	1142
+40	2	15	3419		HON	YKW	speculadora	Detective Crashmore	1044
+40	2	16	3437		BER	BER	Vulfzilla	KK Slider	302
+40	2	17	3461		OCO	OCO	Beta	Iosefa Fuamatu-Ma’afala	619
+40	2	18	3394		BAL	BAL	ItsFrenchie	Bourtol Halcomsby	904
+40	2	19	3406		NYS	NYS	Dalphix	James Batista	322
+40	2	20	3397		CTC	BER	Attopax	Melvin Harris	285
+40	2	21	3415		SJS	CTC	NYR73	Mike Ehrmantraut	411
+40	2	22	3463		COL	BAL	Gwdjohnson	Penger Tolliver	337
+40	2	23	3423		SAR	SAR	Fronk	Fronky Fresh	1618
+40	2	24	3403		AUS	AUS	scudmuffin19	Pegme Amidala	286
+40	2	25	3429		NOLA	YKW	siddhus	Toad Wananapaoa	274
+40	2	26	3421		CHI	SJS	Ace	Lord Farquaads	756
+40	2	27	3408		AZ	AZ	Rabidsponge21	Sir Tywrell Xah’Aawrone	1166
+40	2	28	3444		YKW	HON	MMFLEX	Raya Ho’opa’i	1125
+40	3	29	3401		HON	HON	bigbluex02	Lenny ’Extra’ Longpipe	559
+40	3	30	3407		BER	HON	moonlight	Alita Battle Angel	1027
+40	3	31	3457		OCO	CHI	Sarox	Bobby Steel	166
+40	3	32	3417		BAL	BAL	shanghai_kid	Bengal Tigerheart	1083
+40	3	33	3398		NYS	CTC	ThreeToeSloth	Ryan Lawrence	574
+40	3	34	3420		CTC	OCO	pauadrian	Tyler One	700
+40	3	35	3451		SJS	CTC	ValorX77	Nakiri Ayame	1511
+40	3	36	3424		COL	BAL	McGriddy10	Quandale Dingle	268
+40	3	37	3428		SAR	CTC	Drizzy	Jake Basinger	232
+40	3	38	3400		AUS	AUS	Dallypole	Mike Holiday	350
+40	3	39	3436		NOLA	NOLA	Rufio_NZ	Eli Prince	730
+40	3	40	3456		CHI	CHI	LANEFROST	Xavier Frost	213
+40	3	41	3410		AZ	AZ	Jepox	Don Tollibeo	652
+40	3	42	3411		YKW	AZ	hannahg32	Jayme Jayne Jay-Jaymison	621
+40	4	43	3447		HON	BER	TMosura	The Heavy	179
+40	4	44	3458		BER	BER	SnowyWolfz	Cape The Party Rhino	276
+40	4	45	3438		OCO	OCO	Matty86	Mathias Mayhem	848
+40	4	46	3402		BAL	BAL	Roconator	Rocky Franklin lll	254
+40	4	47	3446		NYS	NYS	Starchychaff	Anthony Simmons II	292
+40	4	48	3434		CTC	HON	SonicStarGaming	Oliver O’Conner	101
+40	4	49	3441		SJS	CHI	jackkmart	Action Bronson	315
+40	4	50	3443		COL	NYS	Keno	Keno Akara	133
+40	4	51	3454		SAR	SAR	Cetreny	Luis Randall	98
+40	4	52	3448		AUS	AUS	EeSea	Cole Mann	70
+40	4	53	3445		NOLA	HON	CyloSaynx	Matthew Fryars	328
+40	4	54	3430		CHI	CHI	Southie	Malcolm Grimes	295
+40	4	55	3422		AZ	AZ	Solarslayer	Jack Henderson	59
+40	4	56	3414		YKW	YKW	mackcoltond	Colt Mackintosh	50
+40	5	57	3427		HON	HON	theone	Cassius Holloway	50
+41	1	1	3607		NYS	NYS	wizard_literal	Dub Redd	1578
+41	1	2	4547		BAL	COL	aeonsjenni	Mary Marie	1257
+41	1	3	3618		HON	HON	LtHudz	Billy Jor-El	1410
+41	1	4	3512		SJS	OCO	UptownCord	John Stark VIII	1526
+41	1	5	3526		BER	NOLA	baz	Imma Sabercat	1566
+41	1	6	3489		COL	NOLA	toofpete	Bruce White	1418
+41	1	7	3548		NOLA	COL	ElMerchanto	Craig Brand	720
+41	1	8	3581		SAR	SAR	Sizz	Max Honestly	1522
+41	1	9	3536		CTC	AUS	Memento Mori	Oliver Tolliver	1061
+41	1	10	3506		AUS	CTC	jollyjiggs	Legs McMillion	1501
+41	1	11	3543		OCO	COL	infinitempg	Wolfie McDummy Jr.	1524
+41	1	12	3555		CHI	CHI	TheRake	Rico Savage	1380
+41	1	13	3598		YKW	YKW	Weaves	Kadarius Claypool II	1366
+41	1	14	3580		AZ	AZ	CROney3	Benji Aguilera	1550
+41	2	15	3552		NYS	NYS	Jumbo	Loose Cannon	1626
+41	2	16	3514		BAL	SJS	furiousPanda	Jumbo Edward	663
+41	2	17	3528		HON	HON	jdc4654	Ray Baker	1515
+41	2	18	3584		SJS	CTC	crash1005	Rolud Onyxgut	1398
+41	2	19	3493		BER	BER	Number 82	Emile Charles	1524
+41	2	20	3515		COL	NOLA	Ultimatedestroye	Kyle Crane	1367
+41	2	21	3568		NOLA	SAR	entreri	Artemis Entreri	375
+41	2	22	3527		SAR	AZ	Raccoon177	Logjammed McBobface	311
+41	2	23	3492		CTC	CTC	Cycro	Justin Willis	1262
+41	2	24	3490		AUS	CTC	FireworkFuse	Jason Steele	961
+41	2	25	3505		OCO	SJS	Urq660	DJ Maclean	1488
+41	2	26	3519		CHI	CHI	KlausGoatCasinos	Bill Cravy	656
+41	2	27	3589		YKW	YKW	Gumbaman	Terry Johnson	667
+41	2	28	3563		AZ	AZ	Purpl3Spartan	Benjamin Duvernay	1273
+41	3	29	3603		NYS	BER	ToastCharger	Burnt Toast	350
+41	3	30	3560		BAL	COL	Dustillation	Synystyr Gates	880
+41	3	31	4535		HON	BER	nickWilliams	Nick Williams	1465
+41	3	32	3539		SJS	SJS	DL14	Diego López Alonso	274
+41	3	33	3530		BER	BER	Jacky	Lukas Van Ness	582
+41	3	34	3501		COL	NYS	18situaseans	Sean Robinson	1290
+41	3	35	3596		NOLA	AZ	WrittinDirectino	Brian Vincent-Vega	1007
+41	3	36	3491		SAR	HON	LiathTheSquirrel	Liath Squirrel	1168
+41	3	37	3525		CTC	SJS	Gragg9	Modest Mussorgsky	359
+41	3	38	3566		AUS	NYS	MattBake12	. The Riddler	1020
+41	3	39	3620		OCO	OCO	bowl0	Lloyd Bannings	1255
+41	3	40	3600		CHI	CHI	thecanadiancanuck	Jake Jefferson	635
+41	3	41	3577		YKW	YKW	juniped	Orga Panda	870
+41	3	42	3494		AZ	AZ	yosh	Beeg Beeg Yoshi, Jr.	955
+41	4	43	3545		NYS	SJS	Greenbaynathan	Otto The Orange	545
+41	4	44	3604		BAL	SAR	Hordle	Damarcus Cole	750
+41	4	45	3587		HON	HON	Kunra99	Trent Silverback	288
+41	4	46	3498		SJS	CHI	Kaliodyme	Faust Leercor	799
+41	4	47	3534		BER	AUS	nasbase	Ryan Knock	305
+41	4	48	3579		COL	NOLA	AK41	Malik Brooks	1035
+41	4	49	3617		NOLA	OCO	Matlestud	Leo Stud	249
+41	4	50	3557		SAR	AZ	pazuzu	Scruffy The Janitor	455
+41	4	51	3571		CTC	AUS	subby500	LeAnthony LeDavis	172
+41	4	52	3567		AUS	BER	BWIII	Forozka Duanei	705
+41	4	53	3547		OCO	CTC	Tiktaalik	Bob Kickerson	602
+41	4	54	3615		CHI	CHI	Quisvilius	Amanda HugAndKiss	454
+41	4	55	3576		YKW	YKW	beardedserb	Andrija Divac	292
+41	4	56	3556		AZ	CTC	Quasi	Sticky Hands	1014
+41	5	57	3606		NYS	NOLA	jross	Rodney Rosadino	266
+41	5	58	3601		BAL	BAL	Pfluginator5	Frederick Carlson	459
+41	5	59	3578		HON	SAR	titanfan34	Eilliot Berry	241
+41	5	60	3507		SJS	SJS	Hallmonitor_20	Kenny Szymborski	805
+41	5	61	3513		BER	BER	MrNoPass	Ivan Baldwin	170
+41	5	62	3541		COL	OCO	Lohnranger	Joshua Mabry	569
+41	5	63	3549		NOLA	COL	Magnet	Banjo O’Kudah	160
+41	5	64	3537		SAR	SAR	ScrambledEggs	King Dedede	651
+41	5	65	3595		CTC	AUS	crazylemire	Great Khali	845
+41	5	66	3524		AUS	BAL	packplaya	Bubba Chubb	357
+41	5	67	3540		OCO	BAL	scorycory	Myrtle Beach Tolliver	180
+41	5	68	3588		CHI	BER	ianthebalance	Pierce Hawthorne	82
+41	5	69	3503		YKW	YKW	MCHers	Garth Silver	163
+41	5	70	3544		AZ	CTC	BrontBront	Bigton Hammer	97
+41	6	71	3529		NYS	NYS	Dolphins	Bradley Welch Jr.	186
+41	6	72	3531		BAL	BAL	Porkypig78	Garrett Cheetahman	123
+41	6	73	3619		HON	HON	InternationalHouse	Øffé Pànic	119
+41	6	74	3594		SJS	NYS	LeatherneckMike	Saveour Piethons	326
+41	6	75	3561		BER	BER	Acsolap	Atlas Kirkby	80
+41	6	76	3574		COL	NOLA	kinglord29	William Barkley	80
+41	6	77	3582		NOLA	COL	tuddus	Spooky Diddler III	70
+41	6	78	3611		SAR	SAR	Robb	Mr Robb	118
+41	6	79	3500		CTC	AUS	StormClark	Albert Einstein	83
+41	6	80	3612		AUS	CTC	Krombopulos_Bill	Donny Doofenshmirtz	68
+41	6	81	3497		OCO	OCO	YoungBuck	Akele Kekela	85
+41	6	82	3559		CHI	CHI	Joe Shabado	Icepick O’Hullihan	218
+41	6	83	3570		YKW	YKW	Rojefmo	Wade Right	93
+41	6	84	3533		AZ	AZ	4D Chess	Cheeky Lad	50
+41	7	85	3522		NYS	NYS	Blacchollywoodd	Slim Reaper	60
+41	7	86	3532		BAL	BAL	cove	Luca Rossi	88
+41	7	87	3521		HON	HON	JSmithFallen	John Smith	78
+41	7	88	3597		SJS	SJS	DeathBed11	Samuel Nelson	100
+41	7	89	3575		BER	BER	Hemmlock	Aleksander Reznikov	59
+41	7	90	3586		COL	NOLA	PonchoC	Nwoye Musa	84
+41	7	91	3542		NOLA	COL	LilOslicki	Quarl Walkins III	67
+42	1	1	4621		NOLA	NOLA	swoosh	Dino Nuggets	1618
+42	1	2	4682		BER	CHI	firstfray	Heiiajs D. Owidhuse	1552
+42	1	3	4603		COL	NOLA	Chicken Lips	Hank Mardukas	1512
+42	1	4	4623		BAL	COL	MN_Moosey	Federico Americano	1352
+42	1	5	4661		NYS	NYS	Martin.Bachman	Martin Bachman	353
+42	1	6	4664		SJS	SJS	Muford	Blacksmith Andre	1524
+42	1	7	4643		AUS	COL	Aleris	RE #38	871
+42	1	8	4669		CHI	SJS	Tylertokesome04	Josh Patterson	1558
+42	1	9	4656		YKW	OCO	shrub02	Reginald Shrubbery	1455
+42	1	10	4613		OCO	YKW	sburbine	Dan Dandrews	1167
+42	1	11	4683		SAR	SAR	DangWookie	Ace Anderson	1405
+42	1	12	4674		HON	BAL	ztarwarz	Luigi Numberone	1517
+42	1	13	4657		AZ	NOLA	CeeKay	Octavion Speedings	1433
+42	1	14	4679		CTC	NOLA	Komobro	Honey Humphries	374
+42	2	15	4685		NOLA	NOLA	Frostbite	Keanu Calhoun	1442
+42	2	16	4648		BER	AUS	tstols	Brock Lesnar	495
+42	2	17	4671		COL	HON	oilmandan	Stetson David	1514
+42	2	18	4609		BAL	COL	Reno	Aleksandar Ković	611
+42	2	19	4605		NYS	BER	Bubba	Chaos Vert	937
+42	2	20	4626		SJS	OCO	MouseMazing	Aaron Jäger	758
+42	2	21	4684		AUS	NYS	platanocat	Wing Wang	1314
+42	2	22	4665		CHI	CHI	LHarm	LeHarm James	924
+42	2	23	4668		YKW	OCO	LordEscanor	King Leonidas I	433
+42	2	24	4678		OCO	YKW	Retuperkele	Robert Rossi	358
+42	2	25	4625		SAR	COL	TubbyTim69	Marco Steele	703
+42	2	26	4629		HON	COL	electrictree	National Treasure	1231
+42	2	27	4687		AZ	NOLA	Sonny	Sonny Johnson	875
+42	2	28	4630		CTC	OCO	Jimi64	Eliot Bukowski	586
+42	3	29	4607		NOLA	NOLA	Matteo	Eldroh Kove	355
+42	3	30	4686		BER	SJS	Brucitalis	Bruce Talis	917
+42	3	31	4688		COL	BAL	Exilate	Narl Hecklenburg	1026
+42	3	32	4676		BAL	COL	PoopNukem	Turd Burglar	164
+42	3	33	4619		NYS	NYS	CheekiBreekiDamkie	Justa Ol ’Shoe	114
+42	3	34	4659		SJS	SJS	Lemorse7	The Red Panda	600
+42	3	35	4628		AUS	COL	ATribeCalledSteph	Trevor Prowler	146
+42	3	36	4663		CHI	CHI	UpperNet	Zisia Ojeisndiwoseodj	484
+42	3	37	4617		YKW	OCO	WALDO	Bread Bowl	1202
+42	3	38	4675		OCO	YKW	Jason Kranz	Jason West	155
+42	3	39	4634		SAR	SAR	srotpars	Lucas Stevenson	117
+42	3	40	4642		HON	HON	WildfireMicro	Speedy Gizmo	1022
+42	3	41	4616		AZ	AZ	somecoach	Suave Cruz	167
+42	3	42	4638		CTC	HON	Tacoville	Alex Rosen	84
+42	4	43	4627		NOLA	NOLA	Dukemarriot	Shucks McShuckle	107
+42	4	44	4633		BER	BER	Mossed26	Mike Gesicki	1288
+42	4	45	4652		COL	NOLA	ADMsmith	Thomas Ferguson	77
+42	4	46	4639		BAL	COL	DillyDillyJose	Kraig Johntholomew	154
+42	4	47	4637		NYS	NYS	MoonMan13	Chris Jakki	94
+42	4	48	4666		SJS	SJS	sandwichtheog	Abraham Madden	78
+42	4	49	4632		AUS	AUS	Berjasta	Otto Hall	69
+42	4	50	4610		CHI	CHI	Big Edd	Not Edd	326
+42	4	51	4651		YKW	OCO	nigsch01	Mergatroid Skittle	65
+42	4	52	4644		OCO	YKW	DukeAK717	Tyrone Huckleberry	67
+42	4	53	4646		SAR	COL	Roney027	John Roney	65
+43	1	1	4742		NOLA	AZ	lemonoppy	Thomas Sutha	1502
+43	1	2	4709		CHI	AUS	Opera_Phantom	Jay Cue III	1634
+43	1	3	4722		OCO	SAR	ctots	Gil Fischer	922
+43	1	4	4748		COL	BER	Water	Sack Sparrow	607
+43	1	5	4753		SJS	BER	Crodyman	Gaius Gleel	606
+43	1	6	4740		SAR	SAR	110radio	Ignatious Cleetington	1457
+43	1	7	4706		YKW	COL	shallowdolphin	Dylan Craig	50
+43	1	8	4720		AUS	BER	Pokecraft	Kyle Bessey	516
+43	1	9	4739		CTC	SAR	FootballIsCool	Spruce Willis	1322
+43	1	10	4745		NYS	AUS	AriaEXE	Crasher Wake	1532
+43	1	11	4747		HON	YKW	UberBJ	Cheecago Boucher	1082
+43	1	12	4729		BAL	NOLA	DoubleDub	Josh Gibson	1319
+43	1	13	4738		BER	NOLA	IHateBobNutting	Bubba Hog	722
+43	1	14	4737		AZ	AZ	allbetsonjames	Iman Outlaw	746
+43	2	15	4736		NOLA	BAL	ForSucksFake	Anakin Skywalker	1450
+43	2	16	4712		CHI	CHI	TheCC	Sem’ga Nah’sim	1414
+43	2	17	4749		OCO	CHI	SmittyHextall	Norman Smiley	959
+43	2	18	4750		COL	SJS	DeadlyPlayer	Tha Thu Craicte	553
+43	2	19	4728		SJS	CHI	goblin jr.	Oskar Clark	343
+43	2	20	4714		SAR	BAL	TDenstroyer	Tunkha Danstrol	542
+43	2	21	4744		YKW	BAL	bernardhibou	Bertie Mannering-Phipps	1253
+43	2	22	4692		AUS	AUS	RobJG2	Robert Green	1446
+43	2	23	4705	GM	CTC	NOLA	MobiausGrander	Allister Adebam	1501
+43	2	24	4695	GM	NYS	COL	Ephenssta	Bell Peepo	881
+43	2	25	4741	GM	HON	YKW	ZootTX	Maximus Boudreaux	1531
+43	2	26	4733		BAL	COL	Allstar20890	Giles Marrett	421
+43	2	27	4746		BER	NOLA	Moosecop	Kelijah Verwae	869
+43	2	28	4743	GM	AZ	AZ	.simo	Paul Dosza	1081
+43	3	29	4730		NOLA	BAL	Rise of Smitty	Sam Mercury	918
+43	3	30	4711		CHI	YKW	Tyrathiel	Tyler Hunt	561
+43	3	31	4690		OCO	OCO	Kazi420	Alex Sanchez	146
+43	3	32	4713		COL	SJS	McGriddy10	Mega Tron	961
+43	3	33	4754		SJS	COL	hemhem	La’Fluke Paris-Johnson	621
+43	3	34	4691		SAR	SAR	PSanchez55	Reginald Arceneaux	266
+43	3	35	4708		YKW	CHI	thevoicelesscreator	Lieks Acksalot	333
+43	3	36	4702		AUS	AUS	slumped64	Sean Aldrich	559
+43	3	37	4689		CTC	COL	andybj	Meowchael Cleocatchra	289
+43	3	38	4724		NYS	NYS	overdoo	Huck Indarts	162
+43	3	39	4719		HON	HON	ChickenLeg	Logan Runswell	150
+43	3	40	4699		BAL	NOLA	Kw1	Tatum Washington III	250
+43	3	41	4726		BER	NOLA	Jiggly_333	Midwest Emo	419
+43	3	42	4752		AZ	AZ	LIL MUNKEY	C.G Breezy Jr.	506
+43	4	43	4716		NOLA	NOLA	WhatInTheCTF	Kane Erikkson	119
+43	4	44	4704		CHI	CHI	Griffcrunk	Griffin Crunk	67
+43	4	45	4698		OCO	OCO	fart_simpson_	Dan Hall	62
+44	1	1	4779		NOLA	NOLA	Tmoney6996	Thomas Passarelli	1622
+44	1	2	4853		CHI	CHI	HalfEatenOnionBagel	A Waffle	854
+44	1	3	4848		SJS	SJS	OrangeJulius	Orange Julius	1114
+44	1	4	4847		OCO	AUS	GrimmCrackers	Trent Thigpen	1514
+44	1	5	4852		YKW	OCO	katarn22	Ryan McBean	645
+44	1	6	4844		SAR	YKW	homercrates	Thor Dangerson	1446
+44	1	7	4842		AUS	SAR	Piercewise1	Jamie Orion	1229
+44	1	8	4854		HON	BER	SomeSay...	Tuna TurnDaBallOva	1347
+44	1	9	4760		BER	COL	Menace0528	Pete Moss	346
+44	1	10	4841		COL	CHI	captainsb	Joey Battle	1206
+44	1	11	4845		AZ	AZ	Bamford13	Jordan Bamford	1561
+44	1	12	4836		CTC	BAL	caleb.grim	Carter Goad	1559
+44	1	13	4795		NYS	CHI	Triceracop	Triceracop -	1459
+44	1	14	4837		BAL	BAL	Bazooka_Joe	Joe Bazooka	1395
+44	2	15	4828		NOLA	NOLA	JoeSteel	Scott Junior	1294
+44	2	16	4849		CHI	SJS	dogwoodmaple	Maple Dogwood	1084
+44	2	17	4850		SJS	SJS	okestboomer	Ronald McDonald	483
+44	2	18	4840		OCO	CHI	Marty the Monster	Marty Crane	1086
+44	2	19	4839		YKW	OCO	Datboi69	Wayne Miller	501
+44	2	20	4846		SAR	AUS	AJay887	Gajeel Redfox	1435
+44	2	21	4831		AUS	OCO	Jaywe88	Billy Ennair	500
+44	2	22	4801		HON	BER	musha6570	Golden Foote	293
+44	2	23	4843		BER	YKW	lock180	Space Dino	1488
+44	2	24	4838		COL	HON	shadyshoelace	Lenard McRobinson	1475
+44	2	25	4824		AZ	AZ	thecrimsonking99	Dormo Bloodhand	245
+44	2	26	4768		CTC	COL	RavensFanFromOntario	Mattrim Cauthon	300
+44	2	27	4818		NYS	NYS	LurchingCard	Xavier Moreno	257
+44	2	28	4829		BAL	CTC	Thor	Thor Bǫllrsveifla	1641
+44	3	29	4851		NOLA	NOLA	jj2416	Biggie Fast	511
+44	3	30	4791		CHI	YKW	Scrizz	Pat Uncertain	520
+44	3	31	4757		SJS	SJS	Bolt	Matthew Bolt	194
+44	3	32	4855		OCO	BAL	DL14	Diego López de Castilla	1065
+44	3	33	4784		YKW	BAL	PHB11677	. Gougar	187
+44	3	34	4827		SAR	YKW	Trennik	Redd Mistt	230
+44	3	35	4774		AUS	NOLA	Buttersqauch101	Dan Sevin	309
+44	3	36	4792		HON	SAR	sound5th	Geo Roberts	116
+44	3	37	4788		BER	CHI	dcphil	Dewey Greenbeans	862
+44	3	38	4807		COL	HON	rickymartin_irl	Wario Saturday	619
+44	3	39	4833		AZ	AZ	Chrundle	Jelani Avant	157
+44	3	40	4856		CTC	COL	Will3	Felix Waterman	357
+44	3	41	4817		NYS	NYS	Slick	Tyrell Ramsey	226
+44	3	42	4776		BAL	AZ	kirbyberns	Kirby Bernard	121
+44	4	43	4773		NOLA	CTC	Dynamicmlb_42	Leonard McCoy	163
+44	4	44	4777		CHI	SAR	Csbbk4	LeBlockus BrickWall	50
+44	4	45	4808		SJS	OCO	Crazytomato	Crazy Tomato	1038
+44	4	46	4857		OCO	YKW	LANEFROST	Lane Frost III	397
+44	4	47	4797		YKW	CHI	kmatt	Ivan Ivanov	608
+44	4	48	4775		SAR	BAL	likealikeasexyorange	Lod Vilkshelm	82
+44	4	49	4810		AUS	SAR	venomous_wario	Jarad Marshall	152
+44	4	50	4764		HON	BER	nickgilbert17	Nicholas Gilbert	96
+44	4	51	4771		BER	COL	JustHereToLeave	Kieran Kovalev	89
+44	4	52	4790		COL	SAR	Charlie C	Theo Blake	129
+44	4	53	4812		AZ	NOLA	bananaman	Justin Time	99
+44	4	54	4821		CTC	NOLA	Panthersnation12	Logan Johnson	69
+44	4	55	4832		NYS	CHI	Moe	Big Birtha	69
+44	4	56	4758		BAL	BAL	Doppelganger_	HK 19	69
+44	5	57	4826		NOLA	NOLA	2frames	Conway Spittey	62
+45	1	1	4895		CHI	CHI	thewhovian	Doctor Who	1523
+45	1	2	4896		NOLA	NOLA	TomHanks	Paul Edgecomb	1349
+45	1	3	4893		SJS	SJS	Pvtpenne	Kit Fisto	1635
+45	1	4	4884		COL	COL	woelkers	Hercules Henry	1079
+45	1	5	4885		OCO	OCO	bex	Siri Kjellström	838
+45	1	6	4901		YKW	YKW	CaptainDMG	Emerson Bigguns	375
+45	1	7	4882		BER	BER	GlimsTC	Willie Swaggert	955
+45	1	8	4863		AZ	AZ	CptGoosar	Xavier Buckley	300
+45	1	9	4886		SAR	SAR	ProdigalSon	Ali Star	1423
+45	1	10	4892		AUS	AUS	PugWalrus	Oops All-Pro	1051
+45	1	11	4897		NYS	NYS	Cody	Perry Passiveman	817
+45	1	12	4883		BAL	CTC	Dagon	Sebastian Lovecraft	383
+45	1	13	4902		CTC	CTC	Huskies311	Juran Riley	475
+45	1	14	4889		HON	COL	J0EB	Klaus von Reinherz	1019
+45	2	15	4904		CHI	CTC	Sizzzle	Simon Winston	336
+45	2	16	4887		NOLA	NOLA	AW13	Dawelle Wevis	1043
+45	2	17	4879		SJS	SJS	Shylo_Moxii	Micah Dixon	225
+45	2	18	4868		COL	HON	g2019	Worsethan Blaze	769
+45	2	19	4865		OCO	OCO	Michiganonymous	Frumious Bandersnatch	278
+45	2	20	4894		YKW	NOLA	Ben	André Benn	1028
+45	2	21	4900		BER	OCO	Philliesphan96	Fin-Jeremy Har-Dur	384
+45	2	22	4890		AZ	AZ	soup	Garlic Jr.	697
+45	2	23	4871		SAR	SAR	Eric Belmont	Raw Cheese McPickle	250
+45	2	24	4881	GM	AUS	BAL	Charple	Chappy McChapperson	1436
+45	2	25	4898		NYS	NYS	scudmuffin19	Scudl McDiddl	655
+45	2	26	4880		BAL	BAL	SnowyWolfz	Master Chief	542
+45	2	27	4888	GM	CTC	YKW	TubaDeus	Luke Hunter	1639
+45	2	28	4891	GM	HON	BER	r0tzbua	Pitter Patter	1171
+45	3	29	4899		CHI	CHI	MMAJAKE710	Neil Bonnet	735
+45	3	30	4861		NOLA	BAL	dude_woman	Isabella García-Shapiro	122
+45	3	31	4903		SJS	SJS	shiki	Local Cryptid	283
+45	3	32	4870		COL	COL	poopooinp	Mike Hawk	103
+45	3	33	4869		OCO	OCO	YoungBuck	Asher Daniels	90
+45	3	34	4874		YKW	YKW	Coachsj35	Cush Jones	209
+45	3	35	4862		BER	BER	Bauer	Eye-Hardly Knower	149
+45	3	36	4859		AZ	AZ	SG_Vesuvius	La’Travious Ward	62
+45	3	37	4872		SAR	SAR	itztimg	Benny Hanna	210
+45	3	38	4875		AUS	AUS	SirBongo	Barret Garrett	64
+45	3	39	4860		NYS	NYS	ScenicVoyage	Hingle McCringleberry	76
+46	1	1	4942		YKW	YKW	xenosthelegend	Silence Suzuka	1571
+46	1	2	4952		NOLA	NOLA	domffl	Oxford Comma	1343
+46	1	3	4958		SJS	SJS	Dindog	KrustyKrab Pizza	1284
+46	1	4	4943		CTC	CHI	DigDoug11	Corey Trevor	1480
+46	1	5	4935		OSK	BER	Drizzy	Devin Jones	1456
+46	1	6	4954		NYS	NYS	Amkamkamk	Drake Wane	1397
+46	1	7	4920		OCO	OCO	amjohnson636	Chopper Donquixote	1159
+46	1	8	4941		AZ	SAR	Gordon Bombay	Léopold Roy	905
+46	1	9	4946		BER	NOLA	CementHands	Octavio Volarus	1111
+46	1	10	4947		BAL	AZ	KaleSalad	Purdy mediocre	1614
+46	1	11	4959		COL	HON	frazzle14	Hearty Harry	782
+46	1	12	4949		HON	HON	griis	Leo Simon Schwartz	693
+46	1	13	4951		SAR	BER	Nathan	PeePee Poop-Eater Jr.	1260
+46	1	14	4960		AUS	AUS	ElMerchanto	Seventh Rounder	316
+46	2	15	4944		YKW	YKW	theskinnyman	Sergei Nunkanblok	880
+46	2	16	4953		NOLA	NOLA	slothfacekilla	Jack Sloth	1544
+46	2	17	4936		SJS	SAR	crow19	Miller Light	469
+46	2	18	4939	GM	CTC	CTC	lordcoolcats	Scorch von Turbo	1448
+46	2	19	4940		OSK	CTC	Keyg_an	Dru Freduci	785
+46	2	20	4955		NYS	NYS	PurplePiratePoo	Lyle Taylor	1427
+46	2	21	4934		OCO	BER	jreed12	D’Jasper Probincrux IV	1256
+46	2	22	4950		AZ	OCO	jaypc8237	Lasse Zeigler	1033
+46	2	23	4945		BER	YKW	bjkman	Billy Van Goff	885
+46	2	24	4948		BAL	AZ	Rydychyn	Wynn Jenkins	987
+46	2	25	4937		COL	COL	DatSmolBoi	Terry Keller	591
+46	2	26	4956	GM	HON	HON	MMFLEX	Fig Newton	1441
+46	2	27	4957	GM	SAR	SJS	RussDrivesTheBus	Duilio's Beard	1493
+46	2	28	4930		AUS	AUS	Matty7478	Matthew McDairmid Jr.	72
+46	3	29	4938		YKW	YKW	smolkrnboi	Taylor Swift	466
+46	3	30	4924		NOLA	NOLA	Aford9910	Aaron Ford	679
+46	3	31	4914		SJS	SJS	ihatereyson	Maeve Mascarpone	140
+46	3	32	4923		CTC	CTC	Jbrid416	Squints Jr	140
+46	3	33	4907		OSK	CHI	yrhryan	Cassius Ketch	80
+46	3	34	4910		NYS	NYS	frozencreek	John le Ston	78
+46	3	35	4913		OCO	OCO	Insurgent1315	Daddy Dimes	101
+46	3	36	4909		AZ	BER	MisterBasketball	Stephen Murphy	77
+46	3	37	4917		BER	BAL	zefuses	Cody Shredder	65
+46	3	38	4908		BAL	AZ	bigdolla	T.J Enterfeltd	67
+46	3	39	4929		COL	COL	Solarslayer	Kolen Henderson	138
+46	3	40	4919		HON	HON	Scooter	Earnest Splash	72
+47	1	1	5028		HON	HON	Brad Woof	Brad Woof	1563
+47	1	2	5029		NOLA	HON	roquefort	Roquefort Cotswold	1626
+47	1	3	5040		BER	BER	WalterYensid	Walter Yensid	385
+47	1	4	5007		COL	COL	shahdude	Tim Riggins	1048
+47	1	5	5035		CTC	NYS	Daniel	Wake Drane Jr.	1326
+47	1	6	5009		NYS	CTC	oknom	Dunkler Sowerwine	1627
+47	1	7	5030		CHI	CHI	JJ5	JJ What	1341
+47	1	8	5038		SJS	SJS	Asked Madden	Mooty Poop-Eater	1495
+47	1	9	5014		SAR	SJS	Swanty	Swantavius Stack	1292
+47	1	10	5033		OCO	OCO	Fangorn	Reginald Hammerfall	1601
+47	1	11	5024		AUS	AUS	TwoSocks	Soul King Brook	895
+47	1	12	4997		BAL	BAL	Baron1898	María Teresa de la Rosa	1611
+47	1	13	5017		YKW	YKW	dustywilson22	Lane Wilson	1308
+47	1	14	5021		AZ	AZ	BRNXB0MBERS	Sewage Joe Fantringham	1530
+47	2	15	5026		HON	HON	TheNC206	Ranch-Pizza Pizza-Man	1130
+47	2	16	5031		NOLA	NOLA	Drip	McDripsen McDropsen	639
+47	2	17	4971		BER	BER	Jackienape	Raphael Mephistopholes	1104
+47	2	18	5008		COL	COL	mikustan native	SkibidiGyat OhioRizzler	1193
+47	2	19	5034		CTC	NYS	PMoney	Speed Hawk	1255
+47	2	20	4983		NYS	CTC	ConnorM123	D’Glester Hardunkichud	299
+47	2	21	5004		CHI	CHI	soevil	Russell Jimmies	1479
+47	2	22	5012		SJS	SAR	mer	Toller Retriever	956
+47	2	23	5022		SAR	BER	Soviet Sexpot	Maurice Gunner	1505
+47	2	24	5011		OCO	CTC	Blix900	Luke Laraque	798
+47	2	25	4976		AUS	BAL	Seymour	Bean Beanman III	781
+47	2	26	4998		BAL	BAL	Figgy	Lyle Robideaux	996
+47	2	27	5018		YKW	YKW	Starboy	Tony Scaletta	554
+47	2	28	5006		AZ	COL	bechtudo	Eric Beaty jr.	1205
+47	3	29	5027		HON	HON	SensibleDictator	Tyler Higbee II	786
+47	3	30	5032		NOLA	NOLA	NUCK	Will Nuck	1162
+47	3	31	5039		BER	SJS	Vulfzilla	Huge Yakman	489
+47	3	32	5020		COL	AZ	araa	Grzegorz Winnicki	1288
+47	3	33	5036		CTC	NYS	Pat	Elijah Dyson	1370
+47	3	34	5010		NYS	CTC	Gage2	Julian Rose	1155
+47	3	35	4965		CHI	CHI	roastfuego	Brandon Johnson	368
+47	3	36	5000		SJS	BAL	Agent Chaos	Upceti Spaghetti	1123
+47	3	37	5013		SAR	SAR	ImSatanJunior	- Bugs	1219
+47	3	38	5037		OCO	OCO	Honoredmexican	South West	1145
+47	3	39	5015		AUS	AUS	modpro	Bull Dozier	1346
+47	3	40	5025		BAL	HON	ThunderTitan82	Rush Hardman	339
+47	3	41	5016		YKW	YKW	papalinator	Bob Kronkowski	1227
+47	3	42	5019		AZ	AZ	Z-Whiz	Puddles O'Duck	1456
+47	4	43	4999		HON	BAL	kahri	Edith Nickelback	731
+47	4	44	4992		NOLA	NOLA	irthen	Matt Wilkins	339
+47	4	45	5003		BER	BER	dhoop	Meo Stickyhands-McGee	806
+47	4	46	5001		COL	COL	Bunny	- Bunny	322
+47	4	47	4970		CTC	NYS	Starchychaff	Anthony Simmons III	308
+47	4	48	4961		NYS	OCO	HollywoodTruzz	Hollywood Tez	159
+47	4	49	5005		CHI	CHI	fetty	Dee Fernandez	470
+47	4	50	5023		SJS	AUS	Rydel439	Ryan Joseph	831
+47	4	51	5041		SAR	SAR	hexify	Hex Waters II	271
+47	4	52	5042		OCO	BER	Schwarzy	Honorius Salvator	287
+47	4	53	4982		AUS	SJS	crazykeyoung	Roman Alexander	265
+47	4	54	4995		BAL	CHI	Sparrow86	Jack Destroyer	241
+47	4	55	5043		YKW	NOLA	Dr.Lloyd	Lloyd Boernsteen	141
+47	4	56	4987		AZ	HON	Canadian_Goose25	Johnathan ByWater	113
+47	5	57	5002		HON	HON	MrGoat1246	Gucci Gurley	415
+47	5	58	4985		NOLA	NOLA	kiki	Kiwi Flapjacks	107
+47	5	59	4990		BER	BER	DerekBecker	Derek Becker	87
+47	5	60	4996		COL	COL	Hamm Hargreaves	Hamm Hargreaves	69
+47	5	61	4963		CTC	NYS	cousinhuey	Demarcus Brothers	65
+47	5	62	4986		NYS	CTC	wingedbard	Treyverion Bernardrick	142
+48	1	1	5089		COL	COL	wetwilleh	Willeh Strong	1618
+48	1	2	5109		HON	HON	yonggarius	Robot Sunfish	1569
+48	1	3	5097		NYS	SAR	Twenty6	Zigzag Zipstep	1633
+48	1	4	5111		AUS	BER	ACynicalGamer	Mac Mannheim	1532
+48	1	5	5113		BER	NYS	zaynzk	Zayn Feet-Lover Sr.	1425
+48	1	6	5103		SAR	AUS	omg	Seer Ial	1599
+48	1	7	5088		YKW	BER	OrbitingDeath	GCBWRNW Princess Donut	1604
+48	1	8	5110		OCO	HON	Muddym13	Rex Havoc	1041
+48	1	9	5087		BAL	COL	DocLars	Jet Larsen	1660
+48	1	10	5107		NOLA	HON	Rusfan	Caleb TheGEICOCamel	1453
+48	1	11	5085		CHI	CHI	Oles	Tyler Oles III	686
+48	1	12	5117		SJS	SJS	Alikh	Lheorvine Adebisi	660
+48	1	13	5071		CTC	BER	Nectorist	Big Tractor	358
+48	1	14	5114		AZ	NYS	.Laser	Draven Chanos	1580
+48	2	15	5090		COL	COL	Punk42AE	Dazen Guile	1531
+48	2	16	5116		HON	CHI	Wiggli	Juan Carrasco	1559
+48	2	17	5102	GM	NYS	AUS	Mooty99	Mako Mendonca Jr	1578
+48	2	18	5093		AUS	COL	infern8	Adolin Collins	1627
+48	2	19	5100		BER	OCO	Jimi64	Animal Blundetto	1494
+48	2	20	5104		SAR	AUS	Ulaire	Rocket Ride	1275
+48	2	21	5094	GM	YKW	BER	Gadget	Acutiramus Bohemicus	1015
+48	2	22	5108	GM	OCO	HON	LtHudz	Leonardo Da Pinchi	1609
+48	2	23	5078	GM	BAL	BAL	SwankyPants31	Lawrence Crawford	1512
+48	2	24	5112		NOLA	NOLA	bfry	Stone Wall	1405
+48	2	25	5074		CHI	CHI	AnUnoriginalGuy	Derrick Prince Jr.	262
+48	2	26	5098	GM	SJS	SAR	abh89	Harrison Andrews Jr.	1488
+48	2	27	5095	GM	CTC	CTC	negs	GoTo imnegs.net	1047
+48	2	28	5115	GM	AZ	NYS	Repgnar	Widdle Warrick	1565
+48	3	29	5070		COL	AZ	Fno	Alexandros Sotiris	316
+48	3	30	5119		HON	HON	Supersquare04	Reggie Battle	278
+48	3	31	5076		NYS	SJS	trident13	Carlos Marx	288
+48	3	32	5079		AUS	BER	KC15	American Dream	998
+48	3	33	5080		BER	OCO	Civvy	Sam Coverdale	329
+48	3	34	5106		SAR	SAR	WildfireMicro	Adam Journey	1360
+48	3	35	5086		YKW	CHI	deadlunatic	Old Man Walker	521
+48	3	36	5081		OCO	HON	NylarthePhoenix	Cleetus Beauregard	581
+48	3	37	5101		BAL	AZ	hotdog	smooth green girnch	944
+48	3	38	5099		NOLA	YKW	Greenbaynathan	Nathan Claflin Jr.	604
+48	3	39	5096		CHI	HON	Fordhammer	Greg Hirsch	274
+48	3	40	5060		SJS	SAR	shackleferd	Rusty Shackleferd	273
+48	3	41	5084		CTC	OCO	Dolphins	Finn Murphy	420
+48	3	42	5092		AZ	COL	Kobefromthefrobe	Cameron Oswald-Newton	386
+48	4	43	5052		COL	COL	SPatt59	Jag McQueen	320
+48	4	44	5118		HON	OCO	RTX_Matrix	Rick Van Vale	126
+48	4	45	5105		NYS	AUS	Gwdjohnson	Garfield Despacito IV	323
+48	4	46	5082		AUS	BER	Argonisi	Kurt Wagner	411
+48	4	47	5083		BER	NYS	SirKitchel	Leroy Jenkins	243
+48	4	48	5120		SAR	AUS	Firefly	Daniel Kenny	87
+48	4	49	5058		YKW	YKW	YoungBuck	Jamarcus Qiller	200
+48	4	50	5073		OCO	HON	Southie	Johnny Bird	172
+48	4	51	5072		BAL	BAL	jft1768	Steve Austin	57
+48	4	52	5123		NOLA	NOLA	sneakyalien	Moses DeWitt	74
+48	4	53	5091		CHI	CHI	Raven	Gusztáv Farkas	1582
+49	1	1	5173		COL	COL	AustinP0027	Alexander Rockstone	1644
+49	1	2	5197		NYS	NYS	ReverendOReily	Kevin Finnerty	1202
+49	1	3	5186		AUS	AUS	Kyamprac	Billdozer Dauterive	1579
+49	1	4	5181		HON	BER	sonicxdoom	Super Sonic	1667
+49	1	5	5169		BER	BER	8bitd1ck	FTBLLCMR4D RUS-KCKR-001	623
+49	1	6	5178		SAR	SAR	bfan8475	Slam Dunkinson	1586
+49	1	7	5194		OCO	CHI	jlyles7	Joe Blaze	1259
+49	1	8	5180		YKW	YKW	Dev0	Devin Mace	1546
+49	1	9	5188		SJS	AUS	Amidships	William Eaton	1633
+49	1	10	5187		CHI	CHI	Lumosityfan	WW Jatt	1542
+49	1	11	5185		AZ	AZ	Crunk	Kim Yeon-Seok	1648
+49	1	12	5199		CTC	COL	Yeenoghu	Tua Domine	1636
+49	1	13	5184		BAL	AZ	Chucky	Harvin Marrison	1180
+49	1	14	5172		NOLA	COL	TubbyTim69	Julian McMorris II	1496
+49	2	15	5193		COL	NOLA	jsteele14	Frosty Steele	723
+49	2	16	5183		NYS	AZ	MikeWhiskey	Lakin Makin	720
+49	2	17	5203		AUS	SJS	Bwestfield	Lucas Graves	880
+49	2	18	5189	GM	HON	HON	IceBear32	- Baymax	1556
+49	2	19	5190		BER	HON	BOOM™	Sweet Sweet Ganjasmoke	1556
+49	2	20	5177		SAR	SAR	nunccoepi	Marshall von Hildebrand	1280
+49	2	21	5174		OCO	CTC	hihihi_62	Martavius Spencer	903
+49	2	22	5209		YKW	YKW	goodvsevil1275	Dexter Morgan	548
+49	2	23	5205		SJS	SJS	Reedy0rNot	Richard Johnson	397
+49	2	24	5204	GM	CHI	CHI	Painted	Hot Dam	1255
+49	2	25	5195	GM	AZ	NYS	wizard_literal	Duke Silverback	1421
+49	2	26	5175	GM	CTC	BER	Dewalt27	Connor Craig Jr. Jr.	1455
+49	2	27	5146	GM	BAL	COL	iStegosauruz	Secret Squirrel	544
+49	2	28	5200	GM	NOLA	OCO	UptownCord	Deacon Blues	1526
+49	3	29	5171		COL	COL	fnordypsyduck	Katya Zamolodchikova	952
+49	3	30	5167		NYS	AZ	Raccoon177	Liggy Jiggy	213
+49	3	31	5191		AUS	NOLA	AJW	Auto Matic	860
+49	3	32	5170		HON	COL	Arctic	Thaal Sinestro	144
+49	3	33	5176		BER	CTC	tcookie	Cedric Theriault	517
+49	3	34	5179		SAR	SAR	Middy	Klaus Reinhardt	711
+49	3	35	5192		OCO	CHI	Daniel Janser	Daniel Janser	1106
+49	3	36	5182		YKW	YKW	wildcatbandit	Benny The Jet	1228
+49	3	37	5202		SJS	SJS	Yahtzee	Tim Robinson	459
+49	3	38	5165		CHI	CHI	REAL rory	Serhii Strynadka	160
+49	3	39	5196		AZ	NYS	jacobcarson877	Oandon Lolanin	665
+49	3	40	5201		CTC	CTC	elixir	Ajax Sakarias	254
+49	3	41	5168		BAL	BAL	STZ	Taylor's BF's Brother	554
+49	3	42	5152		NOLA	BER	Gopher a beer	Bazooka Nuttingham	168
+49	4	43	5159		COL	OCO	Benson	Tony Chazz	180
+49	4	44	5207		NYS	NYS	Jaywe88	Kool Kyle	251
+49	4	45	5145		AUS	AUS	QuirkyTurtle	Jonah Wallis	91
+49	4	46	5198		HON	OCO	WALDO	Zack Vega Jr.	1452
+49	4	47	5210		BER	OCO	DeThePyro	Nathan Abel	130
+49	4	48	5163		SAR	SAR	Dynamicmlb_42	Darius Fasttrack	239
+49	4	49	5208		OCO	BER	dylanjj37	William Metzler	205
+49	4	50	5144		YKW	YKW	bytes	Zimm Triumph	99
+49	4	51	5141		SJS	SJS	TheHammer43	Jacques Hammer	62
+49	4	52	5137		CHI	BAL	SelfAware	Douglas Capybara	50
+49	4	53	5206		AZ	BER	leandrofg	Leandro Goncalves	295
+49	4	54	5150		CTC	BER	wallfly84	Nathan Bodie	50
+49	4	55	5206		BAL	BAL	leandrofg	Leandro Goncalves	295
+49	4	56	5138		NOLA	NOLA	Coachsj35	Stacey Dewayne	232
+49	5	57	5133		COL	COL	avocago_65	Chris Receiverston	62
+49	5	58	5153		NYS	NYS	ItsMcLovin	Ben Hafkey	103
+49	5	59	5148		AUS	AUS	David VanHousen	David VanHousen	92
+49	5	60	5147		HON	BER	ssovm	Bauce McSauce	57
+49	5	61	5155		BER	HON	EBOT0907	Joe Brewer	59
+49	5	62	5160		SAR	SAR	chefkiger	Ralph Johnson XXVI	62
+49	5	63	5124		OCO	OCO	Maniac1218	David Carson	57
+50	1	1	5263		COL	COL	midknight	Taonga Kofi	1280
+50	1	2	5303		OCO	OCO	Bigred1580	William Strong	1462
+50	1	3	5290		BER	HON	cinco de la tarde	Federico Cinco	896
+50	1	4	5291		HON	HON	Beck	Tee Bone	1298
+50	1	5	5286		NYS	AUS	unconfident	Honda Civic	1604
+50	1	6	5297		CTC	NYS	Sevrin	Sevrin Quinn	1206
+50	1	7	5268		AUS	CTC	Bradkipp	Kipp Summers	1216
+50	1	8	5260		OSK	OSK	MrKrumz	Kal Summers Jr	1054
+50	1	9	5274		SAR	SAR	Daileyj6	Jonathan Dailey	488
+50	1	10	5306		SJS	SJS	Seven Arrows	Golden Ericksen	1431
+50	1	11	5282		AZ	AZ	lunaripcole	Dalinar Summers	1564
+50	1	12	5277		YKW	YKW	Deecee98	David Corrigan	1288
+50	1	13	5239		BAL	OCO	bachirafan	Meguru Bachira	588
+50	1	14	5296		NOLA	NOLA	qWest	I.Q. Bowman	1603
+50	2	15	5267		COL	COL	DarknessRising	Swantavius Feet-Lover	1329
+50	2	16	5298		OCO	OCO	parky	Victoire Absolue	1097
+50	2	17	5300		BER	BER	Alf	Linz O'Fare	766
+50	2	18	5278		HON	BER	BlitzAce71	Jack Cannon	1268
+50	2	19	5307		NYS	SJS	Megsychan	Akane Saruta	1466
+50	2	20	5301		CTC	OCO	SoySavant	Traffic Cone	1531
+50	2	21	5295		AUS	NOLA	Commaperiod	Confurius DeThwilson	1637
+50	2	22	5262		OSK	OSK	rapideagle	Casper Constantine	572
+50	2	23	5271		SAR	SAR	DREAMSLOTH	Challah Famer	1030
+50	2	24	5305		SJS	SJS	BenDover	Pasta Rockmann	1360
+50	2	25	5283		AZ	AZ	ManningTypeAim	Prime Sanders	1495
+50	2	26	5276		YKW	YKW	br0_0ker	Pizza Monster	1470
+50	2	27	5254		BAL	BAL	dude_man	No Pix	1622
+50	2	28	5288		NOLA	AUS	Schnee	Benjamin Abenduct	679
+50	3	29	5266		COL	COL	YetiTaz	Holden Affart	810
+50	3	30	5302		OCO	OCO	The.Pat	Joe Cool	937
+50	3	31	5293		BER	BER	124715	Jurisprudence Jones	251
+50	3	32	5285		HON	AZ	Knif3yMan87	JC Tomlinson	1448
+50	3	33	5289		NYS	AUS	RDBSouthPaw	Larton Hilnka	361
+50	3	34	5256		CTC	BAL	Tayjay	Chunky Campbell Soup	886
+50	3	35	5273		AUS	CTC	slate	Alexander Hordle Jr.	807
+50	3	36	5261		OSK	OSK	Symmetrik	Sebastian Rosenthal	1564
+50	3	37	5275		SAR	SAR	HoodKirby	Thurman Waters	414
+50	3	38	5258		SJS	BAL	TheDrapFather	Jordan Drapal	437
+50	3	39	5284		AZ	AZ	kdr	JamesIsRunning Wilder	1589
+50	3	40	5281		YKW	YKW	Big Edd	Skee Yee	526
+50	3	41	5270		BAL	CTC	JaytheGreat	Jake Spears	1099
+50	3	42	5294		NOLA	NOLA	TheSparkyDee	David Hudgens IV	970
+50	4	43	5264		COL	COL	scottyw13	Scott Wickerd	786
+50	4	44	5265		OCO	COL	Hacob	Feka Ohi Kau	1316
+50	4	45	5255		BER	BAL	jayamshah99	Travis Novak	1622
+50	4	46	5292		HON	HON	KnowledgeBoy	Okuyasu Nijimura	1273
+50	4	47	5228		NYS	AUS	Otis B	Otis Boudreaux, Jr	288
+50	4	48	5309		CTC	OCO	Luciddreams702	Eric Cartman	460
+50	4	49	5280		AUS	YKW	moonchildxox	Luna Moon	538
+50	4	50	5259		OSK	OSK	Smurph	SuperNintendo Chalmers	582
+50	4	51	5287		SAR	AUS	toivo	America South America	862
+50	4	52	5308		SJS	SJS	jdourtled	Baldimir Fraudiola	476
+50	4	53	5269		AZ	BER	WildBoyy	Jensen Wild	539
+50	4	54	5257		YKW	BAL	ItsFrenchie	Blo Cage	634
+50	4	55	5219		BAL	CTC	cyberowl	Rush Templeton	243
+50	4	56	5299		NOLA	OCO	Pocketsand007	Ethan Baker	490
+50	5	57	5272		COL	SAR	Cuffy	John Myers	454
+50	5	58	5304		OCO	OCO	Existentialistic	Juan Futman	557
+50	5	59	5238		BER	BER	bigpeters	Sol Majestic	137
+50	5	60	5232		HON	AZ	foshizzlemynizzle	Hugh Eackman	268
+50	5	61	5223		NYS	AUS	benrb97	Zach Ovtroy	190
+50	5	62	5250		CTC	NYS	GarySnailWilson	Carl Wheezer	267
+50	5	63	5218		AUS	BER	noanic	Ted Marshall	157
+50	5	64	5213		OSK	OSK	spicymilk	Bryan Summers	129
+50	5	65	5244		SAR	SAR	DrChops	Blitz McTackleton	92
+50	5	66	5252		SJS	SJS	ClayAbby	Jack Wolf	162
+50	5	67	5225		AZ	OCO	Stalling	Joey Stalling	81
+50	5	68	5279		YKW	YKW	Air Crou	Guess Who	652
+50	5	69	5248		BAL	OCO	CarmCarm	Carmen Murphy	86
+50	5	70	5235		NOLA	NOLA	PSanchez55	Chris Garnica	64
+50	6	71	5234		COL	COL	davidmoose	David Moose	67
+50	6	72	5251		OCO	BAL	schlonz75	James Richmay	82
+50	6	73	5246		BER	BER	tdor1313	Tyler Duncan	67
+50	6	74	5245		HON	OCO	bigdolla	J.J. Enterfeltd	62
+50	6	75	5221		NYS	AUS	lucyxpher	Lucy Leitner	57
+51	1	1	5354		OCO	OCO	Pelochyta	Paulie Wag	1593
+51	1	2	5339		COL	COL	Akoustique	Miguel Caballero Rojo	1271
+51	1	3	5359		BFB	BER	IR15H0000000000	Brick Wall	1606
+51	1	4	5358		SJS	SJS	ComebackZak	Senior Seau	1530
+51	1	5	5355		NOLA	OCO	Hepha	Kai Ware	1276
+51	1	6	5349		CTC	AUS	Matt Turk	Matt Turk	1287
+51	1	7	5332		AUS	BAL	RoyRivers	Roy Rivers	1636
+51	1	8	5342		YKW	CTC	Froste39	Gavin Girard	987
+51	1	9	5335		OSK	OSK	Aleris	Rocket Toss	837
+51	1	10	5341		AZ	CTC	JBLAZE_THE_BOSS	Jamal Slick Jr.	1099
+51	1	11	5357		SAR	SJS	crash1005	Ignacio de la Serna	1342
+51	1	12	5343		HON	CTC	speculadora	Al Porpoise	501
+51	1	13	5353		NYS	NYS	Murtsi	Abstract Geometry	1644
+51	1	14	5333		BAL	BAL	18situaseans	Quincy Robinson	1346
+51	2	15	5347		OCO	OCO	scamps	john scamps	1131
+51	2	16	5337		COL	COL	pboomg	John Kick	680
+51	2	17	5350		BFB	HON	g2019	Cyrus MacDougall	1402
+51	2	18	5348		SJS	AUS	JKortesi81	Jack Crackerjack	1569
+51	2	19	5352		NOLA	NOLA	toofpete	Ben Yay	1255
+51	2	20	5360		CTC	AUS	Kyle	Karl Idlewyld	254
+51	2	21	5345	GM	AUS	YKW	juniped	Ghost Panda	1200
+51	2	22	5356		YKW	SJS	anuragb	Ethan Shadow Jr.	1229
+51	2	23	5336		OSK	OSK	Jacky	Mike Ross	447
+51	2	24	5331		AZ	BAL	LiathTheSquirrel	Jeff Land Shark	1074
+51	2	25	5344		SAR	SAR	Lemorse7	Big Strong Red Panda	577
+51	2	26	5340	GM	HON	CTC	Cycro	Peaquod Von Turbo	1470
+51	2	27	5324		NYS	OCO	Rengoku	Bacon Morales	142
+51	2	28	5346		BAL	AZ	zeagle1	Xander Le Roux	1570
+51	3	29	5319		OCO	NYS	MikeyKnuckelz	Mikey Knuckelz	173
+51	3	30	5338		COL	COL	dead_potato_	Justin Fern	846
+51	3	31	5334		BFB	BER	24redcrayons	Ford F150	332
+51	3	32	5328		SJS	SJS	tellybear	Clam Casino	107
+51	3	33	5351		NOLA	NOLA	UpperNet	Bug Jones	404
+51	3	34	5321		CTC	AUS	Kilowat	Lasso Jones	170
+51	3	35	5323		AUS	YKW	oozeysludge	Cornelius McManama	79
+51	3	36	5361		YKW	OCO	JoeHoe3121	DeAndre Reeler	396
+51	3	37	5322		OSK	OSK	LeAlvaroBoi	Chavo De La Crúz	74
+51	3	38	5312		AZ	COL	koty_k	Jerome Bettis Jr.	203
+52	1	1	5406		OCO	OCO	dannuic	Jerald Chuprig	1394
+52	1	2	5422		BFB	BFB	mystictoejam	Isaac Fuse	583
+52	1	3	5400		SJS	HON	Dmac1200	Dixon Yamada	1571
+52	1	4	5410		CTC	SJS	GUCCI_BO	Zen Olson	500
+52	1	5	5402		COL	NOLA	baz	Count Sevem	1494
+52	1	6	5414		HON	SJS	Bayley	Wilson Goatobert	1586
+52	1	7	5417		OSK	OSK	Hydrium	Magical Liopleurodon	396
+52	1	8	5401		NOLA	NOLA	ztarwarz	Mako Shark	1485
+52	1	9	5399		AUS	AUS	LGMForever	Scoober Bert	519
+52	1	10	5396		YKW	YKW	SwagSloth	Braxton East	1318
+52	1	11	5388		AZ	BFB	LGLAC613	Jimmy John Rushmore	1245
+52	1	12	5387		BAL	BAL	Aneeqs	Hawk Too-Me	1201
+52	1	13	5395		SAR	SAR	Ostaf	Jack White	987
+52	1	14	5404		NYS	NOLA	Crazytomato	Crazy Tomato II	916
+52	2	15	5420		OCO	BAL	Trempale	Da'Truest Rusha	417
+52	2	16	5413		BFB	BFB	Lowkey	Mo Love	1223
+52	2	17	5392		SJS	CTC	Ephenssta	Blueberry Muffin	1368
+52	2	18	5409		CTC	SJS	Urq660	Bjarni Hjalmarsson	1479
+52	2	19	5391	GM	COL	COL	iStegosauruz	Baron von Froggington	1487
+52	2	20	5390		HON	OSK	Hordle	Lee Rushmore	588
+52	2	21	5411		OSK	SJS	ckroyal92	Tackle Merchant™	1531
+52	2	22	5397		NOLA	AZ	SabaDonutMan	Benji Raga	1654
+52	2	23	5398		AUS	COL	Pib	Fairly Smart	801
+52	2	24	5408		YKW	OCO	amjohnson636	Joseph Coolio	1439
+52	2	25	5416		AZ	AZ	McGriddy10	Brady SonKisser	1135
+52	2	26	5405		BAL	OCO	Breeze837	Demar Harris	889
+52	2	27	5394	GM	SAR	SAR	Fronk	Brick Pudding	1449
+52	2	28	5403		NYS	NOLA	cpetrella	Brian Schwabl	508
+52	3	29	5419		OCO	YKW	SonOfCar	Shakir Hodges-Allen	902
+52	3	30	5412		BFB	BAL	Aze2sleepy	George Mcmaster	285
+52	3	31	5393		SJS	CTC	mcgriddleluver	Max Ralph	726
+52	3	32	5389		CTC	CTC	TheElasticBandit	Dante Escobar	216
+52	3	33	5421		COL	SJS	Butteryicarus	Shiyun Lin	269
+52	3	34	5415		HON	OSK	Flamingmedal	Bamba Jamin	414
+52	3	35	5363		OSK	NOLA	djuunk	David Kupp	111
+52	3	36	5418		NOLA	NOLA	McScootie	Justin Time	285
+52	3	37	5385		AUS	AUS	GrïmR3æpêr	Grïm R3ÆPËR	111
+52	3	38	5407		YKW	OCO	Starchychaff	Dan Bacle	443
+52	3	39	5373		AZ	AZ	Teddy_Bradshaw	Teddy Bradshaw	72
+52	3	40	5380		BAL	OCO	texas	Kaleb Manning	77
+53	1	1	5442		BFB	BFB	JuOSu	Tom Turbo	1546
+53	1	2	5448		CTC	CTC	GuitarMaster116	GM Mellott	1486
+53	1	3	5444		OCO	OSK	manicmav36	Football Catcherman	1258
+53	1	4	5463		SJS	SJS	Skindog44	Ezra Torrent	1357
+53	1	5	5459		OSK	SAR	shrub02	Shrub Adub	851
+53	1	6	5457		AUS	OCO	RainDelay	Aurelius Brooks	1253
+53	1	7	5450		SAR	OSK	Jason Kranz	Xantheliu Vornschpültz	384
+53	1	8	5449		NOLA	BFB	Bubba	Thorfinn Vinland	1517
+53	1	9	5465		HON	HON	bowl0	Ban Hammer	1518
+53	1	10	5468		COL	COL	CptGoosar	Adolin Suresan	305
+53	1	11	5455		YKW	AUS	Lowlycrib	Tyron Brackenridge III	1315
+53	1	12	5467		AZ	AZ	Kotasa	Gerry Atrick	1122
+53	1	13	5445		NYS	OSK	MobiausGrander	Zero Escape	1372
+53	1	14	5451		BAL	BFB	CodeK29	Chucky McDavid	307
+53	1	15	5454	comp	COL	COL	hhh81	Ryama D. Yugo	1305
+53	2	16	5443		BFB	BFB	DoubleDub	Line Man	342
+53	2	17	5458		CTC	CTC	Pyro182	Kevin Kirkpatrick	767
+53	2	18	5464		OCO	OSK	Ultimatedestroye	Riptide Hurricane	606
+53	2	19	5466		SJS	SJS	mithrandir	Bear Witten	986
+53	2	20	5447		OSK	NOLA	kmatt	Ivan Ivanov Jr	220
+53	2	21	5446		AUS	HON	rickymartin_irl	Kicky Martin	884
+53	2	22	5460		SAR	BFB	Coachsj35	Phantom Ghost	1087
+53	2	23	5462		NOLA	SAR	SnowyWolfz	Garcia Bear	326
+53	2	24	5456		HON	OCO	DJ_Fire_Dragon	CJ Foley	99
+53	2	25	5469		COL	COL	Eric Belmont	Raw Cheese Mcpickle Jr.	555
+53	2	26	5430		YKW	BFB	bigdolla	Vincent Martinez	107
+53	2	27	5437		AZ	BFB	Anthony8139	Trey Stover	200
+53	2	28	5453		NYS	AUS	RobJG2	Dwayne Swanson	1508
+53	3	29	5423		BAL	OSK	Oatex	Alex Bridges	77
+53	3	30	5461		BFB	BFB	Stylon	Stylon Grissom	94
+53	3	31	5433		CTC	CTC	Krokaine	Timmy Tingus	72
+53	3	32	5452		OCO	OCO	Will3	Inigo Sudworth	150
+53	3	33	5429		SJS	SJS	Firehavoc	Earl Pumpkins	75
+54	1	1	5474		BFB	BFB	CowboyBlender	Rick Diggersbee	1384
+54	1	2	5499		CTC	BFB	TooSweet	Francisco Villalona	1296
+54	1	3	5512		OSK	OSK	Nol15736	Max Payne	1404
+54	1	4	5524		SJS	OSK	Zag	Reno Vega	1424
+54	1	5	5515		OCO	HON	Griff	Griffin Stone	1473
+54	1	6	5508		HON	HON	oilmandan	Laramie Rose	1429
+54	1	7	5510		SAR	SAR	Thor	Zamir Kehla III	1449
+54	1	8	5494		YKW	NYS	Seany148	Artemis Claire Ozolina	922
+54	1	9	5497		NYS	YKW	Casey	Hawk DeBeau	1447
+54	1	10	5537		AUS	AUS	hillshavehats	Joshua Hunchak	885
+54	1	11	5491		COL	BFB	Raf_TML	Athena Mackenzie	1212
+54	1	12	5525		NOLA	NYS	pizzly	Pizzly Husk	588
+54	1	13	5479		BAL	COL	jeffie43	Park Sujin	912
+54	1	14	5522		AZ	OSK	Muford	Forcing ToOsaka	1457
+54	2	15	5477		BFB	BAL	JoeSteel	Multiliki Waialiki	753
+54	2	16	5534		CTC	CTC	PorgBoi	Max Ryder Colt	537
+54	2	17	5516		OSK	AZ	Opera_Phantom	Jay Cue IV	1487
+54	2	18	5498		SJS	YKW	Hawkeye	Adam Vittori	956
+54	2	19	5533		OCO	OCO	jreed12	Drew LaChance	1214
+54	2	20	5526		HON	BAL	Tylertokesome04	Charlie Kelly	1066
+54	2	21	5540		SAR	OCO	Zephyrus1128	Zephyr Williams	1079
+54	2	22	5517		YKW	COL	Chicken Lips	Randy Beavers	781
+54	2	23	5492		NYS	YKW	somecoach	Spice Gardner	202
+54	2	24	5523		AUS	AUS	Shiamus	Oh Haewon	1154
+54	2	25	5514	GM	COL	NYS	Daniel	Trevor Simian	1432
+54	2	26	5513	GM	NOLA	NOLA	Tmoney6996	LMoney Pickarelli	1449
+54	2	27	5511	GM	BAL	BFB	Jackienape	Ms. Frizzle	1264
+54	2	28	5552	GM	AZ	OSK	Triceracop	Bigman Blastoise	1325
+54	2	29	5493	comp	BFB	BFB	ValorX77	Videl Valor	1444
+54	3	30	5551		BFB	BFB	CLG Rampage	Wesley Orion	1206
+54	3	31	5536		CTC	CTC	Seymour	Bean Beanman IV	1164
+54	3	32	5509		OSK	AZ	bernardhibou	Vlad The Inhaler	1269
+54	3	33	5547		SJS	SJS	Reno	Wallace Big	921
+54	3	34	5544		OCO	AZ	mirrorlake_cultivator	Minkah Polamalu	731
+54	3	35	5535		HON	SAR	Zac2211	Cameron Frier	350
+54	3	36	5476		SAR	OCO	robstien	Faramir Took	929
+54	3	37	5546		YKW	BAL	Southworth	Marc Southworth	240
+54	3	38	5475		NYS	YKW	CeeKay	La'induh Trenches	516
+54	3	39	5480		AUS	OSK	Kewl	Dawson Jackson	431
+54	3	40	5538		COL	BFB	Exilate	Captain Checkdown	532
+54	3	41	5483		NOLA	OCO	jollyjiggs	Bonkers Disco	201
+54	3	42	5545		BAL	HON	scudmuffin19	Pegme Amadeus	780
+54	3	43	5495		AZ	YKW	Hallmonitor_20	Honorary Uce	470
+54	3	44	5496	comp	CTC	BFB	itztimg	Bryan Jones	1265
+54	4	45	5539		BFB	BAL	o1playz	Jauan Jennings	486
+54	4	46	5485		CTC	NOLA	Aford9910	Aaron Ford JR	536
+54	4	47	5506		OSK	OSK	AW13	Axel Bradley	355
+54	4	48	5505		SJS	SJS	Dynamicmlb_42	Spock McEatMyDust	382
+54	4	49	5478		OCO	OCO	Viking8712	Maxx Baker	398
+54	4	50	5487		HON	HON	MichkovSzn	Dan Smith	445
+54	4	51	5486		SAR	SAR	JECarp23	Grog Strongjaw	99
+54	4	52	5472		YKW	NYS	Twinsfan87	Jeremy Harrison	129
+54	4	53	5530		NYS	HON	Derek knight	Derek Ward jr	417
+54	4	54	5500		AUS	AUS	Dakota.B	Mike Honcho	145
+54	4	55	5482		COL	COL	Disdain4jerry	Javon Briskett	140
+54	4	56	5507		NOLA	NOLA	FatherOf4our	Christian Johnson	117
+54	4	57	5521		BAL	BFB	William2	William Cramer	72
+54	4	58	5481		AZ	AZ	princejeremiah	Willom hill	614
+54	4	59	5532	comp	OSK	BFB	ScreenedFall59	Grant Wistrom	87
+54	5	60	5541		BFB	BFB	ADMsmith	Jack Michaels	124
+54	5	61	5471		CTC	CTC	Monkee9084	Brian Burton	79
+54	5	62	5548		OSK	OSK	trillium	Timmins Pennymile	77
+54	5	63	5518		SJS	SJS	dannythegoat	Daniel Martin	57
+54	5	64	5473		OCO	OCO	Drake_Maye	Drake Maye	220
+54	5	65	5488		HON	YKW	dj_doubledos_22	DJ Hayes	212
+55	1	1	5576		OSK	OSK	lemonoppy	Kim Minjeong	1307
+55	1	2	5566		BFB	BFB	infinitempg	Wolfie McDummy III	1232
+55	1	3	5635		OCO	OCO	Summerstood	Oopsie Wrongball	1206
+55	1	4	5569		SJS	SJS	TheCC	Norlina Halfpillow	1209
+55	1	5	5629		BAL	BAL	ColonelSaunders	Conner Beck	1166
+55	1	6	5582		NYS	NYS	Dash	Dash Jackson	1267
+55	1	7	5570		NOLA	OSK	ctots	Rusty Rags	759
+55	1	8	5637		YKW	CTC	Sizz	Felix Fortuna	1199
+55	1	9	5628		CTC	BFB	JohnFranklinKennedy	Richard Shoes	388
+55	1	10	5630		HON	HON	Ltblackgrizzly	Steven Matthews	1199
+55	1	11	5573		AUS	AUS	jdc4654	Sir Shrek	1099
+55	1	12	5631		COL	COL	stixvim	Obi-Wan Picknobi	1156
+55	1	13	5579		SAR	AZ	micool132	Agnes McPiepe	1085
+55	1	14	5604		AZ	SAR	rrf_1	Ganymede Moon	1271
+55	2	15	5664		OSK	OSK	SamEagle76	Gyurn Vlommfeldt	1093
+55	2	16	5588		BFB	HON	lore	Scott Pilgrim	826
+55	2	17	5661		OCO	OSK	Im2Klutch	Daenerys Targaryen	1067
+55	2	18	5620		SJS	OSK	Squid	Calvin Calamari	1088
+55	2	19	5646		BAL	OSK	Gwdjohnson	John Chicken-Jockey	802
+55	2	20	5617		NYS	HON	Weaves	Oliver Clozeoff	1039
+55	2	21	5583		NOLA	NOLA	ismat	Random Joe	725
+55	2	22	5555		YKW	COL	Tesla	Princess Leia Organa	1237
+55	2	23	5647		CTC	BFB	LordEscanor	Smoke Moore	645
+55	2	24	5572		HON	SAR	Michiganonymous	Mobius Stripp	1026
+55	2	25	5606		AUS	COL	gucci	Rod Kimble	1211
+55	2	26	5556	GM	COL	AZ	CROney3	Noa Yu II	1307
+55	2	27	5580		SAR	AZ	.simo	Corey Worthington	545
+55	2	28	5574	GM	AZ	BAL	swoosh	Dino Nuggets Jr.	1307
+55	3	29	5616		OSK	COL	IsaStarcrossed	Kylo When	990
+55	3	30	5593		BFB	AUS	Oak	Lars Oaktree	535
+55	3	31	5581		OCO	OCO	DarthDaevin	Fuego Toro	614
+55	3	32	5575		SJS	BFB	OrangeJulius	Cold Brewlius	956
+55	3	33	5568		BAL	BAL	Charple	Blocked On Discord	1018
+55	3	34	5623		NYS	NOLA	Mongoose87	Worf Moghson	927
+55	3	35	5642		NOLA	OSK	Briedaqueduc	Tytus Gilley	939
+55	3	36	5605		YKW	NYS	uhnp	Alex Baudelaire	1233
+55	3	37	5648		CTC	OCO	bluesfan55	Punto McKickerman VI	573
+55	3	38	5651		HON	HON	notorioustig	Mr. Tickles	459
+55	3	39	5611		AUS	AUS	SpartanGibbles	Trunk Gibbles	715
+55	3	40	5656		COL	COL	ToastCharger	Kilian Liam	978
+55	3	41	5592		SAR	AZ	Dman9417	Dalton Gross	1210
+55	3	42	5624		AZ	BAL	CR225	Gumbo Trashman	587
+55	3	43	5643	comp	OCO	OCO	RotticusScott	Gunkst Shreeve	540
+55	4	44	5562		OSK	SAR	ThreeToeSloth	Slater Williamson	1112
+55	4	45	5565		BFB	SJS	roastfuego	Flapjack McKringleShnoz	619
+55	4	46	5612		OCO	OCO	SDCore	Storm Trooper	339
+55	4	47	5638		SJS	BFB	Dhaldar	Danish Jain	325
+55	4	48	5594		BAL	BAL	GourdofDirectors	Raheem Rozier	412
+55	4	49	5609		NYS	NYS	SG_Vesuvius	Mo Ward	582
+55	4	50	5614		NOLA	OSK	sathona	Vendetta -	538
+55	4	51	5587		YKW	YKW	aleks	Mega Man Battle Network	518
+55	4	52	5636		CTC	CTC	BrettManJD	John Rex	526
+55	4	53	5650		HON	HON	sytarah	Sharnaz Iqbal	185
+55	4	54	5639		AUS	AUS	jackkmart	Boss Chud	683
+55	4	55	5645		COL	COL	Master Chef	Founding Father	582
+55	4	56	5632		SAR	AZ	Fantobens	Teddy Fantobens	530
+55	4	57	5665		AZ	SAR	stxllar1	Jeremiah Mission	251
+55	4	58	5640	comp	AZ	AZ	good_ole_kimmy	Connor Wojak	647
+55	5	59	5608		OSK	OSK	SMFJ	Scott Justice	315
+55	5	60	5601		BFB	BFB	Jiggly_333	Rachel Morimura	923
+55	5	61	5673		OCO	OCO	Dame	Jackson Waters	507
+55	5	62	5649		SJS	SJS	SirBongo	Logan Renslow	474
+55	5	63	5610		BAL	BAL	rainzyyy	Nico Ramsey	259
+55	5	64	5627		NYS	NYS	USCDani	Aaron Sterling	342
+55	5	65	5602		NOLA	NOLA	Retuperkele	Rúben Ira	607
+55	5	66	5615		YKW	YKW	LilGainz901	Krish Gainz	216
+55	5	67	5586		CTC	CTC	Corncob_10	Ethan Cornish	212
+55	5	68	5666		HON	HON	loco	Big Bot Mk2	170
+55	5	69	5589		AUS	AUS	speedy blurr	Speedy Blurr	190
+55	5	70	5607		COL	COL	JDub_55Real	Jay Dub	235
+55	5	71	5557		SAR	AZ	Jaywe88	Financial Planning	457
+55	5	72	5634		AZ	SAR	BigfootXVI	Hefty Tank	388
+55	6	73	5584		OSK	OSK	BoogShlazetti	Stelio Kontos	222
+55	6	74	5641		BFB	BFB	Gooney	Buzz Lightjim	194
+55	6	75	5577		OCO	OCO	Faelax	Emil Skovgaard	114
+55	6	76	5600		SJS	SJS	Roflstrike	Cornelius  Crosby	233
+55	6	77	5591		BAL	BAL	bursleyjustice	Jesus Correa	188
+55	6	78	5653		NYS	NYS	Waters	Bingle Johnson	81
+55	6	79	5644		NOLA	NOLA	Nick Richardson 721	Nick Richardson	153
+55	6	80	5659		YKW	YKW	Daveyboy17	Alex Stain	144
+55	6	81	5625		CTC	CTC	zanderhart21	Zander Hart	97
+55	6	82	5658		HON	HON	bigdolla	Reiner Braun	273
+55	6	83	5621		AUS	AUS	merjanic	Zander Hilty	92
+55	6	84	5595		COL	COL	Bullthorn	Christopher Miller	107
+55	6	85	5590		SAR	AZ	Gazebo The 1st	Pierogi Grubson	116
+55	6	86	5657		AZ	SAR	jayteee3	Jay Tee	157
+55	7	87	5662		OSK	OSK	KingAC247	Austen Clark	147
+55	7	88	5596		BFB	BFB	Popeye Jones	Popeye Jones	103
+55	7	89	5655		OCO	OCO	Suckiest Sucker	JUST HOOFIT	134
+56	1	1	5727		OSK	OSK	Bajin	Bajin Inui	1077
+56	1	2	5707		OCO	CTC	Quitolis	Drew Winemaker	1065
+56	1	3	5722		BFB	BFB	Degradation	Vince Morrigan	1069
+56	1	4	5716		NOLA	COL	bobtrek	Steve Dave	1057
+56	1	5	5721		COL	NOLA	Turd Ferguson	Turd Ferguson	1070
+56	1	6	5684		AUS	AUS	Frostbite	Silas Santana	1031
+56	1	7	5667		SAR	SAR	Blasoon	Daud Ramza	1081
+56	1	8	5699		SJS	COL	gracieblais	Mercedes Lambrogini	935
+56	1	9	5724		NYS	NYS	Bearen	Theodore Espen	997
+56	1	10	5678		CTC	OSK	captainsb	Steve's Lava Kaiju	1060
+56	1	11	5675		YKW	YKW	soevil	Wyntir Creakis	1045
+56	1	12	5725		HON	HON	Vumion	Devon Lynch	1003
+56	1	13	5692		AZ	OSK	lock180	Blimblob Smorgusborg	1061
+56	1	14	5739		BAL	NYS	TheAmericanPineapple	Dirty Lyle	1036
+56	2	15	5682		OSK	AZ	DivogoJota	Shnitzel Radda	1084
+56	2	16	5743		OCO	AZ	Joriel	Jonathon Jameston	1023
+56	2	17	5679		BFB	BFB	ForSucksFake	Brick Tupp	816
+56	2	18	5676		NOLA	NOLA	TheRake	Brick Grabowski	921
+56	2	19	5689		COL	COL	enigmatic	Alessandro Mutombo	973
+56	2	20	5740		AUS	AUS	tnerT	Trent Butterfingers	1015
+56	2	21	5685		SAR	AUS	AriaEXE	Cynthia Clair	784
+56	2	22	5702		SJS	COL	jaypc8237	Alejandro Alonso	1051
+56	2	23	5681		NYS	BAL	sliceruser	Alexandros Mograine	953
+56	2	24	5672		CTC	CTC	Daleks	Rok Košir	988
+56	2	25	5706		YKW	COL	xrTForces	Pete Keltrops	366
+56	2	26	5697	GM	HON	OCO	MMFLEX	Drew McPewPewPew Jr	1000
+56	2	27	5696		AZ	BAL	r0tzbua	Canada Goose	863
+56	2	28	5694	GM	BAL	YKW	homercrates	1234567890 Creakis	1028
+56	3	29	5668		OSK	OCO	Vulfzilla	Colonel Panic	987
+56	3	30	5674		OCO	CTC	nickyvmlp	Big Strong	771
+56	3	31	5677		BFB	YKW	SmittyHextall	Carlin Creakis	562
+56	3	32	5683		NOLA	COL	Allstar20890	Corey Coleman	791
+56	3	33	5742		COL	NOLA	AdamEPlays	Adam Plays	923
+56	3	34	5735		AUS	AUS	Snapples	B.C. Snapple	761
+56	3	35	5747		SAR	SAR	N0HBDY	Roger Frontier	391
+56	3	36	5734		SJS	SJS	qwerty13542	Student Loans	564
+56	3	37	5718		NYS	NYS	Water	Drake Rider	824
+56	3	38	5720		CTC	CTC	Gingar77	Gingar Toaster	347
+56	3	39	5680		YKW	YKW	Reedy0rNot	Archie Creakis	464
+56	3	40	5693		HON	OCO	Shaggy28	CJ Henderson	358
+56	3	41	5709		AZ	AZ	boycec55	Brock Rockwell	229
+56	3	42	5708		BAL	COL	Amaziah	Sam Waymon	638
+56	4	43	5671		OSK	OSK	WhatAboutBigBob	Robert Bolig	401
+56	4	44	5698		OCO	BFB	Nathan	Marquees Acho III	522
+56	4	45	5670		BFB	OCO	ZootTX	Tex Richards	1091
+56	4	46	5745		NOLA	COL	ThePope	Krieg Lupercal	392
+56	4	47	5733		COL	NOLA	Hoops4days	Niwde Sodanarg	187
+56	4	48	5731		AUS	YKW	Enyx	Alex Enyx	215
+56	4	49	5728		SAR	OCO	Tiger2112	Manflatten Project	148
+56	4	50	5730		SJS	YKW	idoesntexist	Jimothy Small	200
+56	4	51	5703		NYS	NYS	ChiefBast	Kenrith Kristalonso	412
+56	4	52	5723		CTC	CTC	jthedominator	Orrin Rockwell	122
+56	4	53	5736		YKW	YKW	Rjm2492	Billy Monbro	311
+56	4	54	5700		HON	HON	WildfireMicro	Joey Miller	870
+56	4	55	5710		AZ	AZ	KickinBucket	Hunter Northwood	150
+56	4	56	5744		BAL	NYS	BaseScoutX1	Ricardo Queso	91
+56	5	57	5717		OSK	OSK	Monklock	Deleria Dillon	138
+56	5	58	5688		OCO	OCO	Chig Bungus	Chig Bungus	108
+56	5	59	5687		BFB	BFB	Decalk	Eustice Babycakes	138
+56	5	60	5715		NOLA	COL	PrimePotatoes	Devonte Kingston	101
+56	5	61	5686		COL	NOLA	bnhershy	Jean Sauvé	100
+56	5	62	5749		AUS	CTC	griis	Lrrr Jinkins	97
+56	5	63	5748		SAR	SAR	Villn	Elijah Miller	84
+56	5	64	5705		SJS	SJS	ak1knight	Alex Knight	79
+56	5	65	5713		NYS	NYS	Silentkill	Moe Monee	81
+56	5	66	5701		CTC	CTC	Jimmy Taylor	Jimmy Taylor	80
+56	5	67	5704		YKW	YKW	Walksinwoods	Jasper Arndt	100
+56	5	68	5741		HON	HON	Anthony8139	Trey Demungas	298
+57	1	1	5790		NYS	NYS	grilledcheesesandies	Grilled Cheese Sandies	703
+57	1	2	5794		BFB	COL	Mikemart	Mickey Martino	668
+57	1	3	5758		OSK	OSK	ajtigger	Amoeboid Changeling	665
+57	1	4	5795		SAR	SAR	DApolloS	Dan Smith	830
+57	1	5	5779		NOLA	NOLA	joeronnymo	joeronnymo bueno	529
+57	1	6	5791		OCO	NYS	BoOsH	Ottor Sorby	782
+57	1	7	5777		AUS	SAR	BOOM™	Jean Claude Goddamn	864
+57	1	8	5756		YKW	YKW	TubaDeus	- GEQBUS	925
+57	1	9	5763		AZ	BAL	Bazooka_Joe	Purdy 'PP' Penix	847
+57	1	10	5753		COL	COL	SchwarzNarr	Melvin the Moosebacca	798
+57	1	11	5772		SJS	SJS	leo_gonzo_04	Leo Gonzalez	316
+57	1	12	5751		CTC	SAR	johnlindbe11	John Borieo	522
+57	1	13	5773		BAL	NYS	Brad Woof	Vlad Wolf	812
+57	1	14	5770		HON	HON	JJ5	JJ Who	212
+57	2	15	5757		NYS	BAL	Ben	Ben Savea	564
+57	2	16	5762		BFB	YKW	DarkTaker	Robert Krohn	582
+57	2	17	5769	GM	OSK	NOLA	thewhovian	. Torchwood	773
+57	2	18	5792		SAR	SAR	Anukar	Anukar Reed	655
+57	2	19	5771		NOLA	NOLA	domffl	Doorholder Numberthree	541
+57	2	20	5793		OCO	BAL	Law	DJ Law II	588
+57	2	21	5774		AUS	AUS	FriendStefani	Friend Stefani	306
+57	2	22	5754	GM	YKW	OSK	firstfray	King Ghidorah	908
+57	2	23	5755	GM	AZ	AZ	Bamford13	Gods Comma	889
+57	2	24	5800		COL	YKW	Zare Jonathan	Donte Kendricks	242
+57	2	25	5799		SJS	SJS	JakeTE10	Brock Lesnar	697
+57	2	26	5805	GM	CTC	CTC	lordcoolcats	Earl Grey	821
+57	2	27	5778	GM	BAL	NYS	PurplePiratePoo	Joe Pigott	771
+57	2	28	5776	GM	HON	HON	IceBear32	Tee Deez	869
+57	2	29	5780	comp	NYS	NYS	Flick Davis	Flick Davis	409
+57	2	30	5766	comp	AUS	AUS	6god757	Andre Pope	226
+57	2	31	5786	comp	NYS	NYS	Venhail	Will Clamp	348
+57	3	32	5788		NYS	NYS	Deaner20	Deaner Christiansen	170
+57	3	33	5759		BFB	BFB	hannahg32	JJJJJJJJJJJ JJJJJJJJJJJ	217
+57	3	34	5784		OSK	OSK	Brohdr	Ziggy Zigzagwellerton	237
+57	3	35	5789		SAR	SAR	Chris	Joshua Frederick	193
+57	3	36	5761		NOLA	NYS	xblcommish	XBL Commish	120
+57	3	37	5775		OCO	NYS	mejh87	Seamus Lebowski	131
+57	3	38	5760		AUS	NYS	e13	Tyrus Clay	92
+57	3	39	5785		YKW	NYS	SticksNJones	Sasha Kai	84
+57	3	40	5768		AZ	AZ	rocket raccoon	aidan weir	83
+57	3	41	5767		COL	COL	JZasl	Parker Jackson	82
+57	3	42	5796		SJS	SJS	jeremiahlucas	Jeremiah Lucas	80
+58	1	1	5829		NYS	OSK	DigDoug11	Titus Tortuga	686
+58	1	2	5807		YKW	YKW	xenosthelegend	Tokai Teio	707
+58	1	3	5822		COL	COL	zaynzk	Rub Dedd	579
+58	1	4	5819		SAR	YKW	admiralballtr8s	Hugh Jassman	708
+58	1	5	5810		AZ	AZ	Fangorn	Echoing Thunder	689
+58	1	6	5817		OSK	NYS	Colton_MC	Dr. Squid	626
+58	1	7	5820		AUS	AUS	frazzle14	Tony Yeboah Jr	453
+58	1	8	5804		SJS	AUS	Dindog	LtHudz’s Left-Foot	621
+58	1	9	5826		BFB	YKW	dustywilson22	Bud Wolf	560
+58	1	10	5816		HON	SAR	FootballIsCool	Tree Joe Greene	673
+58	1	11	5841		CTC	SAR	CheeseConeys	Richard Dixon	608
+58	1	12	5837		OCO	OCO	Muddym13	Muddy Rivers	591
+58	1	13	5811		NOLA	NYS	Gage2	Cleon Riley	568
+58	1	14	5813		BAL	BAL	BOS	Marvin Bumgarner	625
+58	1	15	5839	comp	BFB	BFB	fweliiii	Water Boy	590
+58	2	16	5824		NYS	NYS	PMoney	TzTok Jad	457
+58	2	17	5821		YKW	NOLA	Jimi64	Alvin Norton	271
+58	2	18	5838		COL	COL	slasherr	Dijon Robinson	682
+58	2	19	5818		SAR	SAR	Drizzy	Michael Nkiah	668
+58	2	20	5827		AZ	AZ	DixieGnormus	MJ Football	319
+58	2	21	5833		OSK	SAR	iGreatScott	Deek Waters	412
+58	2	22	5814		AUS	BAL	Pocketsand007	Dale Gribble	400
+58	2	23	5815	GM	SJS	SJS	RussDrivesTheBus	Catrick Meowmes	707
+58	2	24	5801		BFB	BFB	Dynamicmlb_42	Thomas Singletary	307
+58	2	25	5825	GM	HON	YKW	juniped	Juni Panda Jr.	533
+58	2	26	5840		CTC	SAR	phoenix2838	Ozzy LaChance	306
+58	2	27	5832		OCO	OCO	AW13	Tip Manzardo	454
+58	2	28	5836		NOLA	NOLA	Viking8712	CTE Purple	217
+58	2	29	5830		BAL	AZ	rytin6543	Sir Sacksalot	311
+58	2	30	5834	comp	AZ	AZ	Garbear000	Tame Brady	288
+58	2	31	5835	comp	SJS	SJS	IconOfSin	Svatoslav Čech	107
+58	3	32	5809		NYS	NYS	Zi215	Jackson Travis	80
+58	3	33	5808		YKW	YKW	Starchychaff	J. Jonah Jameson	98
+59	1	1	5890		YKW	YKW	wizard_literal	Acrylic Block	506
+59	1	2	5857		NOLA	NOLA	McLumberjack	Mons Morè	540
+59	1	3	5848		NYS	NYS	JoeHoe3121	Davoin Shower-Handel	500
+59	1	4	5913		AUS	AUS	RiceyWriter	Bug Chingus	484
+59	1	5	5886		OCO	SJS	ajj2410	Thunder McQueen	478
+59	1	6	5858		CTC	CTC	ReadySalted	John Waffle	552
+59	1	7	5849		SAR	SAR	Z-Whiz	Golly Oo-De-Lally	475
+59	1	8	5846		OSK	AZ	Soviet Sexpot	Lightning McQueen	490
+59	1	9	5860		BFB	NOLA	Lpapi	Buster Forceps	529
+59	1	10	5845		SJS	SJS	WALDO	Cookout Tray	527
+59	1	11	5910		COL	SJS	siddhus	James Boxman	453
+59	1	12	5876		AZ	OSK	OrbitingDeath	Sexy Poodle	520
+59	1	13	5867		BAL	CTC	Krieg	Krieg Mira	437
+59	1	14	5859		HON	SAR	FuriousChicken	Pronking Chicken	451
+59	2	15	5896		YKW	CTC	Crog	Yama End	434
+59	2	16	5895		NOLA	CTC	FL4K__	Stankle McQuade	471
+59	2	17	5912		NYS	SJS	FFPPirate	Flash M'Johnson	457
+59	2	18	5843		AUS	NOLA	bechtudo	Jason Beaty	531
+59	2	19	5887		OCO	COL	Brianesh73	Brian Eshleman	399
+59	2	20	5885		CTC	CTC	The.Pat	Goe Kool	346
+59	2	21	5881		SAR	COL	FleshBagSoup	Valdo Caeserius	312
+59	2	22	5842		OSK	CTC	negs	Big Bis	498
+59	2	23	5909		BFB	BFB	Jetsqb101	Dale Cooper	424
+59	2	24	5906		SJS	HON	Honoredmexican	Domo Arigato	379
+59	2	25	5844	GM	COL	SAR	abh89	Harlan Andrews	540
+59	2	26	5878	GM	AZ	AUS	Mooty99	Edmund Blackadder	494
+59	2	27	5904		BAL	AUS	Grey_gh0st	Judas Malice	449
+59	2	28	5862	GM	HON	YKW	Dev0	Richard McDonald	522
+59	3	29	5914		YKW	YKW	Dire12	Wyatt Syksy	404
+59	3	30	5889		NOLA	NOLA	Egglton	Benny Sanderson	285
+59	3	31	5882		NYS	NYS	SirBongo	Clifford Wilson Jr	229
+59	3	32	5852		AUS	SJS	BRNXB0MBERS	K. Yobagoya MacArthur	457
+59	3	33	5894		OCO	COL	fetty	Ji Antpeen	285
+59	3	34	5888		CTC	CTC	Solarslayer	Jackson Olsen	250
+59	3	35	5856		SAR	SAR	Lubotty	Davey Andrews	303
+59	3	36	5883		OSK	NYS	kahri	The Labubu	336
+59	3	37	5893		BFB	BFB	Dolphins	Patrick Murphy	280
+59	3	38	5855		SJS	AUS	piza	Viktor Andersson	313
+59	3	39	5880		COL	COL	MaxSuperset	Hardbody Mayhem	298
+59	3	40	5877		AZ	CTC	ItsFrenchie	Bo Tteur	249
+59	3	41	5915		BAL	CTC	Yaworski12	TJ Bowser	278
+59	3	42	5865		HON	COL	Alex_Duquesne	Alex Duquesne	202
+59	3	43	5911	comp	OCO	OCO	Starboy	Caleb Ranger	455
+59	4	44	5868		YKW	COL	Immaculate	Saxon Thacubee	288
+59	4	45	5853		NOLA	NOLA	Gallade081	Oliver Closeoffe	293
+59	4	46	5898		NYS	NYS	BelieveAy	Candice Flyn	257
+59	4	47	5864		AUS	AUS	CD6405	Donkey Brainz	308
+59	4	48	5903		OCO	OCO	LANEFROST	Lane Frost IV	375
+59	4	49	5900		CTC	BAL	Sopath	Lion Deadmarsh	154
+59	4	50	5866		SAR	SAR	chaerb	Bowen Arrow	188
+59	4	51	5891		OSK	OSK	BoogShlazetti	Konto Stelios	199
+59	4	52	5873		BFB	BFB	u-s-u-r-p	Bishop Rockman	195
+59	4	53	5861		SJS	SJS	Prismz	Hunter Jackson	222
+59	4	54	5908		COL	COL	Arctic	Robert Robertson	158
+59	4	55	5897		AZ	AZ	Kermit_the_frog	Kermit The frog	183
+59	4	56	5907		BAL	BAL	Dirtybird	Bentley Ryan	86
+59	4	57	5905		HON	HON	camnio12	Terrance Love	174
+59	5	58	5863		YKW	YKW	djfunkstar	Wyler Tarren	93
+59	5	59	5869		NOLA	NOLA	Proverbs 3:5	Mosiah Tahi	120
+59	5	60	5892		NYS	NYS	chaserck	Nick Kirkland	72
+59	5	61	5854		AUS	AUS	Dtx_jojo	Jojo Freak	77
+59	5	62	5884		OCO	OCO	corror	Blake Byrne	93
