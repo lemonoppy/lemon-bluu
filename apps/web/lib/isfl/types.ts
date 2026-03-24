@@ -41,6 +41,12 @@ export interface ClassTrend {
   count: number;
 }
 
+export interface PickEV {
+  pick: number;
+  percentile: number;
+  ev: number;
+}
+
 export interface TeamEfficiency {
   team: string;
   picks: number;

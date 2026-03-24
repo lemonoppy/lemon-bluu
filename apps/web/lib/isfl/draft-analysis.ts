@@ -2,6 +2,7 @@ import type {
   ClassTrend,
   DraftPick,
   PercentileStat,
+  PickEV,
   RoundStat,
   TeamEfficiency,
 } from './types';
@@ -144,6 +145,18 @@ export function computeClassTrends(picks: DraftPick[]): ClassTrend[] {
       top20Avg: topNAvg(tpes, 20),
       count: tpes.length,
     }));
+}
+
+export function computePickEVTable(picks: DraftPick[], classSize: number): PickEV[] {
+  const bucketAvgs = assignBuckets(picks).map((tpes) => avg(tpes));
+  return Array.from({ length: classSize }, (_, i) => {
+    const pct = classSize === 1 ? 0 : (i / (classSize - 1)) * 100;
+    return {
+      pick: i + 1,
+      percentile: Math.round(pct * 10) / 10,
+      ev: Math.round(interpolateExpected(bucketAvgs, pct)),
+    };
+  });
 }
 
 export function computeTeamEfficiency(

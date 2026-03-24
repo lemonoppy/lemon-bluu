@@ -18,11 +18,12 @@ import {
 import {
   computeClassTrends,
   computePercentileStats,
+  computePickEVTable,
   computeRoundStats,
   computeTeamEfficiency,
   parseTSV,
 } from '@/lib/isfl/draft-analysis';
-import type { ClassTrend, DraftPick, PercentileStat, RoundStat, TeamEfficiency } from '@/lib/isfl/types';
+import type { ClassTrend, DraftPick, PercentileStat, PickEV, RoundStat, TeamEfficiency } from '@/lib/isfl/types';
 
 const FULL_DATA_LAG = 7;
 
@@ -405,6 +406,90 @@ function ClassTrendsChart({ data }: { data: ClassTrend[] }) {
 }
 
 // ---------------------------------------------------------------------------
+// Accordion wrapper
+// ---------------------------------------------------------------------------
+
+function Accordion({
+  title,
+  defaultOpen = false,
+  children,
+}: {
+  title: string;
+  defaultOpen?: boolean;
+  children: React.ReactNode;
+}) {
+  const [open, setOpen] = useState(defaultOpen);
+  return (
+    <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="w-full flex items-center justify-between px-4 py-3 text-sm font-semibold text-foreground hover:bg-muted/40 transition-colors"
+      >
+        {title}
+        <span className="text-muted-foreground text-xs">{open ? '▲' : '▼'}</span>
+      </button>
+      {open && <div className="border-t border-border">{children}</div>}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Pick EV table
+// ---------------------------------------------------------------------------
+
+function PickEVTable({ picks }: { picks: DraftPick[] }) {
+  const [classSize, setClassSize] = useState(16);
+  const rows: PickEV[] = useMemo(
+    () => computePickEVTable(picks, classSize),
+    [picks, classSize],
+  );
+
+  return (
+    <>
+      <div className="px-4 py-3 flex items-center gap-3 border-b border-border">
+        <span className="text-xs text-muted-foreground">Class size</span>
+        <input
+          type="number"
+          min={2}
+          max={200}
+          value={classSize}
+          onChange={(e) =>
+            setClassSize(Math.max(2, Math.min(200, parseInt(e.target.value) || 2)))
+          }
+          className="w-16 rounded-md border border-border bg-background px-2 py-1 text-xs text-center tabular-nums focus:outline-none focus:ring-1 focus:ring-border"
+        />
+        <span className="text-xs text-muted-foreground">
+          {rows.length} picks · EV based on filtered data
+        </span>
+      </div>
+      <div className="overflow-auto max-h-80">
+        <table className="w-full text-sm">
+          <thead className="border-b border-border sticky top-0 bg-card">
+            <tr>
+              <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground">Pick</th>
+              <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground">Percentile</th>
+              <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground">Expected TPE</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row) => (
+              <tr
+                key={row.pick}
+                className="border-b border-border last:border-0 hover:bg-muted/40 transition-colors"
+              >
+                <td className="px-3 py-1.5 font-medium text-foreground tabular-nums">{row.pick}</td>
+                <td className="px-3 py-1.5 text-muted-foreground tabular-nums">{row.percentile}%</td>
+                <td className="px-3 py-1.5 tabular-nums">{row.ev}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Team efficiency table
 // ---------------------------------------------------------------------------
 
@@ -444,16 +529,14 @@ function TeamEfficiencyTable({ data, mode }: { data: TeamEfficiency[]; mode: Tea
     );
   }
 
+  const description =
+    mode === 'owning'
+      ? 'Delta = avg TPE earned vs expected for the slots each team actually drafted with.'
+      : 'Cumulative: picks attributed to the team that originally owned them, including picks traded away.';
+
   return (
-    <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
-      <div className="px-4 py-3 border-b border-border">
-        <h3 className="text-sm font-semibold text-foreground">Team Drafting Efficiency</h3>
-        <p className="text-xs text-muted-foreground mt-0.5">
-          {mode === 'owning'
-            ? 'Delta = avg TPE earned vs expected for the slots each team actually drafted with.'
-            : 'Cumulative: picks attributed to the team that originally owned them, including picks traded away.'}
-        </p>
-      </div>
+    <>
+      <p className="px-4 py-2 text-xs text-muted-foreground border-b border-border">{description}</p>
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="border-b border-border">
@@ -494,7 +577,7 @@ function TeamEfficiencyTable({ data, mode }: { data: TeamEfficiency[]; mode: Tea
           </tbody>
         </table>
       </div>
-    </div>
+    </>
   );
 }
 
@@ -537,20 +620,34 @@ export default function DraftAnalysisPage({ picks, maxRound, currentSeason }: Pr
       </Head>
       <div className="max-w-5xl mx-auto px-4 py-8 space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">ISFL Draft Analysis</h1>
+          <h1 className="text-2xl font-bold text-foreground">
+            ISFL Draft Analysis
+          </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Historical draft data — pick value, class trends, and team efficiency.
+            Historical draft data — pick value, class trends, and team
+            efficiency.
           </p>
         </div>
 
-        <FilterBar filters={filters} maxRound={maxRound} currentSeason={currentSeason} onChange={setFilters} />
+        <FilterBar
+          filters={filters}
+          maxRound={maxRound}
+          currentSeason={currentSeason}
+          onChange={setFilters}
+        />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <PickValueChart picks={filteredPicks} view={filters.pickView} />
           <ClassTrendsChart data={classTrends} />
         </div>
 
-        <TeamEfficiencyTable data={teamEfficiency} mode={filters.teamMode} />
+        <Accordion title="Team Drafting Efficiency">
+          <TeamEfficiencyTable data={teamEfficiency} mode={filters.teamMode} />
+        </Accordion>
+
+        <Accordion title="Pick Expected Value">
+          <PickEVTable picks={filteredPicks} />
+        </Accordion>
       </div>
     </>
   );
