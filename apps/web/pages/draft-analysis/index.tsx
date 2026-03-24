@@ -573,6 +573,9 @@ function PickEVTable({ picks }: { picks: DraftPick[] }) {
 function TeamEfficiencyTrends({ trends }: { trends: TeamEfficiencyTrend[] }) {
   const c = useChartColors();
   const [selectedTeam, setSelectedTeam] = useState('');
+  const [metric, setMetric] = useState<'delta' | 'rating'>('delta');
+
+  const K_TEAM = 50;
 
   const teams = useMemo(() => trends.map((t) => t.team), [trends]);
   const teamsKey = teams.join(',');
@@ -588,18 +591,21 @@ function TeamEfficiencyTrends({ trends }: { trends: TeamEfficiencyTrend[] }) {
     return [...seen].sort((a, b) => parseInt(a.slice(1)) - parseInt(b.slice(1)));
   }, [trends]);
 
-  // Pivot: one row per era with each team's delta as a key
+  // Pivot: one row per era with each team's delta or rating as a key
   const chartData = useMemo(
     () =>
       allEras.map((era) => {
         const row: Record<string, string | number | null> = { era };
         for (const t of trends) {
           const e = t.eras.find((x) => x.era === era);
-          row[t.team] = e ? e.delta : null;
+          if (!e) { row[t.team] = null; continue; }
+          row[t.team] = metric === 'rating'
+            ? Math.round(e.delta * e.picks / (e.picks + K_TEAM))
+            : e.delta;
         }
         return row;
       }),
-    [allEras, trends],
+    [allEras, trends, metric],
   );
 
   if (trends.length === 0) {
@@ -625,9 +631,20 @@ function TeamEfficiencyTrends({ trends }: { trends: TeamEfficiencyTrend[] }) {
             </option>
           ))}
         </select>
-        <span className="text-xs text-muted-foreground">
-          Selected team highlighted · others shown faintly · delta = avg TPE − expected
+        <span className="text-xs text-muted-foreground flex-1">
+          Selected team highlighted · others shown faintly
         </span>
+        <div className="flex text-xs border border-border rounded overflow-hidden shrink-0">
+          {(['delta', 'rating'] as const).map((m) => (
+            <button
+              key={m}
+              onClick={() => setMetric(m)}
+              className={`px-2 py-1 transition-colors capitalize ${metric === m ? 'bg-muted text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+            >
+              {m === 'delta' ? 'Delta' : 'Rating'}
+            </button>
+          ))}
+        </div>
       </div>
       <div className="px-4 py-4">
         <ResponsiveContainer width="100%" height={240}>
@@ -655,7 +672,7 @@ function TeamEfficiencyTrends({ trends }: { trends: TeamEfficiencyTrend[] }) {
                   <div style={{ ...tooltipStyle(c), padding: '8px 12px' }}>
                     <p style={{ fontWeight: 600 }}>{String(label)}</p>
                     <p>
-                      {selectedTeam}: {val > 0 ? '+' : ''}
+                      {selectedTeam} {metric === 'rating' ? 'Rating' : 'Delta'}: {val > 0 ? '+' : ''}
                       {val}
                     </p>
                   </div>
@@ -764,7 +781,7 @@ function GMEfficiencyTable({ data }: { data: GMEfficiency[] }) {
   return (
     <>
       <p className="px-4 py-2 text-xs text-muted-foreground border-b border-border">
-        Delta = avg TPE vs expected per pick. Adj. = Bayesian-shrunk surplus
+        Delta = avg TPE vs expected per pick. Rating = Bayesian-shrunk surplus
         (small samples pulled toward zero). Only complete-development seasons
         included. (≥ 5 picks to qualify)
       </p>
@@ -780,7 +797,7 @@ function GMEfficiencyTable({ data }: { data: GMEfficiency[] }) {
               <Th label="Avg TPE" col="avgTPE" />
               <Th label="Expected" col="expectedTPE" />
               <Th label="Delta" col="delta" />
-              <Th label="Adj." col="adj" />
+              <Th label="Rating" col="adj" />
             </tr>
           </thead>
           <tbody>
@@ -875,8 +892,8 @@ function TeamEfficiencyTable({ data, mode }: { data: TeamEfficiency[]; mode: Tea
 
   const description =
     mode === 'owning'
-      ? 'Delta = avg TPE vs expected per pick. Adj. = Bayesian-shrunk surplus (small samples pulled toward zero).'
-      : 'Cumulative: picks attributed to the team that originally owned them, including picks traded away. Delta = avg TPE vs expected per pick. Adj. = Bayesian-shrunk surplus.';
+      ? 'Delta = avg TPE vs expected per pick. Rating = Bayesian-shrunk surplus (small samples pulled toward zero).'
+      : 'Cumulative: picks attributed to the team that originally owned them, including picks traded away. Delta = avg TPE vs expected per pick. Rating = Bayesian-shrunk surplus.';
 
   return (
     <>
@@ -891,7 +908,7 @@ function TeamEfficiencyTable({ data, mode }: { data: TeamEfficiency[]; mode: Tea
               <Th label="Avg TPE" col="avgTPE" />
               <Th label="Expected" col="expectedTPE" />
               <Th label="Delta" col="delta" />
-              <Th label="Adj." col="adj" />
+              <Th label="Rating" col="adj" />
             </tr>
           </thead>
           <tbody>
@@ -923,7 +940,7 @@ function TeamEfficiencyTable({ data, mode }: { data: TeamEfficiency[]; mode: Tea
 function PickDetailRow({ detail }: { detail: DraftPickDetail }) {
   const deltaColor =
     detail.delta > 0 ? 'oklch(0.55 0.18 145)' : detail.delta < 0 ? 'oklch(0.55 0.2 25)' : undefined;
-  // Parent columns: # | Team | Season | Picks | Avg TPE | Expected | Delta | Adj.
+  // Parent columns: # | Team | Season | Picks | Avg TPE | Expected | Delta | Rating
   // Detail:        &nbsp; | empty | R1 #14 | name | TPE | Expected | delta | empty
   return (
     <tr className="border-b border-border/50 last:border-0 bg-muted/20">
@@ -1011,7 +1028,7 @@ function BestDraftsTable({ data }: { data: DraftResult[] }) {
   return (
     <>
       <p className="px-4 py-2 text-xs text-muted-foreground border-b border-border">
-        Each row is one team&apos;s draft in one season. Delta = avg TPE vs expected per pick. Adj. =
+        Each row is one team&apos;s draft in one season. Delta = avg TPE vs expected per pick. Rating =
         Bayesian-shrunk surplus (small samples pulled toward zero).
       </p>
       <div className="overflow-x-auto max-h-96 overflow-y-auto">
@@ -1025,7 +1042,7 @@ function BestDraftsTable({ data }: { data: DraftResult[] }) {
               <Th label="Avg TPE" col="avgTPE" />
               <Th label="Expected" col="expectedTPE" />
               <Th label="Delta" col="rawDelta" />
-              <Th label="Adj." col="delta" />
+              <Th label="Rating" col="delta" />
             </tr>
           </thead>
           <tbody>
