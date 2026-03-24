@@ -111,4 +111,5 @@ export interface UserPickResult {
   highestTPE: number;
   expectedTPE: number;
   delta: number;
+  pct: number; // within-season draft percentile, 0 = first pick
 }

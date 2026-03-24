@@ -355,9 +355,9 @@ function PickValueChart({
               contentStyle={tooltipStyle(c)}
               formatter={(value) => [value, 'Avg TPE']}
               labelFormatter={(v) => {
-                const start = parseInt(v as string);
-                const end = Math.round(start + 100 / BUCKET_COUNT);
-                return `${start}–${end}% percentile`;
+                const end = parseInt(v as string);
+                const start = Math.round(end - 100 / BUCKET_COUNT);
+                return `${start}–${end}th percentile`;
               }}
             />
             <Line
@@ -555,7 +555,7 @@ function PickEVTable({ picks }: { picks: DraftPick[] }) {
           <thead className="border-b border-border sticky top-0 bg-card">
             <tr>
               <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground">Pick</th>
-              <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground">Pct</th>
+              <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground">Pctile</th>
               <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground">P25</th>
               <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground">Exp. TPE</th>
               <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground">P75</th>
@@ -570,7 +570,7 @@ function PickEVTable({ picks }: { picks: DraftPick[] }) {
                 className="border-b border-border last:border-0 hover:bg-muted/40 transition-colors"
               >
                 <td className="px-3 py-1.5 font-medium text-foreground tabular-nums">{row.pick}</td>
-                <td className="px-3 py-1.5 text-muted-foreground tabular-nums">{row.percentile}%</td>
+                <td className="px-3 py-1.5 text-muted-foreground tabular-nums">{Math.round(100 - row.percentile)}th</td>
                 <td className="px-3 py-1.5 text-muted-foreground tabular-nums">{row.p25}</td>
                 <td className="px-3 py-1.5 font-medium tabular-nums">{row.ev}</td>
                 <td className="px-3 py-1.5 text-muted-foreground tabular-nums">{row.p75}</td>
@@ -1307,6 +1307,7 @@ function AllPicksByDeltaTable({ picks }: { picks: DraftPick[] }) {
               <Th label="Team" col="owningTeam" />
               <Th label="Round" col="round" />
               <Th label="Pick #" col="pick" />
+              <Th label="Pctile" col="pct" />
               <Th label="TPE" col="highestTPE" />
               <Th label="Expected" col="expectedTPE" />
               <Th label="Delta" col="delta" />
@@ -1333,6 +1334,7 @@ function AllPicksByDeltaTable({ picks }: { picks: DraftPick[] }) {
                 <td className="px-3 py-2 text-muted-foreground">{row.owningTeam}</td>
                 <td className="px-3 py-2 text-muted-foreground tabular-nums">{row.round}</td>
                 <td className="px-3 py-2 text-muted-foreground tabular-nums">{row.pick}</td>
+                <td className="px-3 py-2 text-muted-foreground tabular-nums">{Math.round(100 - row.pct)}th</td>
                 <td className="px-3 py-2 tabular-nums">{row.highestTPE}</td>
                 <td className="px-3 py-2 tabular-nums text-muted-foreground">{row.expectedTPE}</td>
                 <DeltaCell value={row.delta} />
@@ -1422,7 +1424,7 @@ function PicksAtPercentileTable({ picks }: { picks: DraftPick[] }) {
               ‹
             </button>
             <span className="px-3 py-1 tabular-nums font-medium min-w-16 text-center">
-              {result.bucketStart}–{result.bucketEnd}%
+              {Math.round(100 - result.bucketEnd)}–{Math.round(100 - result.bucketStart)}th
             </span>
             <button
               onClick={() => setBucketIndex((b) => Math.min(BUCKET_COUNT - 1, b + 1))}
@@ -1446,7 +1448,7 @@ function PicksAtPercentileTable({ picks }: { picks: DraftPick[] }) {
         </div>
       </div>
       <p className="px-4 py-2 text-xs text-muted-foreground border-b border-border">
-        Picks shown are from the {result.bucketStart}–{result.bucketEnd}% bucket ({result.bucketEnd - result.bucketStart}-point window). Expected TPE is interpolated for the exact percentile selected.
+        Picks shown are from the {Math.round(100 - result.bucketEnd)}–{Math.round(100 - result.bucketStart)}th percentile bucket ({result.bucketEnd - result.bucketStart}-point window). Expected TPE is interpolated for the exact percentile selected.
       </p>
       <div className="overflow-x-auto max-h-96 overflow-y-auto">
         <table className="w-full text-sm">
@@ -1458,7 +1460,7 @@ function PicksAtPercentileTable({ picks }: { picks: DraftPick[] }) {
               <Th label="Team" col="owningTeam" />
               <Th label="Round" col="round" />
               <Th label="Pick #" col="pick" />
-              <Th label="Pct%" col="pct" />
+              <Th label="Pctile" col="pct" />
               <Th label="TPE" col="highestTPE" />
               <Th label="Expected" col="pickExpectedTPE" />
               <Th label="Delta" col="pickDelta" />
@@ -1476,7 +1478,7 @@ function PicksAtPercentileTable({ picks }: { picks: DraftPick[] }) {
                 <td className="px-3 py-2 text-muted-foreground">{row.owningTeam}</td>
                 <td className="px-3 py-2 text-muted-foreground tabular-nums">{row.round}</td>
                 <td className="px-3 py-2 text-muted-foreground tabular-nums">{row.pick}</td>
-                <td className="px-3 py-2 text-muted-foreground tabular-nums">{row.pct.toFixed(1)}%</td>
+                <td className="px-3 py-2 text-muted-foreground tabular-nums">{Math.round(100 - row.pct)}th</td>
                 <td className="px-3 py-2 tabular-nums">{row.highestTPE}</td>
                 <td className="px-3 py-2 tabular-nums text-muted-foreground">{row.pickExpectedTPE}</td>
                 <DeltaCell value={row.pickDelta} />
