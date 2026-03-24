@@ -45,7 +45,7 @@ function percentileValue(sorted: number[], p: number): number {
 
 // Number of buckets used for expected-value calculations and the percentile chart.
 // Higher = finer granularity, smaller interpolation range per bucket.
-export const BUCKET_COUNT = 33;
+export const BUCKET_COUNT = 25;
 const BUCKET_WIDTH = 100 / BUCKET_COUNT;
 
 // Number of seasons per era for team efficiency trend analysis.
@@ -150,7 +150,7 @@ export function computeRoundStats(picks: DraftPick[]): RoundStat[] {
 export function computePercentileStats(picks: DraftPick[]): PercentileStat[] {
   const { buckets } = assignRawBuckets(picks);
   return buckets.map((raw, i) => ({
-    label: `${Math.round(i * BUCKET_WIDTH)}%`,
+    label: `${Math.round(100 - i * BUCKET_WIDTH)}%`,
     bucket: i,
     avg: Math.round(avg(raw)),
     median: Math.round(median(raw)),
@@ -248,6 +248,7 @@ function buildPickDeltas(allPicks: DraftPick[], subset: DraftPick[]): UserPickRe
       highestTPE: p.highestTPE,
       expectedTPE,
       delta: p.highestTPE - expectedTPE,
+      pct,
     };
   });
 }
