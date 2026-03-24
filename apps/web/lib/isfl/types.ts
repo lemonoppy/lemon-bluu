@@ -26,11 +26,6 @@ export interface PercentileStat {
   count: number;
 }
 
-export interface PickStat {
-  round: number;
-  pick: number;
-  avg: number;
-}
 
 export interface ClassTrend {
   season: number;

@@ -438,11 +438,13 @@ function Accordion({
 // ---------------------------------------------------------------------------
 
 function PickEVTable({ picks }: { picks: DraftPick[] }) {
-  const [classSize, setClassSize] = useState(16);
+  const [classSize, setClassSize] = useState(50);
   const rows: PickEV[] = useMemo(
     () => computePickEVTable(picks, classSize),
     [picks, classSize],
   );
+
+  const c = useChartColors();
 
   return (
     <>
@@ -461,6 +463,38 @@ function PickEVTable({ picks }: { picks: DraftPick[] }) {
         <span className="text-xs text-muted-foreground">
           {rows.length} picks · EV based on filtered data
         </span>
+      </div>
+      <div className="px-4 py-4 border-b border-border">
+        <ResponsiveContainer width="100%" height={200}>
+          <LineChart data={rows} margin={{ top: 4, right: 8, left: -16, bottom: 0 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke={c.grid} />
+            <XAxis
+              dataKey="pick"
+              tickFormatter={(v) => `P${v}`}
+              tick={{ fill: c.tick, fontSize: 11 }}
+              axisLine={{ stroke: c.grid }}
+              tickLine={false}
+            />
+            <YAxis
+              tick={{ fill: c.tick, fontSize: 11 }}
+              axisLine={{ stroke: c.grid }}
+              tickLine={false}
+            />
+            <Tooltip
+              contentStyle={tooltipStyle(c)}
+              formatter={(value) => [value, 'Expected TPE']}
+              labelFormatter={(v) => `Pick ${v}`}
+            />
+            <Line
+              type="monotone"
+              dataKey="ev"
+              stroke={c.bar}
+              strokeWidth={2}
+              dot={false}
+              activeDot={{ r: 4 }}
+            />
+          </LineChart>
+        </ResponsiveContainer>
       </div>
       <div className="overflow-auto max-h-80">
         <table className="w-full text-sm">

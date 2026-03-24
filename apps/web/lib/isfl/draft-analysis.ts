@@ -52,8 +52,36 @@ function resolveTeam(team: string, legacy: boolean): string {
   return legacy ? (TEAM_RENAMES[team] ?? team) : team;
 }
 
-// Groups picks into BUCKET_COUNT buckets by their rank within each season's draft.
-function assignBuckets(picks: DraftPick[]): number[][] {
+// Groups picks into BUCKET_COUNT buckets by within-season percentile rank,
+// normalizing each pick's TPE by its season's mean to remove the temporal
+// upward trend. Returns normalized bucket arrays and the raw global mean
+// (used to scale expected values back to absolute TPE for display).
+function assignNormalizedBuckets(picks: DraftPick[]): {
+  buckets: number[][];
+  globalMean: number;
+} {
+  // Use median as the reference to avoid star players inflating season means,
+  // which would compress the top of the curve.
+  const allTPEs = picks.map((p) => p.highestTPE);
+  const globalMean = median(allTPEs);
+  if (globalMean === 0) {
+    return {
+      buckets: Array.from({ length: BUCKET_COUNT }, () => []),
+      globalMean: 0,
+    };
+  }
+
+  // Compute per-season medians
+  const seasonTPEs = new Map<number, number[]>();
+  for (const p of picks) {
+    if (!seasonTPEs.has(p.season)) seasonTPEs.set(p.season, []);
+    seasonTPEs.get(p.season)!.push(p.highestTPE);
+  }
+  const seasonMeans = new Map<number, number>();
+  for (const [season, tpes] of seasonTPEs) {
+    seasonMeans.set(season, median(tpes));
+  }
+
   const bySeason = new Map<number, DraftPick[]>();
   for (const p of picks) {
     if (!bySeason.has(p.season)) bySeason.set(p.season, []);
@@ -62,16 +90,18 @@ function assignBuckets(picks: DraftPick[]): number[][] {
 
   const buckets: number[][] = Array.from({ length: BUCKET_COUNT }, () => []);
   for (const seasonPicks of bySeason.values()) {
+    const seasonMean = seasonMeans.get(seasonPicks[0].season) ?? globalMean;
     const sorted = [...seasonPicks].sort((a, b) => a.pick - b.pick);
     const total = sorted.length;
     sorted.forEach((p, i) => {
       const pct = total === 1 ? 0 : (i / (total - 1)) * 100;
       const bucket = Math.min(Math.floor(pct / BUCKET_WIDTH), BUCKET_COUNT - 1);
-      buckets[bucket].push(p.highestTPE);
+      // Normalized ratio: 1.0 = season average, 1.5 = 50% above average
+      buckets[bucket].push(p.highestTPE / seasonMean);
     });
   }
 
-  return buckets;
+  return { buckets, globalMean };
 }
 
 export function parseTSV(raw: string): DraftPick[] {
@@ -119,13 +149,13 @@ export function computeRoundStats(picks: DraftPick[]): RoundStat[] {
 }
 
 export function computePercentileStats(picks: DraftPick[]): PercentileStat[] {
-  const buckets = assignBuckets(picks);
-  return buckets.map((tpes, i) => ({
+  const { buckets, globalMean } = assignNormalizedBuckets(picks);
+  return buckets.map((normalized, i) => ({
     label: `${Math.round(i * BUCKET_WIDTH)}%`,
     bucket: i,
-    avg: Math.round(avg(tpes)),
-    median: Math.round(median(tpes)),
-    count: tpes.length,
+    avg: Math.round(avg(normalized) * globalMean),
+    median: Math.round(median(normalized) * globalMean),
+    count: normalized.length,
   }));
 }
 
@@ -148,13 +178,14 @@ export function computeClassTrends(picks: DraftPick[]): ClassTrend[] {
 }
 
 export function computePickEVTable(picks: DraftPick[], classSize: number): PickEV[] {
-  const bucketAvgs = assignBuckets(picks).map((tpes) => avg(tpes));
+  const { buckets, globalMean } = assignNormalizedBuckets(picks);
+  const bucketAvgs = buckets.map((normalized) => avg(normalized));
   return Array.from({ length: classSize }, (_, i) => {
     const pct = classSize === 1 ? 0 : (i / (classSize - 1)) * 100;
     return {
       pick: i + 1,
       percentile: Math.round(pct * 10) / 10,
-      ev: Math.round(interpolateExpected(bucketAvgs, pct)),
+      ev: Math.round(interpolateExpected(bucketAvgs, pct) * globalMean),
     };
   });
 }
@@ -164,10 +195,9 @@ export function computeTeamEfficiency(
   mode: 'owning' | 'original' = 'owning',
   legacy = false,
 ): TeamEfficiency[] {
-  // Build decile expected-value lookup from the full filtered pick set
-  const bucketAvgs = assignBuckets(picks).map((tpes) => avg(tpes));
+  const { buckets, globalMean } = assignNormalizedBuckets(picks);
+  const bucketAvgs = buckets.map((normalized) => avg(normalized));
 
-  // For each pick, determine its decile rank within its own season
   const bySeason = new Map<number, DraftPick[]>();
   for (const p of picks) {
     if (!bySeason.has(p.season)) bySeason.set(p.season, []);
@@ -183,8 +213,8 @@ export function computeTeamEfficiency(
 
     sorted.forEach((p, i) => {
       const pct = total === 1 ? 0 : (i / (total - 1)) * 100;
-      Math.min(Math.floor(pct / 10), 9);
-      const expected = interpolateExpected(bucketAvgs, pct);
+      // Scale normalized expected value back to raw TPE using global mean
+      const expected = interpolateExpected(bucketAvgs, pct) * globalMean;
 
       const team = resolveTeam(p[teamKey], legacy);
       if (!byTeam.has(team)) byTeam.set(team, { tpes: [], expectedTotal: 0 });
