@@ -25,6 +25,7 @@ import {
   computeTeamEfficiency,
   computeTeamEfficiencyTrends,
 } from '@/lib/isfl/draft-analysis';
+import { getTeamColor } from '@/lib/isfl/teams';
 import type {
   ClassTrend,
   DraftPick,
@@ -669,9 +670,9 @@ function TeamEfficiencyTrends({ trends }: { trends: TeamEfficiencyTrend[] }) {
                 key={selectedTeam}
                 type="monotone"
                 dataKey={selectedTeam}
-                stroke={c.bar}
+                stroke={getTeamColor(selectedTeam)}
                 strokeWidth={2.5}
-                dot={{ fill: c.bar, r: 3 }}
+                dot={{ fill: getTeamColor(selectedTeam), r: 3 }}
                 activeDot={{ r: 5 }}
                 connectNulls={false}
               />
