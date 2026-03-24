@@ -707,7 +707,11 @@ function GMEfficiencyTable({ data }: { data: GMEfficiency[] }) {
   const [sortKey, setSortKey] = useState<GMSortKey>('adj');
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
 
-  const rows = data.map((r) => ({ ...r, adj: Math.round(r.delta * Math.sqrt(r.picks)) }));
+  const K_GM = 10;
+  const rows = data.map((r) => ({
+    ...r,
+    adj: Math.round(r.delta * r.picks / (r.picks + K_GM)),
+  }));
 
   function handleSort(key: GMSortKey) {
     if (key === sortKey) {
@@ -760,8 +764,8 @@ function GMEfficiencyTable({ data }: { data: GMEfficiency[] }) {
   return (
     <>
       <p className="px-4 py-2 text-xs text-muted-foreground border-b border-border">
-        Delta = avg TPE vs expected per pick. Adj. = total surplus scaled by
-        √picks (rewards quality and volume). Only complete-development seasons
+        Delta = avg TPE vs expected per pick. Adj. = Bayesian-shrunk surplus
+        (small samples pulled toward zero). Only complete-development seasons
         included. (≥ 5 picks to qualify)
       </p>
       <div className="overflow-x-auto max-h-96 overflow-y-auto">
@@ -815,7 +819,11 @@ function TeamEfficiencyTable({ data, mode }: { data: TeamEfficiency[]; mode: Tea
   const [sortKey, setSortKey] = useState<SortKey>('adj');
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
 
-  const rows = data.map((r) => ({ ...r, adj: Math.round(r.delta * Math.sqrt(r.picks)) }));
+  const K_TEAM = 50;
+  const rows = data.map((r) => ({
+    ...r,
+    adj: Math.round(r.delta * r.picks / (r.picks + K_TEAM)),
+  }));
 
   function handleSort(key: SortKey) {
     if (key === sortKey) {
@@ -867,8 +875,8 @@ function TeamEfficiencyTable({ data, mode }: { data: TeamEfficiency[]; mode: Tea
 
   const description =
     mode === 'owning'
-      ? 'Delta = avg TPE vs expected per pick. Adj. = total surplus scaled by √picks (rewards quality and volume).'
-      : 'Cumulative: picks attributed to the team that originally owned them, including picks traded away. Delta = avg TPE vs expected per pick. Adj. = √picks-scaled surplus.';
+      ? 'Delta = avg TPE vs expected per pick. Adj. = Bayesian-shrunk surplus (small samples pulled toward zero).'
+      : 'Cumulative: picks attributed to the team that originally owned them, including picks traded away. Delta = avg TPE vs expected per pick. Adj. = Bayesian-shrunk surplus.';
 
   return (
     <>
@@ -940,10 +948,14 @@ function BestDraftsTable({ data }: { data: DraftResult[] }) {
   type DSortKey = 'team' | 'season' | 'picks' | 'avgTPE' | 'expectedTPE' | 'rawDelta' | 'delta';
   const [sortKey, setSortKey] = useState<DSortKey>('delta');
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
-  const [showCount, setShowCount] = useState<'top' | 'all'>('top');
   const [expandedKey, setExpandedKey] = useState<string | null>(null);
 
-  const rows = data.map((r) => ({ ...r, rawDelta: r.avgTPE - r.expectedTPE }));
+  const K_DRAFT = 3;
+  const rows = data.map((r) => ({
+    ...r,
+    rawDelta: r.avgTPE - r.expectedTPE,
+    delta: Math.round((r.avgTPE - r.expectedTPE) * r.picks / (r.picks + K_DRAFT)),
+  }));
 
   function handleSort(key: DSortKey) {
     if (key === sortKey) {
@@ -966,7 +978,6 @@ function BestDraftsTable({ data }: { data: DraftResult[] }) {
     return a.team.localeCompare(b.team);
   });
 
-  const displayed = showCount === 'top' ? sorted.slice(0, 25) : sorted;
 
   function DeltaCell({ value }: { value: number }) {
     return (
@@ -999,18 +1010,10 @@ function BestDraftsTable({ data }: { data: DraftResult[] }) {
 
   return (
     <>
-      <div className="px-4 py-2 flex items-center gap-3 border-b border-border">
-        <p className="text-xs text-muted-foreground flex-1">
-          Each row is one team&apos;s draft in one season. Delta = avg TPE vs expected per pick. Adj. =
-          total surplus scaled by √picks (rewards quality and volume).
-        </p>
-        <button
-          onClick={() => setShowCount((v) => (v === 'top' ? 'all' : 'top'))}
-          className="text-xs text-muted-foreground hover:text-foreground transition-colors shrink-0"
-        >
-          {showCount === 'top' ? `Show all ${data.length}` : 'Show top 25'}
-        </button>
-      </div>
+      <p className="px-4 py-2 text-xs text-muted-foreground border-b border-border">
+        Each row is one team&apos;s draft in one season. Delta = avg TPE vs expected per pick. Adj. =
+        Bayesian-shrunk surplus (small samples pulled toward zero).
+      </p>
       <div className="overflow-x-auto max-h-96 overflow-y-auto">
         <table className="w-full text-sm">
           <thead className="border-b border-border sticky top-0 bg-card">
@@ -1026,7 +1029,7 @@ function BestDraftsTable({ data }: { data: DraftResult[] }) {
             </tr>
           </thead>
           <tbody>
-            {displayed.map((row, i) => {
+            {sorted.map((row, i) => {
               const key = `${row.team}-${row.season}`;
               const isExpanded = expandedKey === key;
               return (
