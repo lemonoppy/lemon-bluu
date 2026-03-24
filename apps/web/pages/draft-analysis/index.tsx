@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import Head from 'next/head';
 import { useTheme } from 'next-themes';
@@ -24,11 +24,13 @@ import {
   computeRoundStats,
   computeTeamEfficiency,
   computeTeamEfficiencyTrends,
+  computeUserPicks,
 } from '@/lib/isfl/draft-analysis';
 import { getTeamColor } from '@/lib/isfl/teams';
 import type {
   ClassTrend,
   DraftPick,
+  DraftPickDetail,
   DraftResult,
   GMData,
   GMEfficiency,
@@ -37,6 +39,7 @@ import type {
   RoundStat,
   TeamEfficiency,
   TeamEfficiencyTrend,
+  UserPickResult,
 } from '@/lib/isfl/types';
 
 const FULL_DATA_LAG = 7;
@@ -117,6 +120,7 @@ interface Filters {
   teamMode: TeamMode;
   legacyMode: boolean;
   completeOnly: boolean;
+  modernOnly: boolean;
 }
 
 function FilterBar({
@@ -226,6 +230,19 @@ function FilterBar({
         }`}
       >
         Complete only {filters.completeOnly ? 'on' : 'off'}
+      </button>
+
+      {/* Modern era toggle */}
+      <button
+        onClick={() => set({ modernOnly: !filters.modernOnly })}
+        title="Exclude S1–20 early-era data"
+        className={`px-3 py-1 rounded-md border text-xs font-medium transition-colors ${
+          filters.modernOnly
+            ? 'border-foreground/40 bg-foreground/10 text-foreground'
+            : 'border-border text-muted-foreground hover:text-foreground hover:border-foreground/30'
+        }`}
+      >
+        Modern {filters.modernOnly ? 'on' : 'off'}
       </button>
 
       {/* Team mode toggle */}
@@ -735,9 +752,9 @@ function GMEfficiencyTable({ data }: { data: GMEfficiency[] }) {
         TPE earned vs expected for slots held. Only seasons with complete player development are
         included — GMs whose tenure is primarily in recent seasons will have a smaller sample here.
       </p>
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto max-h-96 overflow-y-auto">
         <table className="w-full text-sm">
-          <thead className="border-b border-border">
+          <thead className="border-b border-border sticky top-0 bg-card">
             <tr>
               <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground w-8">#</th>
               <Th label="GM" col="username" />
@@ -882,11 +899,35 @@ function TeamEfficiencyTable({ data, mode }: { data: TeamEfficiency[]; mode: Tea
 // Best / worst individual drafts table
 // ---------------------------------------------------------------------------
 
+function PickDetailRow({ detail }: { detail: DraftPickDetail }) {
+  const deltaColor =
+    detail.delta > 0 ? 'oklch(0.55 0.18 145)' : detail.delta < 0 ? 'oklch(0.55 0.2 25)' : undefined;
+  // Parent columns: # | Team | Season | Picks | Avg TPE | Expected | Delta
+  // Detail mapping: empty | empty | R1 #14 | Player | TPE | Expected | Delta
+  return (
+    <tr className="border-b border-border/50 last:border-0 bg-muted/20">
+      <td className="px-3 py-1.5 w-8">&nbsp;</td>
+      <td className="px-3 py-1.5" />
+      <td className="px-3 py-1.5 text-muted-foreground tabular-nums text-xs whitespace-nowrap">
+        R{detail.round} #{detail.pick}
+      </td>
+      <td className="px-3 py-1.5 text-xs">{detail.name}</td>
+      <td className="px-3 py-1.5 tabular-nums text-xs">{detail.highestTPE}</td>
+      <td className="px-3 py-1.5 text-muted-foreground tabular-nums text-xs">{detail.expectedTPE}</td>
+      <td className="px-3 py-1.5 font-medium tabular-nums text-xs" style={{ color: deltaColor }}>
+        {detail.delta > 0 ? '+' : ''}
+        {detail.delta}
+      </td>
+    </tr>
+  );
+}
+
 function BestDraftsTable({ data }: { data: DraftResult[] }) {
   type DSortKey = keyof Pick<DraftResult, 'team' | 'season' | 'picks' | 'avgTPE' | 'expectedTPE' | 'delta'>;
   const [sortKey, setSortKey] = useState<DSortKey>('delta');
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
   const [showCount, setShowCount] = useState<'top' | 'all'>('top');
+  const [expandedKey, setExpandedKey] = useState<string | null>(null);
 
   function handleSort(key: DSortKey) {
     if (key === sortKey) {
@@ -954,37 +995,177 @@ function BestDraftsTable({ data }: { data: DraftResult[] }) {
             </tr>
           </thead>
           <tbody>
-            {displayed.map((row, i) => (
-              <tr
-                key={`${row.team}-${row.season}`}
-                className="border-b border-border last:border-0 hover:bg-muted/40 transition-colors"
-              >
-                <td className="px-3 py-2 text-muted-foreground tabular-nums text-xs">{i + 1}</td>
-                <td className="px-3 py-2 font-medium text-foreground">{row.team}</td>
-                <td className="px-3 py-2 text-muted-foreground tabular-nums">S{row.season}</td>
-                <td className="px-3 py-2 text-muted-foreground tabular-nums">{row.picks}</td>
-                <td className="px-3 py-2 tabular-nums">{row.avgTPE}</td>
-                <td className="px-3 py-2 text-muted-foreground tabular-nums">{row.expectedTPE}</td>
-                <td
-                  className="px-3 py-2 font-semibold tabular-nums"
-                  style={{
-                    color:
-                      row.delta > 0
-                        ? 'oklch(0.55 0.18 145)'
-                        : row.delta < 0
-                          ? 'oklch(0.55 0.2 25)'
-                          : undefined,
-                  }}
-                >
-                  {row.delta > 0 ? '+' : ''}
-                  {row.delta}
-                </td>
-              </tr>
-            ))}
+            {displayed.map((row, i) => {
+              const key = `${row.team}-${row.season}`;
+              const isExpanded = expandedKey === key;
+              return (
+                <React.Fragment key={key}>
+                  <tr
+                    key={key}
+                    className="border-b border-border last:border-0 hover:bg-muted/40 transition-colors cursor-pointer select-none"
+                    onClick={() => setExpandedKey(isExpanded ? null : key)}
+                  >
+                    <td className="px-3 py-2 text-muted-foreground tabular-nums text-xs">{i + 1}</td>
+                    <td className="px-3 py-2 font-medium text-foreground">
+                      <span className="mr-1.5 text-muted-foreground text-xs">{isExpanded ? '▾' : '▸'}</span>
+                      {row.team}
+                    </td>
+                    <td className="px-3 py-2 text-muted-foreground tabular-nums">S{row.season}</td>
+                    <td className="px-3 py-2 text-muted-foreground tabular-nums">{row.picks}</td>
+                    <td className="px-3 py-2 tabular-nums">{row.avgTPE}</td>
+                    <td className="px-3 py-2 text-muted-foreground tabular-nums">{row.expectedTPE}</td>
+                    <td
+                      className="px-3 py-2 font-semibold tabular-nums"
+                      style={{
+                        color:
+                          row.delta > 0
+                            ? 'oklch(0.55 0.18 145)'
+                            : row.delta < 0
+                              ? 'oklch(0.55 0.2 25)'
+                              : undefined,
+                      }}
+                    >
+                      {row.delta > 0 ? '+' : ''}
+                      {row.delta}
+                    </td>
+                  </tr>
+                  {isExpanded &&
+                    row.pickDetails.map((detail) => (
+                      <PickDetailRow key={detail.pid} detail={detail} />
+                    ))}
+                </React.Fragment>
+              );
+            })}
           </tbody>
         </table>
       </div>
     </>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// User search
+// ---------------------------------------------------------------------------
+
+function UserSearch({ picks }: { picks: DraftPick[] }) {
+  const [query, setQuery] = useState('');
+
+  const usernames = useMemo(() => {
+    const set = new Set(picks.map((p) => p.username));
+    return Array.from(set).sort((a, b) => a.localeCompare(b));
+  }, [picks]);
+
+  const results = useMemo<UserPickResult[]>(() => {
+    const q = query.trim();
+    if (!q) return [];
+    return computeUserPicks(picks, q);
+  }, [picks, query]);
+
+  const summary = useMemo(() => {
+    if (results.length === 0) return null;
+    const avgDelta = Math.round(results.reduce((s, r) => s + r.delta, 0) / results.length);
+    const avgTPE = Math.round(results.reduce((s, r) => s + r.highestTPE, 0) / results.length);
+    const avgExp = Math.round(results.reduce((s, r) => s + r.expectedTPE, 0) / results.length);
+    return { avgDelta, avgTPE, avgExp, total: results.length };
+  }, [results]);
+
+  const deltaColor = (d: number) =>
+    d > 0 ? 'oklch(0.55 0.18 145)' : d < 0 ? 'oklch(0.55 0.2 25)' : undefined;
+
+  return (
+    <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
+      <div className="px-4 py-3 border-b border-border flex items-center gap-3">
+        <h2 className="text-sm font-semibold text-foreground">Player Search</h2>
+        <input
+          list="username-list"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search by username…"
+          className="flex-1 max-w-xs rounded-md border border-border bg-background px-3 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-border"
+        />
+        <datalist id="username-list">
+          {usernames.map((u) => (
+            <option key={u} value={u} />
+          ))}
+        </datalist>
+      </div>
+
+      {results.length === 0 && query.trim() && (
+        <p className="px-4 py-3 text-xs text-muted-foreground">
+          No picks found for &quot;{query.trim()}&quot;.
+        </p>
+      )}
+
+      {results.length > 0 && (
+        <>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="border-b border-border">
+                <tr>
+                  <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground">Season</th>
+                  <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground">Pick</th>
+                  <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground">Player</th>
+                  <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground">Team</th>
+                  <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground">TPE</th>
+                  <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground">Expected</th>
+                  <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground">Δ</th>
+                </tr>
+              </thead>
+              <tbody>
+                {results.map((r) => (
+                  <tr
+                    key={r.pid}
+                    className="border-b border-border last:border-0 hover:bg-muted/40 transition-colors"
+                  >
+                    <td className="px-3 py-2 text-muted-foreground tabular-nums text-xs">S{r.season}</td>
+                    <td className="px-3 py-2 text-muted-foreground tabular-nums text-xs">
+                      R{r.round} #{r.pick}
+                    </td>
+                    <td className="px-3 py-2 font-medium text-foreground">{r.name}</td>
+                    <td className="px-3 py-2">
+                      <span className="flex items-center gap-1.5">
+                        <span
+                          className="inline-block w-2 h-2 rounded-full flex-shrink-0"
+                          style={{ backgroundColor: getTeamColor(r.owningTeam) }}
+                        />
+                        <span className="text-muted-foreground text-xs">{r.owningTeam}</span>
+                      </span>
+                    </td>
+                    <td className="px-3 py-2 tabular-nums">{r.highestTPE}</td>
+                    <td className="px-3 py-2 tabular-nums text-muted-foreground">{r.expectedTPE}</td>
+                    <td
+                      className="px-3 py-2 font-semibold tabular-nums"
+                      style={{ color: deltaColor(r.delta) }}
+                    >
+                      {r.delta > 0 ? '+' : ''}
+                      {r.delta}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {summary && (
+            <div className="px-4 py-2 border-t border-border flex gap-6 text-xs text-muted-foreground">
+              <span>{summary.total} picks</span>
+              <span>
+                Avg TPE <span className="text-foreground font-medium">{summary.avgTPE}</span>
+              </span>
+              <span>
+                Avg expected <span className="text-foreground font-medium">{summary.avgExp}</span>
+              </span>
+              <span>
+                Avg Δ{' '}
+                <span className="font-semibold" style={{ color: deltaColor(summary.avgDelta) }}>
+                  {summary.avgDelta > 0 ? '+' : ''}
+                  {summary.avgDelta}
+                </span>
+              </span>
+            </div>
+          )}
+        </>
+      )}
+    </div>
   );
 }
 
@@ -1015,6 +1196,7 @@ export default function DraftAnalysisPage() {
     teamMode: 'owning',
     legacyMode: true,
     completeOnly: true,
+    modernOnly: true,
   });
 
   const filteredPicks = useMemo(() => {
@@ -1022,10 +1204,11 @@ export default function DraftAnalysisPage() {
     return picks.filter(
       (p) =>
         (!applyRounds || (p.round >= filters.roundMin && p.round <= filters.roundMax)) &&
-        (filters.includeGM || p.type !== 'GM') &&
-        (!filters.completeOnly || p.season <= currentSeason - FULL_DATA_LAG),
+        (filters.includeGM || p.type.toLowerCase() !== 'gm') &&
+        (!filters.completeOnly || p.season <= currentSeason - FULL_DATA_LAG) &&
+        (!filters.modernOnly || p.season >= 21),
     );
-  }, [picks, filters.roundMin, filters.roundMax, filters.includeGM, filters.completeOnly, filters.pickView, currentSeason]);
+  }, [picks, filters.roundMin, filters.roundMax, filters.includeGM, filters.completeOnly, filters.pickView, filters.modernOnly, currentSeason]);
 
   const classTrends = useMemo(() => computeClassTrends(filteredPicks), [filteredPicks]);
 
@@ -1040,7 +1223,7 @@ export default function DraftAnalysisPage() {
   );
 
   const gmEfficiency = useMemo(
-    () => computeGMEfficiency(filteredPicks, gmData, filteredPicks),
+    () => computeGMEfficiency(filteredPicks, gmData),
     [filteredPicks, gmData],
   );
 
@@ -1122,6 +1305,8 @@ export default function DraftAnalysisPage() {
         <Accordion title="Pick Expected Value">
           <PickEVTable picks={filteredPicks} />
         </Accordion>
+
+        <UserSearch picks={filteredPicks} />
       </div>
     </>
   );

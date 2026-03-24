@@ -81,11 +81,34 @@ export interface GMEfficiency {
   delta: number;
 }
 
+export interface DraftPickDetail {
+  round: number;
+  pick: number;
+  pid: number;
+  name: string;
+  highestTPE: number;
+  expectedTPE: number;
+  delta: number;
+}
+
 export interface DraftResult {
   team: string;
   season: number;
   picks: number;
   avgTPE: number;
+  expectedTPE: number;
+  delta: number;
+  pickDetails: DraftPickDetail[];
+}
+
+export interface UserPickResult {
+  season: number;
+  round: number;
+  pick: number; // overall
+  pid: number;
+  name: string;
+  owningTeam: string;
+  highestTPE: number;
   expectedTPE: number;
   delta: number;
 }
