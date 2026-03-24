@@ -1,8 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
 
-import fs from 'fs';
-import path from 'path';
-
 import Head from 'next/head';
 import { useTheme } from 'next-themes';
 import {
@@ -27,8 +24,6 @@ import {
   computeRoundStats,
   computeTeamEfficiency,
   computeTeamEfficiencyTrends,
-  parseGMTSV,
-  parseTSV,
 } from '@/lib/isfl/draft-analysis';
 import type {
   ClassTrend,
@@ -45,12 +40,10 @@ import type {
 
 const FULL_DATA_LAG = 7;
 
-interface Props {
-  picks: DraftPick[];
-  gmData: GMData[];
-  maxRound: number;
-  currentSeason: number;
-}
+type DataState =
+  | { status: 'loading' }
+  | { status: 'error' }
+  | { status: 'ok'; picks: DraftPick[]; gmData: GMData[]; maxRound: number; currentSeason: number };
 
 type SortKey = keyof Pick<
   TeamEfficiency,
@@ -998,7 +991,21 @@ function BestDraftsTable({ data }: { data: DraftResult[] }) {
 // Page
 // ---------------------------------------------------------------------------
 
-export default function DraftAnalysisPage({ picks, gmData, maxRound, currentSeason }: Props) {
+export default function DraftAnalysisPage() {
+  const [data, setData] = useState<DataState>({ status: 'loading' });
+
+  useEffect(() => {
+    fetch('/api/isfl/draft-data')
+      .then((r) => (r.ok ? r.json() : Promise.reject()))
+      .then((json) => setData({ status: 'ok', ...json }))
+      .catch(() => setData({ status: 'error' }));
+  }, []);
+
+  const picks = useMemo(() => (data.status === 'ok' ? data.picks : []), [data]);
+  const gmData = useMemo(() => (data.status === 'ok' ? data.gmData : []), [data]);
+  const maxRound = data.status === 'ok' ? data.maxRound : 10;
+  const currentSeason = data.status === 'ok' ? data.currentSeason : 1;
+
   const [filters, setFilters] = useState<Filters>({
     roundMin: 1,
     roundMax: 5,
@@ -1018,7 +1025,6 @@ export default function DraftAnalysisPage({ picks, gmData, maxRound, currentSeas
         (!filters.completeOnly || p.season <= currentSeason - FULL_DATA_LAG),
     );
   }, [picks, filters.roundMin, filters.roundMax, filters.includeGM, filters.completeOnly, filters.pickView, currentSeason]);
-
 
   const classTrends = useMemo(() => computeClassTrends(filteredPicks), [filteredPicks]);
 
@@ -1041,6 +1047,32 @@ export default function DraftAnalysisPage({ picks, gmData, maxRound, currentSeas
     () => computeBestDrafts(filteredPicks, filters.teamMode, filters.legacyMode),
     [filteredPicks, filters.teamMode, filters.legacyMode],
   );
+
+  if (data.status === 'loading') {
+    return (
+      <>
+        <Head>
+          <title>ISFL Draft Analysis</title>
+        </Head>
+        <div className="max-w-5xl mx-auto px-4 py-8">
+          <p className="text-muted-foreground text-sm">Loading draft data…</p>
+        </div>
+      </>
+    );
+  }
+
+  if (data.status === 'error') {
+    return (
+      <>
+        <Head>
+          <title>ISFL Draft Analysis</title>
+        </Head>
+        <div className="max-w-5xl mx-auto px-4 py-8">
+          <p className="text-muted-foreground text-sm">Failed to load draft data. Try refreshing.</p>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
@@ -1094,21 +1126,3 @@ export default function DraftAnalysisPage({ picks, gmData, maxRound, currentSeas
   );
 }
 
-export async function getStaticProps() {
-  const draftPath = path.join(process.cwd(), 'data', 'isfl-draft.tsv');
-  const gmPath = path.join(process.cwd(), 'data', 'gm-data.tsv');
-
-  if (!fs.existsSync(draftPath)) {
-    return { props: { picks: [], gmData: [], maxRound: 10, currentSeason: 1 } };
-  }
-
-  const raw = fs.readFileSync(draftPath, 'utf-8');
-  const picks = parseTSV(raw);
-  const maxRound = picks.reduce((m, p) => Math.max(m, p.round), 1);
-  const currentSeason = picks.reduce((m, p) => Math.max(m, p.season), 1);
-
-  const gmRaw = fs.existsSync(gmPath) ? fs.readFileSync(gmPath, 'utf-8') : '';
-  const gmData = parseGMTSV(gmRaw);
-
-  return { props: { picks, gmData, maxRound, currentSeason } };
-}
