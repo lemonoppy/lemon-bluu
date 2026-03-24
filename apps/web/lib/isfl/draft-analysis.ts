@@ -45,7 +45,7 @@ function percentileValue(sorted: number[], p: number): number {
 
 // Number of buckets used for expected-value calculations and the percentile chart.
 // Higher = finer granularity, smaller interpolation range per bucket.
-const BUCKET_COUNT = 20;
+export const BUCKET_COUNT = 33;
 const BUCKET_WIDTH = 100 / BUCKET_COUNT;
 
 // Number of seasons per era for team efficiency trend analysis.
@@ -219,11 +219,10 @@ export function computePickEVTable(picks: DraftPick[], classSize: number): PickE
   return rows;
 }
 
-export function computeUserPicks(allPicks: DraftPick[], username: string): UserPickResult[] {
+function buildPickDeltas(allPicks: DraftPick[], subset: DraftPick[]): UserPickResult[] {
   const { buckets } = assignRawBuckets(allPicks);
   const bucketAvgs = buckets.map((b) => median(b));
 
-  // Per-season pick lists sorted by overall pick order (needed for percentile rank)
   const bySeason = new Map<number, DraftPick[]>();
   for (const p of allPicks) {
     if (!bySeason.has(p.season)) bySeason.set(p.season, []);
@@ -233,29 +232,36 @@ export function computeUserPicks(allPicks: DraftPick[], username: string): UserP
     bySeason.set(s, [...sp].sort((a, b) => a.pick - b.pick));
   }
 
+  return subset.map((p) => {
+    const seasonPicks = bySeason.get(p.season) ?? [];
+    const total = seasonPicks.length;
+    const idx = seasonPicks.findIndex((sp) => sp.pid === p.pid);
+    const pct = total <= 1 ? 0 : (idx / (total - 1)) * 100;
+    const expectedTPE = Math.round(interpolateExpected(bucketAvgs, pct));
+    return {
+      season: p.season,
+      round: p.round,
+      pick: p.pick,
+      pid: p.pid,
+      name: p.name,
+      owningTeam: p.owningTeam,
+      highestTPE: p.highestTPE,
+      expectedTPE,
+      delta: p.highestTPE - expectedTPE,
+    };
+  });
+}
+
+export function computeUserPicks(allPicks: DraftPick[], username: string): UserPickResult[] {
   const lower = username.toLowerCase();
   const userPicks = allPicks.filter((p) => p.username.toLowerCase() === lower);
+  return buildPickDeltas(allPicks, userPicks).sort(
+    (a, b) => a.season - b.season || a.pick - b.pick,
+  );
+}
 
-  return userPicks
-    .map((p) => {
-      const seasonPicks = bySeason.get(p.season) ?? [];
-      const total = seasonPicks.length;
-      const idx = seasonPicks.findIndex((sp) => sp.pid === p.pid);
-      const pct = total <= 1 ? 0 : (idx / (total - 1)) * 100;
-      const expectedTPE = Math.round(interpolateExpected(bucketAvgs, pct));
-      return {
-        season: p.season,
-        round: p.round,
-        pick: p.pick,
-        pid: p.pid,
-        name: p.name,
-        owningTeam: p.owningTeam,
-        highestTPE: p.highestTPE,
-        expectedTPE,
-        delta: p.highestTPE - expectedTPE,
-      };
-    })
-    .sort((a, b) => a.season - b.season || a.pick - b.pick);
+export function computeAllPickDeltas(picks: DraftPick[]): UserPickResult[] {
+  return buildPickDeltas(picks, picks);
 }
 
 export function computeTeamEfficiency(
@@ -509,4 +515,56 @@ export function computeBestDrafts(
       };
     })
     .sort((a, b) => b.delta - a.delta);
+}
+
+export interface PickAtPercentile extends DraftPick {
+  pct: number;
+  pickExpectedTPE: number;
+  pickDelta: number;
+}
+
+export interface PicksAtPercentileResult {
+  picks: PickAtPercentile[];
+  bucketStart: number;
+  bucketEnd: number;
+  expectedTPE: number;
+  medianTPE: number;
+}
+
+// Returns all picks whose within-season percentile falls in the given bucket,
+// plus the interpolated expected TPE at the bucket midpoint.
+export function computePicksAtPercentile(
+  picks: DraftPick[],
+  bucketIndex: number,
+): PicksAtPercentileResult {
+  const { buckets } = assignRawBuckets(picks);
+  const bucketAvgs = buckets.map((b) => median(b));
+  const midpointPct = (bucketIndex + 0.5) * BUCKET_WIDTH;
+  const expectedTPE = Math.round(interpolateExpected(bucketAvgs, midpointPct));
+
+  const bucketStart = Math.round(bucketIndex * BUCKET_WIDTH);
+  const bucketEnd = Math.round(Math.min(bucketStart + BUCKET_WIDTH, 100));
+  const medianTPE = Math.round(median(buckets[bucketIndex]));
+
+  const bySeason = new Map<number, DraftPick[]>();
+  for (const p of picks) {
+    if (!bySeason.has(p.season)) bySeason.set(p.season, []);
+    bySeason.get(p.season)!.push(p);
+  }
+
+  const result: PickAtPercentile[] = [];
+  for (const seasonPicks of bySeason.values()) {
+    const sorted = [...seasonPicks].sort((a, b) => a.pick - b.pick);
+    const total = sorted.length;
+    sorted.forEach((p, i) => {
+      const pct = total === 1 ? 0 : (i / (total - 1)) * 100;
+      const bucket = Math.min(Math.floor(pct / BUCKET_WIDTH), BUCKET_COUNT - 1);
+      if (bucket === bucketIndex) {
+        const pickExpectedTPE = Math.round(interpolateExpected(bucketAvgs, pct));
+        result.push({ ...p, pct, pickExpectedTPE, pickDelta: p.highestTPE - pickExpectedTPE });
+      }
+    });
+  }
+
+  return { picks: result, bucketStart, bucketEnd, expectedTPE, medianTPE };
 }
