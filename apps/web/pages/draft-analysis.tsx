@@ -656,9 +656,9 @@ function TeamEfficiencyTrends({ trends }: { trends: TeamEfficiencyTrend[] }) {
                   key={t.team}
                   type="monotone"
                   dataKey={t.team}
-                  stroke={c.tick}
+                  stroke={getTeamColor(t.team)}
                   strokeWidth={1}
-                  strokeOpacity={0.25}
+                  strokeOpacity={0.4}
                   dot={false}
                   connectNulls={false}
                   legendType="none"
