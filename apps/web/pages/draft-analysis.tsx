@@ -713,7 +713,10 @@ function GMEfficiencyTable({ data }: { data: GMEfficiency[] }) {
     const bv = b[sortKey];
     const cmp =
       typeof av === 'string' ? av.localeCompare(bv as string) : (av as number) - (bv as number);
-    return sortDir === 'asc' ? cmp : -cmp;
+    if (cmp !== 0) return sortDir === 'asc' ? cmp : -cmp;
+    // Tiebreaker: more picks first, then name asc
+    if (a.picks !== b.picks) return b.picks - a.picks;
+    return a.username.localeCompare(b.username);
   });
 
   function Th({ label, col }: { label: string; col: GMSortKey }) {
@@ -742,6 +745,7 @@ function GMEfficiencyTable({ data }: { data: GMEfficiency[] }) {
         <table className="w-full text-sm">
           <thead className="border-b border-border">
             <tr>
+              <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground w-8">#</th>
               <Th label="GM" col="username" />
               <Th label="Picks" col="picks" />
               <Th label="Avg TPE" col="avgTPE" />
@@ -750,11 +754,12 @@ function GMEfficiencyTable({ data }: { data: GMEfficiency[] }) {
             </tr>
           </thead>
           <tbody>
-            {sorted.map((row) => (
+            {sorted.map((row, i) => (
               <tr
                 key={row.username}
                 className="border-b border-border last:border-0 hover:bg-muted/40 transition-colors"
               >
+                <td className="px-3 py-2 text-muted-foreground tabular-nums text-xs">{i + 1}</td>
                 <td className="px-3 py-2 font-medium text-foreground">{row.username}</td>
                 <td className="px-3 py-2 text-muted-foreground">{row.picks}</td>
                 <td className="px-3 py-2">{row.avgTPE}</td>
@@ -804,7 +809,10 @@ function TeamEfficiencyTable({ data, mode }: { data: TeamEfficiency[]; mode: Tea
     const bv = b[sortKey];
     const cmp =
       typeof av === 'string' ? av.localeCompare(bv as string) : (av as number) - (bv as number);
-    return sortDir === 'asc' ? cmp : -cmp;
+    if (cmp !== 0) return sortDir === 'asc' ? cmp : -cmp;
+    // Tiebreaker: more picks first, then team name asc
+    if (a.picks !== b.picks) return b.picks - a.picks;
+    return a.team.localeCompare(b.team);
   });
 
   function Th({ label, col }: { label: string; col: SortKey }) {
@@ -834,6 +842,7 @@ function TeamEfficiencyTable({ data, mode }: { data: TeamEfficiency[]; mode: Tea
         <table className="w-full text-sm">
           <thead className="border-b border-border">
             <tr>
+              <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground w-8">#</th>
               <Th label="Team" col="team" />
               <Th label="Picks" col="picks" />
               <Th label="Avg TPE" col="avgTPE" />
@@ -842,11 +851,12 @@ function TeamEfficiencyTable({ data, mode }: { data: TeamEfficiency[]; mode: Tea
             </tr>
           </thead>
           <tbody>
-            {sorted.map((row) => (
+            {sorted.map((row, i) => (
               <tr
                 key={row.team}
                 className="border-b border-border last:border-0 hover:bg-muted/40 transition-colors"
               >
+                <td className="px-3 py-2 text-muted-foreground tabular-nums text-xs">{i + 1}</td>
                 <td className="px-3 py-2 font-medium text-foreground">{row.team}</td>
                 <td className="px-3 py-2 text-muted-foreground">{row.picks}</td>
                 <td className="px-3 py-2">{row.avgTPE}</td>
@@ -898,7 +908,11 @@ function BestDraftsTable({ data }: { data: DraftResult[] }) {
     const bv = b[sortKey];
     const cmp =
       typeof av === 'string' ? av.localeCompare(bv as string) : (av as number) - (bv as number);
-    return sortDir === 'asc' ? cmp : -cmp;
+    if (cmp !== 0) return sortDir === 'asc' ? cmp : -cmp;
+    // Tiebreaker: more picks first, then season desc, then team name asc
+    if (a.picks !== b.picks) return b.picks - a.picks;
+    if (a.season !== b.season) return b.season - a.season;
+    return a.team.localeCompare(b.team);
   });
 
   const displayed = showCount === 'top' ? sorted.slice(0, 25) : sorted;
@@ -936,6 +950,7 @@ function BestDraftsTable({ data }: { data: DraftResult[] }) {
         <table className="w-full text-sm">
           <thead className="border-b border-border sticky top-0 bg-card">
             <tr>
+              <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground w-8">#</th>
               <Th label="Team" col="team" />
               <Th label="Season" col="season" />
               <Th label="Picks" col="picks" />
@@ -945,11 +960,12 @@ function BestDraftsTable({ data }: { data: DraftResult[] }) {
             </tr>
           </thead>
           <tbody>
-            {displayed.map((row) => (
+            {displayed.map((row, i) => (
               <tr
                 key={`${row.team}-${row.season}`}
                 className="border-b border-border last:border-0 hover:bg-muted/40 transition-colors"
               >
+                <td className="px-3 py-2 text-muted-foreground tabular-nums text-xs">{i + 1}</td>
                 <td className="px-3 py-2 font-medium text-foreground">{row.team}</td>
                 <td className="px-3 py-2 text-muted-foreground tabular-nums">S{row.season}</td>
                 <td className="px-3 py-2 text-muted-foreground tabular-nums">{row.picks}</td>
