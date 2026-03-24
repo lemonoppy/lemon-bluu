@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import fs from 'fs';
 import path from 'path';
@@ -6,9 +6,12 @@ import path from 'path';
 import Head from 'next/head';
 import { useTheme } from 'next-themes';
 import {
+  Area,
   CartesianGrid,
+  ComposedChart,
   Line,
   LineChart,
+  ReferenceLine,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -16,19 +19,35 @@ import {
 } from 'recharts';
 
 import {
+  computeBestDrafts,
   computeClassTrends,
+  computeGMEfficiency,
   computePercentileStats,
   computePickEVTable,
   computeRoundStats,
   computeTeamEfficiency,
+  computeTeamEfficiencyTrends,
+  parseGMTSV,
   parseTSV,
 } from '@/lib/isfl/draft-analysis';
-import type { ClassTrend, DraftPick, PercentileStat, PickEV, RoundStat, TeamEfficiency } from '@/lib/isfl/types';
+import type {
+  ClassTrend,
+  DraftPick,
+  DraftResult,
+  GMData,
+  GMEfficiency,
+  PercentileStat,
+  PickEV,
+  RoundStat,
+  TeamEfficiency,
+  TeamEfficiencyTrend,
+} from '@/lib/isfl/types';
 
 const FULL_DATA_LAG = 7;
 
 interface Props {
   picks: DraftPick[];
+  gmData: GMData[];
   maxRound: number;
   currentSeason: number;
 }
@@ -466,7 +485,10 @@ function PickEVTable({ picks }: { picks: DraftPick[] }) {
       </div>
       <div className="px-4 py-4 border-b border-border">
         <ResponsiveContainer width="100%" height={200}>
-          <LineChart data={rows} margin={{ top: 4, right: 8, left: -16, bottom: 0 }}>
+          <ComposedChart
+            data={rows.map((r) => ({ ...r, bandHeight: r.p75 - r.p25 }))}
+            margin={{ top: 4, right: 8, left: -16, bottom: 0 }}
+          >
             <CartesianGrid strokeDasharray="3 3" stroke={c.grid} />
             <XAxis
               dataKey="pick"
@@ -481,19 +503,24 @@ function PickEVTable({ picks }: { picks: DraftPick[] }) {
               tickLine={false}
             />
             <Tooltip
-              contentStyle={tooltipStyle(c)}
-              formatter={(value) => [value, 'Expected TPE']}
-              labelFormatter={(v) => `Pick ${v}`}
+              content={({ active, payload, label }) => {
+                if (!active || !payload?.length) return null;
+                const d = payload[0]?.payload as PickEV & { bandHeight: number };
+                return (
+                  <div style={{ ...tooltipStyle(c), padding: '8px 12px', lineHeight: '1.6' }}>
+                    <p style={{ fontWeight: 600 }}>Pick {label}</p>
+                    <p>Expected: {d.ev}</p>
+                    <p style={{ color: c.tick }}>P25–P75: {d.p25}–{d.p75}</p>
+                    <p style={{ color: c.tick }}>Hit rate: {d.hitRate}%</p>
+                  </div>
+                );
+              }}
             />
-            <Line
-              type="monotone"
-              dataKey="ev"
-              stroke={c.bar}
-              strokeWidth={2}
-              dot={false}
-              activeDot={{ r: 4 }}
-            />
-          </LineChart>
+            {/* Stacked areas create a floating band between p25 and p75 */}
+            <Area type="monotone" stackId="band" dataKey="p25" stroke="none" fillOpacity={0} />
+            <Area type="monotone" stackId="band" dataKey="bandHeight" stroke="none" fill={c.bar} fillOpacity={0.15} />
+            <Line type="monotone" dataKey="ev" stroke={c.bar} strokeWidth={2} dot={false} activeDot={{ r: 4 }} />
+          </ComposedChart>
         </ResponsiveContainer>
       </div>
       <div className="overflow-auto max-h-80">
@@ -501,8 +528,12 @@ function PickEVTable({ picks }: { picks: DraftPick[] }) {
           <thead className="border-b border-border sticky top-0 bg-card">
             <tr>
               <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground">Pick</th>
-              <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground">Percentile</th>
-              <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground">Expected TPE</th>
+              <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground">Pct</th>
+              <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground">P25</th>
+              <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground">Exp. TPE</th>
+              <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground">P75</th>
+              <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground">Hit %</th>
+              <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground">Rel. Val</th>
             </tr>
           </thead>
           <tbody>
@@ -513,7 +544,235 @@ function PickEVTable({ picks }: { picks: DraftPick[] }) {
               >
                 <td className="px-3 py-1.5 font-medium text-foreground tabular-nums">{row.pick}</td>
                 <td className="px-3 py-1.5 text-muted-foreground tabular-nums">{row.percentile}%</td>
-                <td className="px-3 py-1.5 tabular-nums">{row.ev}</td>
+                <td className="px-3 py-1.5 text-muted-foreground tabular-nums">{row.p25}</td>
+                <td className="px-3 py-1.5 font-medium tabular-nums">{row.ev}</td>
+                <td className="px-3 py-1.5 text-muted-foreground tabular-nums">{row.p75}</td>
+                <td className="px-3 py-1.5 tabular-nums">{row.hitRate}%</td>
+                <td className="px-3 py-1.5 text-muted-foreground tabular-nums">{row.relValue}%</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Team efficiency trends chart
+// ---------------------------------------------------------------------------
+
+function TeamEfficiencyTrends({ trends }: { trends: TeamEfficiencyTrend[] }) {
+  const c = useChartColors();
+  const [selectedTeam, setSelectedTeam] = useState('');
+
+  const teams = useMemo(() => trends.map((t) => t.team), [trends]);
+  const teamsKey = teams.join(',');
+
+  useEffect(() => {
+    setSelectedTeam((prev) => (teams.includes(prev) ? prev : (teams[0] ?? '')));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [teamsKey]);
+
+  const allEras = useMemo(() => {
+    const seen = new Set<string>();
+    for (const t of trends) for (const e of t.eras) seen.add(e.era);
+    return [...seen].sort((a, b) => parseInt(a.slice(1)) - parseInt(b.slice(1)));
+  }, [trends]);
+
+  // Pivot: one row per era with each team's delta as a key
+  const chartData = useMemo(
+    () =>
+      allEras.map((era) => {
+        const row: Record<string, string | number | null> = { era };
+        for (const t of trends) {
+          const e = t.eras.find((x) => x.era === era);
+          row[t.team] = e ? e.delta : null;
+        }
+        return row;
+      }),
+    [allEras, trends],
+  );
+
+  if (trends.length === 0) {
+    return (
+      <p className="px-4 py-6 text-sm text-muted-foreground">
+        Not enough data to show trends.
+      </p>
+    );
+  }
+
+  return (
+    <>
+      <div className="px-4 py-3 flex flex-wrap items-center gap-3 border-b border-border">
+        <span className="text-xs text-muted-foreground">Team</span>
+        <select
+          value={selectedTeam}
+          onChange={(e) => setSelectedTeam(e.target.value)}
+          className="rounded-md border border-border bg-background px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-border"
+        >
+          {teams.map((t) => (
+            <option key={t} value={t}>
+              {t}
+            </option>
+          ))}
+        </select>
+        <span className="text-xs text-muted-foreground">
+          Selected team highlighted · others shown faintly · delta = avg TPE − expected
+        </span>
+      </div>
+      <div className="px-4 py-4">
+        <ResponsiveContainer width="100%" height={240}>
+          <LineChart data={chartData} margin={{ top: 4, right: 8, left: -16, bottom: 0 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke={c.grid} />
+            <XAxis
+              dataKey="era"
+              tick={{ fill: c.tick, fontSize: 10 }}
+              axisLine={{ stroke: c.grid }}
+              tickLine={false}
+            />
+            <YAxis
+              tick={{ fill: c.tick, fontSize: 11 }}
+              axisLine={{ stroke: c.grid }}
+              tickLine={false}
+            />
+            <ReferenceLine y={0} stroke={c.tick} strokeDasharray="4 2" strokeOpacity={0.5} />
+            <Tooltip
+              content={({ active, payload, label }) => {
+                if (!active || !payload?.length) return null;
+                const sel = payload.find((p) => p.dataKey === selectedTeam);
+                if (!sel) return null;
+                const val = sel.value as number;
+                return (
+                  <div style={{ ...tooltipStyle(c), padding: '8px 12px' }}>
+                    <p style={{ fontWeight: 600 }}>{String(label)}</p>
+                    <p>
+                      {selectedTeam}: {val > 0 ? '+' : ''}
+                      {val}
+                    </p>
+                  </div>
+                );
+              }}
+            />
+            {/* Faint lines for all non-selected teams */}
+            {trends
+              .filter((t) => t.team !== selectedTeam)
+              .map((t) => (
+                <Line
+                  key={t.team}
+                  type="monotone"
+                  dataKey={t.team}
+                  stroke={c.tick}
+                  strokeWidth={1}
+                  strokeOpacity={0.25}
+                  dot={false}
+                  connectNulls={false}
+                  legendType="none"
+                />
+              ))}
+            {/* Selected team highlighted on top */}
+            {selectedTeam && (
+              <Line
+                key={selectedTeam}
+                type="monotone"
+                dataKey={selectedTeam}
+                stroke={c.bar}
+                strokeWidth={2.5}
+                dot={{ fill: c.bar, r: 3 }}
+                activeDot={{ r: 5 }}
+                connectNulls={false}
+              />
+            )}
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+    </>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// GM efficiency table
+// ---------------------------------------------------------------------------
+
+function GMEfficiencyTable({ data }: { data: GMEfficiency[] }) {
+  type GMSortKey = keyof Pick<GMEfficiency, 'username' | 'picks' | 'avgTPE' | 'expectedTPE' | 'delta'>;
+  const [sortKey, setSortKey] = useState<GMSortKey>('delta');
+  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
+
+  function handleSort(key: GMSortKey) {
+    if (key === sortKey) {
+      setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'));
+    } else {
+      setSortKey(key);
+      setSortDir(key === 'username' ? 'asc' : 'desc');
+    }
+  }
+
+  const sorted = [...data].sort((a, b) => {
+    const av = a[sortKey];
+    const bv = b[sortKey];
+    const cmp =
+      typeof av === 'string' ? av.localeCompare(bv as string) : (av as number) - (bv as number);
+    return sortDir === 'asc' ? cmp : -cmp;
+  });
+
+  function Th({ label, col }: { label: string; col: GMSortKey }) {
+    const active = col === sortKey;
+    return (
+      <th
+        className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground cursor-pointer select-none hover:text-foreground transition-colors whitespace-nowrap"
+        onClick={() => handleSort(col)}
+      >
+        {label}
+        <span className={active ? '' : 'opacity-30'}>
+          {active ? (sortDir === 'asc' ? ' ↑' : ' ↓') : ' ↕'}
+        </span>
+      </th>
+    );
+  }
+
+  return (
+    <>
+      <p className="px-4 py-2 text-xs text-muted-foreground border-b border-border">
+        All GMs on a team&apos;s staff are credited for each pick (≥ 5 picks to qualify). Delta = avg
+        TPE earned vs expected for slots held. Only seasons with complete player development are
+        included — GMs whose tenure is primarily in recent seasons will have a smaller sample here.
+      </p>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead className="border-b border-border">
+            <tr>
+              <Th label="GM" col="username" />
+              <Th label="Picks" col="picks" />
+              <Th label="Avg TPE" col="avgTPE" />
+              <Th label="Expected" col="expectedTPE" />
+              <Th label="Delta" col="delta" />
+            </tr>
+          </thead>
+          <tbody>
+            {sorted.map((row) => (
+              <tr
+                key={row.username}
+                className="border-b border-border last:border-0 hover:bg-muted/40 transition-colors"
+              >
+                <td className="px-3 py-2 font-medium text-foreground">{row.username}</td>
+                <td className="px-3 py-2 text-muted-foreground">{row.picks}</td>
+                <td className="px-3 py-2">{row.avgTPE}</td>
+                <td className="px-3 py-2 text-muted-foreground">{row.expectedTPE}</td>
+                <td
+                  className="px-3 py-2 font-semibold tabular-nums"
+                  style={{
+                    color:
+                      row.delta > 0
+                        ? 'oklch(0.55 0.18 145)'
+                        : row.delta < 0
+                          ? 'oklch(0.55 0.2 25)'
+                          : undefined,
+                  }}
+                >
+                  {row.delta > 0 ? '+' : ''}
+                  {row.delta}
+                </td>
               </tr>
             ))}
           </tbody>
@@ -616,10 +875,114 @@ function TeamEfficiencyTable({ data, mode }: { data: TeamEfficiency[]; mode: Tea
 }
 
 // ---------------------------------------------------------------------------
+// Best / worst individual drafts table
+// ---------------------------------------------------------------------------
+
+function BestDraftsTable({ data }: { data: DraftResult[] }) {
+  type DSortKey = keyof Pick<DraftResult, 'team' | 'season' | 'picks' | 'avgTPE' | 'expectedTPE' | 'delta'>;
+  const [sortKey, setSortKey] = useState<DSortKey>('delta');
+  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
+  const [showCount, setShowCount] = useState<'top' | 'all'>('top');
+
+  function handleSort(key: DSortKey) {
+    if (key === sortKey) {
+      setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'));
+    } else {
+      setSortKey(key);
+      setSortDir(key === 'team' ? 'asc' : 'desc');
+    }
+  }
+
+  const sorted = [...data].sort((a, b) => {
+    const av = a[sortKey];
+    const bv = b[sortKey];
+    const cmp =
+      typeof av === 'string' ? av.localeCompare(bv as string) : (av as number) - (bv as number);
+    return sortDir === 'asc' ? cmp : -cmp;
+  });
+
+  const displayed = showCount === 'top' ? sorted.slice(0, 25) : sorted;
+
+  function Th({ label, col }: { label: string; col: DSortKey }) {
+    const active = col === sortKey;
+    return (
+      <th
+        className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground cursor-pointer select-none hover:text-foreground transition-colors whitespace-nowrap"
+        onClick={() => handleSort(col)}
+      >
+        {label}
+        <span className={active ? '' : 'opacity-30'}>
+          {active ? (sortDir === 'asc' ? ' ↑' : ' ↓') : ' ↕'}
+        </span>
+      </th>
+    );
+  }
+
+  return (
+    <>
+      <div className="px-4 py-2 flex items-center gap-3 border-b border-border">
+        <p className="text-xs text-muted-foreground flex-1">
+          Each row is one team&apos;s draft in one season. Delta = avg TPE of picks vs expected for those
+          slots.
+        </p>
+        <button
+          onClick={() => setShowCount((v) => (v === 'top' ? 'all' : 'top'))}
+          className="text-xs text-muted-foreground hover:text-foreground transition-colors shrink-0"
+        >
+          {showCount === 'top' ? `Show all ${data.length}` : 'Show top 25'}
+        </button>
+      </div>
+      <div className="overflow-x-auto max-h-96 overflow-y-auto">
+        <table className="w-full text-sm">
+          <thead className="border-b border-border sticky top-0 bg-card">
+            <tr>
+              <Th label="Team" col="team" />
+              <Th label="Season" col="season" />
+              <Th label="Picks" col="picks" />
+              <Th label="Avg TPE" col="avgTPE" />
+              <Th label="Expected" col="expectedTPE" />
+              <Th label="Delta" col="delta" />
+            </tr>
+          </thead>
+          <tbody>
+            {displayed.map((row) => (
+              <tr
+                key={`${row.team}-${row.season}`}
+                className="border-b border-border last:border-0 hover:bg-muted/40 transition-colors"
+              >
+                <td className="px-3 py-2 font-medium text-foreground">{row.team}</td>
+                <td className="px-3 py-2 text-muted-foreground tabular-nums">S{row.season}</td>
+                <td className="px-3 py-2 text-muted-foreground tabular-nums">{row.picks}</td>
+                <td className="px-3 py-2 tabular-nums">{row.avgTPE}</td>
+                <td className="px-3 py-2 text-muted-foreground tabular-nums">{row.expectedTPE}</td>
+                <td
+                  className="px-3 py-2 font-semibold tabular-nums"
+                  style={{
+                    color:
+                      row.delta > 0
+                        ? 'oklch(0.55 0.18 145)'
+                        : row.delta < 0
+                          ? 'oklch(0.55 0.2 25)'
+                          : undefined,
+                  }}
+                >
+                  {row.delta > 0 ? '+' : ''}
+                  {row.delta}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Page
 // ---------------------------------------------------------------------------
 
-export default function DraftAnalysisPage({ picks, maxRound, currentSeason }: Props) {
+export default function DraftAnalysisPage({ picks, gmData, maxRound, currentSeason }: Props) {
   const [filters, setFilters] = useState<Filters>({
     roundMin: 1,
     roundMax: 5,
@@ -640,10 +1003,26 @@ export default function DraftAnalysisPage({ picks, maxRound, currentSeason }: Pr
     );
   }, [picks, filters.roundMin, filters.roundMax, filters.includeGM, filters.completeOnly, filters.pickView, currentSeason]);
 
+
   const classTrends = useMemo(() => computeClassTrends(filteredPicks), [filteredPicks]);
 
   const teamEfficiency = useMemo(
     () => computeTeamEfficiency(filteredPicks, filters.teamMode, filters.legacyMode),
+    [filteredPicks, filters.teamMode, filters.legacyMode],
+  );
+
+  const teamEfficiencyTrends = useMemo(
+    () => computeTeamEfficiencyTrends(filteredPicks, filters.teamMode, filters.legacyMode),
+    [filteredPicks, filters.teamMode, filters.legacyMode],
+  );
+
+  const gmEfficiency = useMemo(
+    () => computeGMEfficiency(filteredPicks, gmData, filteredPicks),
+    [filteredPicks, gmData],
+  );
+
+  const bestDrafts = useMemo(
+    () => computeBestDrafts(filteredPicks, filters.teamMode, filters.legacyMode),
     [filteredPicks, filters.teamMode, filters.legacyMode],
   );
 
@@ -679,6 +1058,18 @@ export default function DraftAnalysisPage({ picks, maxRound, currentSeason }: Pr
           <TeamEfficiencyTable data={teamEfficiency} mode={filters.teamMode} />
         </Accordion>
 
+        <Accordion title="Team Efficiency Trends">
+          <TeamEfficiencyTrends trends={teamEfficiencyTrends} />
+        </Accordion>
+
+        <Accordion title="GM Drafting Efficiency">
+          <GMEfficiencyTable data={gmEfficiency} />
+        </Accordion>
+
+        <Accordion title="Best Individual Drafts">
+          <BestDraftsTable data={bestDrafts} />
+        </Accordion>
+
         <Accordion title="Pick Expected Value">
           <PickEVTable picks={filteredPicks} />
         </Accordion>
@@ -688,16 +1079,20 @@ export default function DraftAnalysisPage({ picks, maxRound, currentSeason }: Pr
 }
 
 export async function getStaticProps() {
-  const filePath = path.join(process.cwd(), 'data', 'isfl-draft.tsv');
+  const draftPath = path.join(process.cwd(), 'data', 'isfl-draft.tsv');
+  const gmPath = path.join(process.cwd(), 'data', 'gm-data.tsv');
 
-  if (!fs.existsSync(filePath)) {
-    return { props: { picks: [], maxRound: 10, currentSeason: 1 } };
+  if (!fs.existsSync(draftPath)) {
+    return { props: { picks: [], gmData: [], maxRound: 10, currentSeason: 1 } };
   }
 
-  const raw = fs.readFileSync(filePath, 'utf-8');
+  const raw = fs.readFileSync(draftPath, 'utf-8');
   const picks = parseTSV(raw);
   const maxRound = picks.reduce((m, p) => Math.max(m, p.round), 1);
   const currentSeason = picks.reduce((m, p) => Math.max(m, p.season), 1);
 
-  return { props: { picks, maxRound, currentSeason } };
+  const gmRaw = fs.existsSync(gmPath) ? fs.readFileSync(gmPath, 'utf-8') : '';
+  const gmData = parseGMTSV(gmRaw);
+
+  return { props: { picks, gmData, maxRound, currentSeason } };
 }
