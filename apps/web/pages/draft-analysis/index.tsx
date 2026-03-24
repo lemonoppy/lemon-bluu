@@ -49,10 +49,7 @@ type DataState =
   | { status: 'error' }
   | { status: 'ok'; picks: DraftPick[]; gmData: GMData[]; maxRound: number; currentSeason: number };
 
-type SortKey = keyof Pick<
-  TeamEfficiency,
-  'team' | 'picks' | 'avgTPE' | 'expectedTPE' | 'delta'
->;
+type SortKey = 'team' | 'picks' | 'avgTPE' | 'expectedTPE' | 'delta' | 'adj';
 
 type PickView = 'round' | 'percentile';
 type TeamMode = 'owning' | 'original';
@@ -706,9 +703,11 @@ function TeamEfficiencyTrends({ trends }: { trends: TeamEfficiencyTrend[] }) {
 // ---------------------------------------------------------------------------
 
 function GMEfficiencyTable({ data }: { data: GMEfficiency[] }) {
-  type GMSortKey = keyof Pick<GMEfficiency, 'username' | 'picks' | 'avgTPE' | 'expectedTPE' | 'delta'>;
-  const [sortKey, setSortKey] = useState<GMSortKey>('delta');
+  type GMSortKey = 'username' | 'picks' | 'avgTPE' | 'expectedTPE' | 'delta' | 'adj';
+  const [sortKey, setSortKey] = useState<GMSortKey>('adj');
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
+
+  const rows = data.map((r) => ({ ...r, adj: Math.round(r.delta * Math.sqrt(r.picks)) }));
 
   function handleSort(key: GMSortKey) {
     if (key === sortKey) {
@@ -719,13 +718,12 @@ function GMEfficiencyTable({ data }: { data: GMEfficiency[] }) {
     }
   }
 
-  const sorted = [...data].sort((a, b) => {
+  const sorted = [...rows].sort((a, b) => {
     const av = a[sortKey];
     const bv = b[sortKey];
     const cmp =
       typeof av === 'string' ? av.localeCompare(bv as string) : (av as number) - (bv as number);
     if (cmp !== 0) return sortDir === 'asc' ? cmp : -cmp;
-    // Tiebreaker: more picks first, then name asc
     if (a.picks !== b.picks) return b.picks - a.picks;
     return a.username.localeCompare(b.username);
   });
@@ -745,23 +743,40 @@ function GMEfficiencyTable({ data }: { data: GMEfficiency[] }) {
     );
   }
 
+  function DeltaCell({ value }: { value: number }) {
+    return (
+      <td
+        className="px-3 py-2 font-semibold tabular-nums"
+        style={{
+          color: value > 0 ? 'oklch(0.55 0.18 145)' : value < 0 ? 'oklch(0.55 0.2 25)' : undefined,
+        }}
+      >
+        {value > 0 ? '+' : ''}
+        {value}
+      </td>
+    );
+  }
+
   return (
     <>
       <p className="px-4 py-2 text-xs text-muted-foreground border-b border-border">
-        All GMs on a team&apos;s staff are credited for each pick (≥ 5 picks to qualify). Delta = avg
-        TPE earned vs expected for slots held. Only seasons with complete player development are
-        included — GMs whose tenure is primarily in recent seasons will have a smaller sample here.
+        Delta = avg TPE vs expected per pick. Adj. = total surplus scaled by
+        √picks (rewards quality and volume). Only complete-development seasons
+        included. (≥ 5 picks to qualify)
       </p>
       <div className="overflow-x-auto max-h-96 overflow-y-auto">
         <table className="w-full text-sm">
           <thead className="border-b border-border sticky top-0 bg-card">
             <tr>
-              <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground w-8">#</th>
+              <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground w-8">
+                #
+              </th>
               <Th label="GM" col="username" />
               <Th label="Picks" col="picks" />
               <Th label="Avg TPE" col="avgTPE" />
               <Th label="Expected" col="expectedTPE" />
               <Th label="Delta" col="delta" />
+              <Th label="Adj." col="adj" />
             </tr>
           </thead>
           <tbody>
@@ -770,25 +785,19 @@ function GMEfficiencyTable({ data }: { data: GMEfficiency[] }) {
                 key={row.username}
                 className="border-b border-border last:border-0 hover:bg-muted/40 transition-colors"
               >
-                <td className="px-3 py-2 text-muted-foreground tabular-nums text-xs">{i + 1}</td>
-                <td className="px-3 py-2 font-medium text-foreground">{row.username}</td>
+                <td className="px-3 py-2 text-muted-foreground tabular-nums text-xs">
+                  {i + 1}
+                </td>
+                <td className="px-3 py-2 font-medium text-foreground">
+                  {row.username}
+                </td>
                 <td className="px-3 py-2 text-muted-foreground">{row.picks}</td>
                 <td className="px-3 py-2">{row.avgTPE}</td>
-                <td className="px-3 py-2 text-muted-foreground">{row.expectedTPE}</td>
-                <td
-                  className="px-3 py-2 font-semibold tabular-nums"
-                  style={{
-                    color:
-                      row.delta > 0
-                        ? 'oklch(0.55 0.18 145)'
-                        : row.delta < 0
-                          ? 'oklch(0.55 0.2 25)'
-                          : undefined,
-                  }}
-                >
-                  {row.delta > 0 ? '+' : ''}
-                  {row.delta}
+                <td className="px-3 py-2 text-muted-foreground">
+                  {row.expectedTPE}
                 </td>
+                <DeltaCell value={row.delta} />
+                <DeltaCell value={row.adj} />
               </tr>
             ))}
           </tbody>
@@ -803,8 +812,10 @@ function GMEfficiencyTable({ data }: { data: GMEfficiency[] }) {
 // ---------------------------------------------------------------------------
 
 function TeamEfficiencyTable({ data, mode }: { data: TeamEfficiency[]; mode: TeamMode }) {
-  const [sortKey, setSortKey] = useState<SortKey>('delta');
+  const [sortKey, setSortKey] = useState<SortKey>('adj');
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
+
+  const rows = data.map((r) => ({ ...r, adj: Math.round(r.delta * Math.sqrt(r.picks)) }));
 
   function handleSort(key: SortKey) {
     if (key === sortKey) {
@@ -815,13 +826,12 @@ function TeamEfficiencyTable({ data, mode }: { data: TeamEfficiency[]; mode: Tea
     }
   }
 
-  const sorted = [...data].sort((a, b) => {
+  const sorted = [...rows].sort((a, b) => {
     const av = a[sortKey];
     const bv = b[sortKey];
     const cmp =
       typeof av === 'string' ? av.localeCompare(bv as string) : (av as number) - (bv as number);
     if (cmp !== 0) return sortDir === 'asc' ? cmp : -cmp;
-    // Tiebreaker: more picks first, then team name asc
     if (a.picks !== b.picks) return b.picks - a.picks;
     return a.team.localeCompare(b.team);
   });
@@ -841,10 +851,24 @@ function TeamEfficiencyTable({ data, mode }: { data: TeamEfficiency[]; mode: Tea
     );
   }
 
+  function DeltaCell({ value }: { value: number }) {
+    return (
+      <td
+        className="px-3 py-2 font-semibold tabular-nums"
+        style={{
+          color: value > 0 ? 'oklch(0.55 0.18 145)' : value < 0 ? 'oklch(0.55 0.2 25)' : undefined,
+        }}
+      >
+        {value > 0 ? '+' : ''}
+        {value}
+      </td>
+    );
+  }
+
   const description =
     mode === 'owning'
-      ? 'Delta = avg TPE earned vs expected for the slots each team actually drafted with.'
-      : 'Cumulative: picks attributed to the team that originally owned them, including picks traded away.';
+      ? 'Delta = avg TPE vs expected per pick. Adj. = total surplus scaled by √picks (rewards quality and volume).'
+      : 'Cumulative: picks attributed to the team that originally owned them, including picks traded away. Delta = avg TPE vs expected per pick. Adj. = √picks-scaled surplus.';
 
   return (
     <>
@@ -859,6 +883,7 @@ function TeamEfficiencyTable({ data, mode }: { data: TeamEfficiency[]; mode: Tea
               <Th label="Avg TPE" col="avgTPE" />
               <Th label="Expected" col="expectedTPE" />
               <Th label="Delta" col="delta" />
+              <Th label="Adj." col="adj" />
             </tr>
           </thead>
           <tbody>
@@ -872,20 +897,8 @@ function TeamEfficiencyTable({ data, mode }: { data: TeamEfficiency[]; mode: Tea
                 <td className="px-3 py-2 text-muted-foreground">{row.picks}</td>
                 <td className="px-3 py-2">{row.avgTPE}</td>
                 <td className="px-3 py-2 text-muted-foreground">{row.expectedTPE}</td>
-                <td
-                  className="px-3 py-2 font-semibold tabular-nums"
-                  style={{
-                    color:
-                      row.delta > 0
-                        ? 'oklch(0.55 0.18 145)'
-                        : row.delta < 0
-                          ? 'oklch(0.55 0.2 25)'
-                          : undefined,
-                  }}
-                >
-                  {row.delta > 0 ? '+' : ''}
-                  {row.delta}
-                </td>
+                <DeltaCell value={row.delta} />
+                <DeltaCell value={row.adj} />
               </tr>
             ))}
           </tbody>
@@ -902,8 +915,8 @@ function TeamEfficiencyTable({ data, mode }: { data: TeamEfficiency[]; mode: Tea
 function PickDetailRow({ detail }: { detail: DraftPickDetail }) {
   const deltaColor =
     detail.delta > 0 ? 'oklch(0.55 0.18 145)' : detail.delta < 0 ? 'oklch(0.55 0.2 25)' : undefined;
-  // Parent columns: # | Team | Season | Picks | Avg TPE | Expected | Delta
-  // Detail mapping: empty | empty | R1 #14 | Player | TPE | Expected | Delta
+  // Parent columns: # | Team | Season | Picks | Avg TPE | Expected | Delta | Adj.
+  // Detail:        &nbsp; | empty | R1 #14 | name | TPE | Expected | delta | empty
   return (
     <tr className="border-b border-border/50 last:border-0 bg-muted/20">
       <td className="px-3 py-1.5 w-8">&nbsp;</td>
@@ -918,16 +931,19 @@ function PickDetailRow({ detail }: { detail: DraftPickDetail }) {
         {detail.delta > 0 ? '+' : ''}
         {detail.delta}
       </td>
+      <td className="px-3 py-1.5" />
     </tr>
   );
 }
 
 function BestDraftsTable({ data }: { data: DraftResult[] }) {
-  type DSortKey = keyof Pick<DraftResult, 'team' | 'season' | 'picks' | 'avgTPE' | 'expectedTPE' | 'delta'>;
+  type DSortKey = 'team' | 'season' | 'picks' | 'avgTPE' | 'expectedTPE' | 'rawDelta' | 'delta';
   const [sortKey, setSortKey] = useState<DSortKey>('delta');
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
   const [showCount, setShowCount] = useState<'top' | 'all'>('top');
   const [expandedKey, setExpandedKey] = useState<string | null>(null);
+
+  const rows = data.map((r) => ({ ...r, rawDelta: r.avgTPE - r.expectedTPE }));
 
   function handleSort(key: DSortKey) {
     if (key === sortKey) {
@@ -938,7 +954,7 @@ function BestDraftsTable({ data }: { data: DraftResult[] }) {
     }
   }
 
-  const sorted = [...data].sort((a, b) => {
+  const sorted = [...rows].sort((a, b) => {
     const av = a[sortKey];
     const bv = b[sortKey];
     const cmp =
@@ -951,6 +967,20 @@ function BestDraftsTable({ data }: { data: DraftResult[] }) {
   });
 
   const displayed = showCount === 'top' ? sorted.slice(0, 25) : sorted;
+
+  function DeltaCell({ value }: { value: number }) {
+    return (
+      <td
+        className="px-3 py-2 font-semibold tabular-nums"
+        style={{
+          color: value > 0 ? 'oklch(0.55 0.18 145)' : value < 0 ? 'oklch(0.55 0.2 25)' : undefined,
+        }}
+      >
+        {value > 0 ? '+' : ''}
+        {value}
+      </td>
+    );
+  }
 
   function Th({ label, col }: { label: string; col: DSortKey }) {
     const active = col === sortKey;
@@ -971,8 +1001,8 @@ function BestDraftsTable({ data }: { data: DraftResult[] }) {
     <>
       <div className="px-4 py-2 flex items-center gap-3 border-b border-border">
         <p className="text-xs text-muted-foreground flex-1">
-          Each row is one team&apos;s draft in one season. Delta = avg TPE of picks vs expected for those
-          slots.
+          Each row is one team&apos;s draft in one season. Delta = avg TPE vs expected per pick. Adj. =
+          total surplus scaled by √picks (rewards quality and volume).
         </p>
         <button
           onClick={() => setShowCount((v) => (v === 'top' ? 'all' : 'top'))}
@@ -991,7 +1021,8 @@ function BestDraftsTable({ data }: { data: DraftResult[] }) {
               <Th label="Picks" col="picks" />
               <Th label="Avg TPE" col="avgTPE" />
               <Th label="Expected" col="expectedTPE" />
-              <Th label="Delta" col="delta" />
+              <Th label="Delta" col="rawDelta" />
+              <Th label="Adj." col="delta" />
             </tr>
           </thead>
           <tbody>
@@ -1014,20 +1045,8 @@ function BestDraftsTable({ data }: { data: DraftResult[] }) {
                     <td className="px-3 py-2 text-muted-foreground tabular-nums">{row.picks}</td>
                     <td className="px-3 py-2 tabular-nums">{row.avgTPE}</td>
                     <td className="px-3 py-2 text-muted-foreground tabular-nums">{row.expectedTPE}</td>
-                    <td
-                      className="px-3 py-2 font-semibold tabular-nums"
-                      style={{
-                        color:
-                          row.delta > 0
-                            ? 'oklch(0.55 0.18 145)'
-                            : row.delta < 0
-                              ? 'oklch(0.55 0.2 25)'
-                              : undefined,
-                      }}
-                    >
-                      {row.delta > 0 ? '+' : ''}
-                      {row.delta}
-                    </td>
+                    <DeltaCell value={row.rawDelta} />
+                    <DeltaCell value={row.delta} />
                   </tr>
                   {isExpanded &&
                     row.pickDetails.map((detail) => (
@@ -1125,7 +1144,7 @@ function UserSearch({ picks }: { picks: DraftPick[] }) {
                     <td className="px-3 py-2">
                       <span className="flex items-center gap-1.5">
                         <span
-                          className="inline-block w-2 h-2 rounded-full flex-shrink-0"
+                          className="inline-block w-2 h-2 rounded-full shrink-0"
                           style={{ backgroundColor: getTeamColor(r.owningTeam) }}
                         />
                         <span className="text-muted-foreground text-xs">{r.owningTeam}</span>
