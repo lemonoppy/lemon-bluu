@@ -31,6 +31,10 @@ const links: Array<NavLink> = [
     label: 'Pixelator',
   },
   {
+    href: '/draft-analysis',
+    label: 'Draft Analysis',
+  },
+  {
     href: '/dropdown-builder',
     label: 'Dropdown Builder',
   },

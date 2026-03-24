@@ -34,6 +34,14 @@ const projects = [
     isExternal: true,
   },
   {
+    title: 'ISFL Draft Analysis',
+    description:
+      'Historical ISFL draft data — pick expected value, class trends, team and GM drafting efficiency, and player search across all 59 seasons.',
+    href: '/draft-analysis',
+    tags: ['isfl', 'statistics', 'draft'],
+    available: true,
+  },
+  {
     title: 'Build a Set',
     description:
       'Build and manage your very own Magic: The Gathering set. Track your card inventory, calculate copy requirements for drafts, analyse distributions, and browse official sets for reference and templating.',
