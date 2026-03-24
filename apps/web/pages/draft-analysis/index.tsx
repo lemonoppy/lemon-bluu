@@ -16,16 +16,20 @@ import {
 
 import { PageLayout } from '@/components/layout/page-layout';
 import {
+  BUCKET_COUNT,
+  computeAllPickDeltas,
   computeBestDrafts,
   computeClassTrends,
   computeGMEfficiency,
   computePercentileStats,
   computePickEVTable,
+  computePicksAtPercentile,
   computeRoundStats,
   computeTeamEfficiency,
   computeTeamEfficiencyTrends,
   computeUserPicks,
 } from '@/lib/isfl/draft-analysis';
+import type { PickAtPercentile } from '@/lib/isfl/draft-analysis';
 import { getTeamColor } from '@/lib/isfl/teams';
 import type {
   ClassTrend,
@@ -43,6 +47,16 @@ import type {
 } from '@/lib/isfl/types';
 
 const FULL_DATA_LAG = 7;
+
+function rankBy<T>(sorted: T[], key: keyof T): number[] {
+  return sorted.map((row, i) => {
+    if (i === 0) return 1;
+    return sorted[i - 1][key] === row[key] ? 0 : i + 1; // 0 = same rank as previous
+  }).reduce<number[]>((acc, r, i) => {
+    acc.push(r === 0 ? acc[i - 1] : r);
+    return acc;
+  }, []);
+}
 
 type DataState =
   | { status: 'loading' }
@@ -330,6 +344,7 @@ function PickValueChart({
               tick={{ fill: c.tick, fontSize: 10 }}
               axisLine={{ stroke: c.grid }}
               tickLine={false}
+              interval={Math.floor(BUCKET_COUNT / 10) - 1}
             />
             <YAxis
               tick={{ fill: c.tick, fontSize: 11 }}
@@ -339,7 +354,11 @@ function PickValueChart({
             <Tooltip
               contentStyle={tooltipStyle(c)}
               formatter={(value) => [value, 'Avg TPE']}
-              labelFormatter={(v) => `${v}–${parseInt(v as string) + 5}% percentile`}
+              labelFormatter={(v) => {
+                const start = parseInt(v as string);
+                const end = Math.round(start + 100 / BUCKET_COUNT);
+                return `${start}–${end}% percentile`;
+              }}
             />
             <Line
               type="monotone"
@@ -465,7 +484,7 @@ function Accordion({
 // ---------------------------------------------------------------------------
 
 function PickEVTable({ picks }: { picks: DraftPick[] }) {
-  const [classSize, setClassSize] = useState(50);
+  const [classSize, setClassSize] = useState(56);
   const rows: PickEV[] = useMemo(
     () => computePickEVTable(picks, classSize),
     [picks, classSize],
@@ -748,6 +767,7 @@ function GMEfficiencyTable({ data }: { data: GMEfficiency[] }) {
     if (a.picks !== b.picks) return b.picks - a.picks;
     return a.username.localeCompare(b.username);
   });
+  const ranks = rankBy(sorted, sortKey);
 
   function Th({ label, col }: { label: string; col: GMSortKey }) {
     const active = col === sortKey;
@@ -807,7 +827,7 @@ function GMEfficiencyTable({ data }: { data: GMEfficiency[] }) {
                 className="border-b border-border last:border-0 hover:bg-muted/40 transition-colors"
               >
                 <td className="px-3 py-2 text-muted-foreground tabular-nums text-xs">
-                  {i + 1}
+                  {ranks[i]}
                 </td>
                 <td className="px-3 py-2 font-medium text-foreground">
                   {row.username}
@@ -860,6 +880,7 @@ function TeamEfficiencyTable({ data, mode }: { data: TeamEfficiency[]; mode: Tea
     if (a.picks !== b.picks) return b.picks - a.picks;
     return a.team.localeCompare(b.team);
   });
+  const ranks = rankBy(sorted, sortKey);
 
   function Th({ label, col }: { label: string; col: SortKey }) {
     const active = col === sortKey;
@@ -917,7 +938,7 @@ function TeamEfficiencyTable({ data, mode }: { data: TeamEfficiency[]; mode: Tea
                 key={row.team}
                 className="border-b border-border last:border-0 hover:bg-muted/40 transition-colors"
               >
-                <td className="px-3 py-2 text-muted-foreground tabular-nums text-xs">{i + 1}</td>
+                <td className="px-3 py-2 text-muted-foreground tabular-nums text-xs">{ranks[i]}</td>
                 <td className="px-3 py-2 font-medium text-foreground">{row.team}</td>
                 <td className="px-3 py-2 text-muted-foreground">{row.picks}</td>
                 <td className="px-3 py-2">{row.avgTPE}</td>
@@ -994,6 +1015,7 @@ function BestDraftsTable({ data }: { data: DraftResult[] }) {
     if (a.season !== b.season) return b.season - a.season;
     return a.team.localeCompare(b.team);
   });
+  const ranks = rankBy(sorted, sortKey);
 
 
   function DeltaCell({ value }: { value: number }) {
@@ -1056,7 +1078,7 @@ function BestDraftsTable({ data }: { data: DraftResult[] }) {
                     className="border-b border-border last:border-0 hover:bg-muted/40 transition-colors cursor-pointer select-none"
                     onClick={() => setExpandedKey(isExpanded ? null : key)}
                   >
-                    <td className="px-3 py-2 text-muted-foreground tabular-nums text-xs">{i + 1}</td>
+                    <td className="px-3 py-2 text-muted-foreground tabular-nums text-xs">{ranks[i]}</td>
                     <td className="px-3 py-2 font-medium text-foreground">
                       <span className="mr-1.5 text-muted-foreground text-xs">{isExpanded ? '▾' : '▸'}</span>
                       {row.team}
@@ -1114,7 +1136,7 @@ function UserSearch({ picks }: { picks: DraftPick[] }) {
   return (
     <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
       <div className="px-4 py-3 border-b border-border flex items-center gap-3">
-        <h2 className="text-sm font-semibold text-foreground">Player Search</h2>
+        <h2 className="text-sm font-semibold text-foreground">User Search</h2>
         <input
           list="username-list"
           value={query}
@@ -1209,6 +1231,265 @@ function UserSearch({ picks }: { picks: DraftPick[] }) {
 }
 
 // ---------------------------------------------------------------------------
+// All picks by delta
+// ---------------------------------------------------------------------------
+
+function AllPicksByDeltaTable({ picks }: { picks: DraftPick[] }) {
+  type Col = keyof UserPickResult;
+  const [sortKey, setSortKey] = useState<Col>('delta');
+  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
+
+  const rows = useMemo(() => computeAllPickDeltas(picks), [picks]);
+
+  function handleSort(key: Col) {
+    if (key === sortKey) {
+      setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'));
+    } else {
+      setSortKey(key);
+      setSortDir('desc');
+    }
+  }
+
+  const sorted = useMemo(
+    () =>
+      [...rows].sort((a, b) => {
+        const av = a[sortKey];
+        const bv = b[sortKey];
+        const cmp =
+          typeof av === 'string' ? av.localeCompare(bv as string) : (av as number) - (bv as number);
+        return sortDir === 'asc' ? cmp : -cmp;
+      }),
+    [rows, sortKey, sortDir],
+  );
+  const ranks = rankBy(sorted, sortKey);
+
+  function Th({ label, col }: { label: string; col: Col }) {
+    const active = col === sortKey;
+    return (
+      <th
+        className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground cursor-pointer select-none hover:text-foreground transition-colors whitespace-nowrap"
+        onClick={() => handleSort(col)}
+      >
+        {label}
+        <span className={active ? '' : 'opacity-30'}>
+          {active ? (sortDir === 'asc' ? ' ↑' : ' ↓') : ' ↕'}
+        </span>
+      </th>
+    );
+  }
+
+  function DeltaCell({ value }: { value: number }) {
+    return (
+      <td
+        className="px-3 py-2 font-semibold tabular-nums"
+        style={{
+          color: value > 0 ? 'oklch(0.55 0.18 145)' : value < 0 ? 'oklch(0.55 0.2 25)' : undefined,
+        }}
+      >
+        {value > 0 ? '+' : ''}
+        {value}
+      </td>
+    );
+  }
+
+  return (
+    <>
+      <p className="px-4 py-2 text-xs text-muted-foreground border-b border-border">
+        Every draftee ranked by delta (actual TPE − interpolated expected for their draft slot). {rows.length} picks.
+      </p>
+      <div className="overflow-x-auto max-h-96 overflow-y-auto">
+        <table className="w-full text-sm">
+          <thead className="border-b border-border sticky top-0 bg-card">
+            <tr>
+              <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground w-8">#</th>
+              <Th label="Player" col="name" />
+              <Th label="Season" col="season" />
+              <Th label="Team" col="owningTeam" />
+              <Th label="Round" col="round" />
+              <Th label="Pick #" col="pick" />
+              <Th label="TPE" col="highestTPE" />
+              <Th label="Expected" col="expectedTPE" />
+              <Th label="Delta" col="delta" />
+            </tr>
+          </thead>
+          <tbody>
+            {sorted.map((row, i) => (
+              <tr
+                key={`${row.pid}-${row.season}`}
+                className="border-b border-border last:border-0 hover:bg-muted/40 transition-colors"
+              >
+                <td className="px-3 py-2 text-muted-foreground tabular-nums text-xs">{ranks[i]}</td>
+                <td className="px-3 py-2 font-medium">
+                  <a
+                    href={`https://portal.sim-football.com/player/${row.pid}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:underline"
+                  >
+                    {row.name}
+                  </a>
+                </td>
+                <td className="px-3 py-2 text-muted-foreground tabular-nums">S{row.season}</td>
+                <td className="px-3 py-2 text-muted-foreground">{row.owningTeam}</td>
+                <td className="px-3 py-2 text-muted-foreground tabular-nums">{row.round}</td>
+                <td className="px-3 py-2 text-muted-foreground tabular-nums">{row.pick}</td>
+                <td className="px-3 py-2 tabular-nums">{row.highestTPE}</td>
+                <td className="px-3 py-2 tabular-nums text-muted-foreground">{row.expectedTPE}</td>
+                <DeltaCell value={row.delta} />
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Picks at percentile
+// ---------------------------------------------------------------------------
+
+function PicksAtPercentileTable({ picks }: { picks: DraftPick[] }) {
+  const [bucketIndex, setBucketIndex] = useState(0);
+
+  const result = useMemo(
+    () => computePicksAtPercentile(picks, bucketIndex),
+    [picks, bucketIndex],
+  );
+
+  type Col = keyof PickAtPercentile;
+  const [sortKey, setSortKey] = useState<Col>('pickDelta');
+  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
+
+  function handleSort(key: Col) {
+    if (key === sortKey) {
+      setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'));
+    } else {
+      setSortKey(key);
+      setSortDir('desc');
+    }
+  }
+
+  const sorted = [...result.picks].sort((a, b) => {
+    const av = a[sortKey];
+    const bv = b[sortKey];
+    const cmp =
+      typeof av === 'string' ? av.localeCompare(bv as string) : (av as number) - (bv as number);
+    return sortDir === 'asc' ? cmp : -cmp;
+  });
+  const ranks = rankBy(sorted, sortKey);
+
+  function Th({ label, col }: { label: string; col: Col }) {
+    const active = col === sortKey;
+    return (
+      <th
+        className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground cursor-pointer select-none hover:text-foreground transition-colors whitespace-nowrap"
+        onClick={() => handleSort(col)}
+      >
+        {label}
+        <span className={active ? '' : 'opacity-30'}>
+          {active ? (sortDir === 'asc' ? ' ↑' : ' ↓') : ' ↕'}
+        </span>
+      </th>
+    );
+  }
+
+  function DeltaCell({ value }: { value: number }) {
+    return (
+      <td
+        className="px-3 py-2 font-semibold tabular-nums"
+        style={{
+          color: value > 0 ? 'oklch(0.55 0.18 145)' : value < 0 ? 'oklch(0.55 0.2 25)' : undefined,
+        }}
+      >
+        {value > 0 ? '+' : ''}
+        {value}
+      </td>
+    );
+  }
+
+  return (
+    <>
+      <div className="px-4 py-3 flex flex-wrap items-center gap-4 border-b border-border">
+        <div className="flex items-center gap-2 flex-1">
+          <label className="text-xs text-muted-foreground whitespace-nowrap">Bucket</label>
+          <div className="flex items-center border border-border rounded overflow-hidden text-xs">
+            <button
+              onClick={() => setBucketIndex((b) => Math.max(0, b - 1))}
+              disabled={bucketIndex === 0}
+              className="px-2 py-1 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors disabled:opacity-30"
+            >
+              ‹
+            </button>
+            <span className="px-3 py-1 tabular-nums font-medium min-w-16 text-center">
+              {result.bucketStart}–{result.bucketEnd}%
+            </span>
+            <button
+              onClick={() => setBucketIndex((b) => Math.min(BUCKET_COUNT - 1, b + 1))}
+              disabled={bucketIndex === BUCKET_COUNT - 1}
+              className="px-2 py-1 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors disabled:opacity-30"
+            >
+              ›
+            </button>
+          </div>
+        </div>
+        <div className="flex gap-4 text-xs text-muted-foreground shrink-0">
+          <span>
+            Interp. expected <span className="text-foreground font-medium">{result.expectedTPE} TPE</span>
+          </span>
+          <span>
+            Bucket median <span className="text-foreground font-medium">{result.medianTPE} TPE</span>
+          </span>
+          <span>
+            {result.picks.length} picks
+          </span>
+        </div>
+      </div>
+      <p className="px-4 py-2 text-xs text-muted-foreground border-b border-border">
+        Picks shown are from the {result.bucketStart}–{result.bucketEnd}% bucket ({result.bucketEnd - result.bucketStart}-point window). Expected TPE is interpolated for the exact percentile selected.
+      </p>
+      <div className="overflow-x-auto max-h-96 overflow-y-auto">
+        <table className="w-full text-sm">
+          <thead className="border-b border-border sticky top-0 bg-card">
+            <tr>
+              <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground w-8">#</th>
+              <Th label="Player" col="name" />
+              <Th label="Season" col="season" />
+              <Th label="Team" col="owningTeam" />
+              <Th label="Round" col="round" />
+              <Th label="Pick #" col="pick" />
+              <Th label="Pct%" col="pct" />
+              <Th label="TPE" col="highestTPE" />
+              <Th label="Expected" col="pickExpectedTPE" />
+              <Th label="Delta" col="pickDelta" />
+            </tr>
+          </thead>
+          <tbody>
+            {sorted.map((row, i) => (
+              <tr
+                key={`${row.pid}-${row.season}`}
+                className="border-b border-border last:border-0 hover:bg-muted/40 transition-colors"
+              >
+                <td className="px-3 py-2 text-muted-foreground tabular-nums text-xs">{ranks[i]}</td>
+                <td className="px-3 py-2 font-medium">{row.name}</td>
+                <td className="px-3 py-2 text-muted-foreground tabular-nums">S{row.season}</td>
+                <td className="px-3 py-2 text-muted-foreground">{row.owningTeam}</td>
+                <td className="px-3 py-2 text-muted-foreground tabular-nums">{row.round}</td>
+                <td className="px-3 py-2 text-muted-foreground tabular-nums">{row.pick}</td>
+                <td className="px-3 py-2 text-muted-foreground tabular-nums">{row.pct.toFixed(1)}%</td>
+                <td className="px-3 py-2 tabular-nums">{row.highestTPE}</td>
+                <td className="px-3 py-2 tabular-nums text-muted-foreground">{row.pickExpectedTPE}</td>
+                <DeltaCell value={row.pickDelta} />
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Page
 // ---------------------------------------------------------------------------
 
@@ -1240,13 +1521,17 @@ export default function DraftAnalysisPage() {
 
   const filteredPicks = useMemo(() => {
     const applyRounds = filters.pickView === 'round';
-    return picks.filter(
-      (p) =>
-        (!applyRounds || (p.round >= filters.roundMin && p.round <= filters.roundMax)) &&
-        (filters.includeGM || p.type.toLowerCase() !== 'gm') &&
-        (!filters.completeOnly || p.season <= currentSeason - FULL_DATA_LAG) &&
-        (!filters.modernOnly || p.season >= 21),
-    );
+    const seen = new Set<string>();
+    return picks.filter((p) => {
+      if (!(!applyRounds || (p.round >= filters.roundMin && p.round <= filters.roundMax))) return false;
+      if (!(filters.includeGM || p.type.toLowerCase() !== 'gm')) return false;
+      if (!(!filters.completeOnly || p.season <= currentSeason - FULL_DATA_LAG)) return false;
+      if (!(!filters.modernOnly || p.season >= 21)) return false;
+      const key = `${p.pid}-${p.season}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
   }, [picks, filters.roundMin, filters.roundMax, filters.includeGM, filters.completeOnly, filters.pickView, filters.modernOnly, currentSeason]);
 
   const classTrends = useMemo(() => computeClassTrends(filteredPicks), [filteredPicks]);
@@ -1305,6 +1590,8 @@ export default function DraftAnalysisPage() {
           <ClassTrendsChart data={classTrends} />
         </div>
 
+        <UserSearch picks={filteredPicks} />
+
         <Accordion title="Team Drafting Efficiency">
           <TeamEfficiencyTable data={teamEfficiency} mode={filters.teamMode} />
         </Accordion>
@@ -1325,7 +1612,13 @@ export default function DraftAnalysisPage() {
           <PickEVTable picks={filteredPicks} />
         </Accordion>
 
-        <UserSearch picks={filteredPicks} />
+        <Accordion title="Picks at Percentile">
+          <PicksAtPercentileTable picks={filteredPicks} />
+        </Accordion>
+
+        <Accordion title="All Picks by Delta">
+          <AllPicksByDeltaTable picks={filteredPicks} />
+        </Accordion>
       </div>
     </PageLayout>
   );
