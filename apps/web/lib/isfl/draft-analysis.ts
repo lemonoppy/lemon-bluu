@@ -49,7 +49,7 @@ const BUCKET_COUNT = 20;
 const BUCKET_WIDTH = 100 / BUCKET_COUNT;
 
 // Number of seasons per era for team efficiency trend analysis.
-const ERA_SIZE = 10;
+const ERA_SIZE = 5;
 
 function interpolateExpected(bucketAvgs: number[], pct: number): number {
   const bucketF = pct / BUCKET_WIDTH;
@@ -361,7 +361,7 @@ export function computeTeamEfficiencyTrends(
     allEras.push(getEraLabel(s));
   }
 
-  const MIN_PICKS = 3;
+  const MIN_PICKS = 2;
 
   return Array.from(teamEraData.entries())
     .map(([team, eraMap]) => ({
