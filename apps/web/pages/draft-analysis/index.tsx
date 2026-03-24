@@ -1473,7 +1473,16 @@ function PicksAtPercentileTable({ picks }: { picks: DraftPick[] }) {
                 className="border-b border-border last:border-0 hover:bg-muted/40 transition-colors"
               >
                 <td className="px-3 py-2 text-muted-foreground tabular-nums text-xs">{ranks[i]}</td>
-                <td className="px-3 py-2 font-medium">{row.name}</td>
+                <td className="px-3 py-2 font-medium">
+                  <a
+                    href={`https://portal.sim-football.com/player/${row.pid}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:underline"
+                  >
+                    {row.name}
+                  </a>
+                </td>
                 <td className="px-3 py-2 text-muted-foreground tabular-nums">S{row.season}</td>
                 <td className="px-3 py-2 text-muted-foreground">{row.owningTeam}</td>
                 <td className="px-3 py-2 text-muted-foreground tabular-nums">{row.round}</td>
