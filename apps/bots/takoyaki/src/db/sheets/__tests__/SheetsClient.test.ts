@@ -318,6 +318,7 @@ describe('SheetsClient', () => {
       (global.fetch as jest.Mock).mockResolvedValueOnce({
         ok: false,
         status: 500,
+        text: jest.fn().mockResolvedValue('Internal Server Error'),
         headers: {
           entries: () => [],
         },
