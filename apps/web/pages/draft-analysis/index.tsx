@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
 
-import Head from 'next/head';
 import { useTheme } from 'next-themes';
 import {
   Area,
@@ -15,6 +14,7 @@ import {
   YAxis,
 } from 'recharts';
 
+import { PageLayout } from '@/components/layout/page-layout';
 import {
   computeBestDrafts,
   computeClassTrends,
@@ -1273,46 +1273,26 @@ export default function DraftAnalysisPage() {
 
   if (data.status === 'loading') {
     return (
-      <>
-        <Head>
-          <title>ISFL Draft Analysis</title>
-        </Head>
-        <div className="max-w-5xl mx-auto px-4 py-8">
-          <p className="text-muted-foreground text-sm">Loading draft data…</p>
-        </div>
-      </>
+      <PageLayout title="ISFL Draft Analysis">
+        <p className="text-muted-foreground text-sm">Loading draft data…</p>
+      </PageLayout>
     );
   }
 
   if (data.status === 'error') {
     return (
-      <>
-        <Head>
-          <title>ISFL Draft Analysis</title>
-        </Head>
-        <div className="max-w-5xl mx-auto px-4 py-8">
-          <p className="text-muted-foreground text-sm">Failed to load draft data. Try refreshing.</p>
-        </div>
-      </>
+      <PageLayout title="ISFL Draft Analysis">
+        <p className="text-muted-foreground text-sm">Failed to load draft data. Try refreshing.</p>
+      </PageLayout>
     );
   }
 
   return (
-    <>
-      <Head>
-        <title>ISFL Draft Analysis</title>
-      </Head>
-      <div className="max-w-5xl mx-auto px-4 py-8 space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">
-            ISFL Draft Analysis
-          </h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Historical draft data — pick value, class trends, and team
-            efficiency.
-          </p>
-        </div>
-
+    <PageLayout
+      title="ISFL Draft Analysis"
+      description="Historical draft data — pick value, class trends, and team efficiency."
+    >
+      <div className="space-y-6 pb-8">
         <FilterBar
           filters={filters}
           maxRound={maxRound}
@@ -1347,7 +1327,7 @@ export default function DraftAnalysisPage() {
 
         <UserSearch picks={filteredPicks} />
       </div>
-    </>
+    </PageLayout>
   );
 }
 
