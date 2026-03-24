@@ -26,7 +26,6 @@ export interface PercentileStat {
   count: number;
 }
 
-
 export interface ClassTrend {
   season: number;
   avg: number;
@@ -40,10 +39,51 @@ export interface PickEV {
   pick: number;
   percentile: number;
   ev: number;
+  p25: number; // 25th percentile TPE at this slot
+  p75: number; // 75th percentile TPE at this slot
+  hitRate: number; // % of picks at this slot that hit 2× season median
+  relValue: number; // EV as % of pick 1's EV
 }
 
 export interface TeamEfficiency {
   team: string;
+  picks: number;
+  avgTPE: number;
+  expectedTPE: number;
+  delta: number;
+}
+
+export interface EraEfficiency {
+  era: string; // e.g. "S1–10"
+  picks: number;
+  avgTPE: number;
+  expectedTPE: number;
+  delta: number;
+}
+
+export interface TeamEfficiencyTrend {
+  team: string;
+  eras: EraEfficiency[];
+}
+
+export interface GMData {
+  uid: number;
+  username: string;
+  season: number;
+  team: string;
+}
+
+export interface GMEfficiency {
+  username: string;
+  picks: number;
+  avgTPE: number;
+  expectedTPE: number;
+  delta: number;
+}
+
+export interface DraftResult {
+  team: string;
+  season: number;
   picks: number;
   avgTPE: number;
   expectedTPE: number;
