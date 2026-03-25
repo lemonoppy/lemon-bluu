@@ -18,6 +18,7 @@ import { Accordion } from '@/components/ui/accordion';
 import { ChartCard } from '@/components/ui/chart-card';
 import { tooltipStyle, useChartColors } from '@/lib/chart-utils';
 import {
+  applyProjections,
   BUCKET_COUNT,
   computeAllPickDeltas,
   computeBestDrafts,
@@ -30,6 +31,7 @@ import {
   computeTeamEfficiency,
   computeTeamEfficiencyTrends,
   computeUserPicks,
+  FULL_DATA_LAG,
 } from '@/lib/isfl/draft-analysis';
 import type { PickAtPercentile } from '@/lib/isfl/draft-analysis';
 import { getTeamColor } from '@/lib/isfl/teams';
@@ -47,8 +49,6 @@ import type {
   TeamEfficiencyTrend,
   UserPickResult,
 } from '@/lib/isfl/types';
-
-const FULL_DATA_LAG = 7;
 
 function rankBy<T>(sorted: T[], key: keyof T): number[] {
   return sorted.map((row, i) => {
@@ -184,14 +184,18 @@ function FilterBar({
       {/* Complete data toggle */}
       <button
         onClick={() => set({ completeOnly: !filters.completeOnly })}
-        title={`Only seasons ≤ S${currentSeason - FULL_DATA_LAG}`}
+        title={
+          filters.completeOnly
+            ? `Only seasons ≤ S${currentSeason - FULL_DATA_LAG}`
+            : `S${currentSeason - FULL_DATA_LAG + 1}–S${currentSeason} projected via linear TPE scaling`
+        }
         className={`px-3 py-1 rounded-md border text-xs font-medium transition-colors ${
           filters.completeOnly
             ? 'border-foreground/40 bg-foreground/10 text-foreground'
             : 'border-border text-muted-foreground hover:text-foreground hover:border-foreground/30'
         }`}
       >
-        Complete only {filters.completeOnly ? 'on' : 'off'}
+        {filters.completeOnly ? 'Complete only' : 'With projections'}
       </button>
 
       {/* Modern era toggle */}
@@ -1429,37 +1433,59 @@ function PicksAtPercentileTable({ picks }: { picks: DraftPick[] }) {
 // ---------------------------------------------------------------------------
 
 function DraftLookupTable({ picks }: { picks: DraftPick[] }) {
+  type DraftSortKey = 'pick' | 'pct' | 'owningTeam' | 'name' | 'highestTPE' | 'expectedTPE' | 'delta';
+
   const allDeltas = useMemo(() => computeAllPickDeltas(picks), [picks]);
 
-  const teams = useMemo(
-    () => [...new Set(picks.map((p) => p.owningTeam))].sort(),
+  const seasons = useMemo(
+    () => [...new Set(picks.map((p) => p.season))].sort((a, b) => b - a),
     [picks],
   );
 
-  const [team, setTeam] = useState('');
   const [season, setSeason] = useState(0);
+  const [sortKey, setSortKey] = useState<DraftSortKey>('pick');
+  const [sortDir, setSortDir] = useState<'asc' | 'desc'>('asc');
 
-  const teamSeasons = useMemo(() => {
-    const t = team || teams[0];
-    return [...new Set(picks.filter((p) => p.owningTeam === t).map((p) => p.season))].sort(
-      (a, b) => b - a,
-    );
-  }, [picks, team, teams]);
+  const effectiveSeason = season || seasons[0] || 0;
 
-  const effectiveTeam = team || teams[0] || '';
-  const effectiveSeason = season || teamSeasons[0] || 0;
+  function handleSort(key: DraftSortKey) {
+    if (key === sortKey) {
+      setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'));
+    } else {
+      setSortKey(key);
+      setSortDir(key === 'owningTeam' || key === 'name' ? 'asc' : key === 'pick' || key === 'pct' ? 'asc' : 'desc');
+    }
+  }
 
-  const rows = useMemo(
-    () =>
-      allDeltas
-        .filter((r) => r.owningTeam === effectiveTeam && r.season === effectiveSeason)
-        .sort((a, b) => a.pick - b.pick),
-    [allDeltas, effectiveTeam, effectiveSeason],
-  );
+  const rows = useMemo(() => {
+    const filtered = allDeltas.filter((r) => r.season === effectiveSeason);
+    return [...filtered].sort((a, b) => {
+      const av = a[sortKey];
+      const bv = b[sortKey];
+      const cmp = typeof av === 'string' ? av.localeCompare(bv as string) : (av as number) - (bv as number);
+      if (cmp !== 0) return sortDir === 'asc' ? cmp : -cmp;
+      return a.pick - b.pick;
+    });
+  }, [allDeltas, effectiveSeason, sortKey, sortDir]);
 
   const avgTPE = rows.length ? Math.round(rows.reduce((s, r) => s + r.highestTPE, 0) / rows.length) : 0;
   const avgExp = rows.length ? Math.round(rows.reduce((s, r) => s + r.expectedTPE, 0) / rows.length) : 0;
   const avgDelta = rows.length ? Math.round(rows.reduce((s, r) => s + r.delta, 0) / rows.length) : 0;
+
+  function Th({ label, col }: { label: string; col: DraftSortKey }) {
+    const active = col === sortKey;
+    return (
+      <th
+        className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground cursor-pointer select-none hover:text-foreground transition-colors whitespace-nowrap"
+        onClick={() => handleSort(col)}
+      >
+        {label}
+        <span className={active ? '' : 'opacity-30'}>
+          {active ? (sortDir === 'asc' ? ' ↑' : ' ↓') : ' ↕'}
+        </span>
+      </th>
+    );
+  }
 
   function DeltaCell({ value }: { value: number }) {
     return (
@@ -1478,18 +1504,11 @@ function DraftLookupTable({ picks }: { picks: DraftPick[] }) {
     <>
       <div className="px-4 py-3 flex flex-wrap items-center gap-3 border-b border-border">
         <select
-          value={effectiveTeam}
-          onChange={(e) => { setTeam(e.target.value); setSeason(0); }}
-          className="rounded-md border border-border bg-background px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-border"
-        >
-          {teams.map((t) => <option key={t} value={t}>{t}</option>)}
-        </select>
-        <select
           value={effectiveSeason}
           onChange={(e) => setSeason(Number(e.target.value))}
           className="rounded-md border border-border bg-background px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-border"
         >
-          {teamSeasons.map((s) => <option key={s} value={s}>S{s}</option>)}
+          {seasons.map((s) => <option key={s} value={s}>S{s}</option>)}
         </select>
         {rows.length > 0 && (
           <div className="flex gap-4 text-xs text-muted-foreground ml-auto">
@@ -1512,12 +1531,13 @@ function DraftLookupTable({ picks }: { picks: DraftPick[] }) {
           <thead className="border-b border-border">
             <tr>
               <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground">Round</th>
-              <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground">Pick #</th>
-              <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground">Pctile</th>
-              <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground">Player</th>
-              <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground">TPE</th>
-              <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground">Expected</th>
-              <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground">Delta</th>
+              <Th label="Pick #" col="pick" />
+              <Th label="Pctile" col="pct" />
+              <Th label="Team" col="owningTeam" />
+              <Th label="Player" col="name" />
+              <Th label="TPE" col="highestTPE" />
+              <Th label="Expected" col="expectedTPE" />
+              <Th label="Delta" col="delta" />
             </tr>
           </thead>
           <tbody>
@@ -1529,6 +1549,7 @@ function DraftLookupTable({ picks }: { picks: DraftPick[] }) {
                 <td className="px-3 py-2 text-muted-foreground tabular-nums">{row.round}</td>
                 <td className="px-3 py-2 text-muted-foreground tabular-nums">{row.pick}</td>
                 <td className="px-3 py-2 text-muted-foreground tabular-nums">{Math.round(100 - row.pct)}th</td>
+                <td className="px-3 py-2 text-muted-foreground font-mono text-xs">{row.owningTeam}</td>
                 <td className="px-3 py-2 font-medium">
                   <a
                     href={`https://portal.sim-football.com/player/${row.pid}`}
@@ -1584,7 +1605,7 @@ export default function DraftAnalysisPage() {
   const filteredPicks = useMemo(() => {
     const applyRounds = filters.pickView === 'round';
     const seen = new Set<string>();
-    return picks.filter((p) => {
+    const raw = picks.filter((p) => {
       if (!(!applyRounds || (p.round >= filters.roundMin && p.round <= filters.roundMax))) return false;
       if (!(filters.includeGM || p.type.toLowerCase() !== 'gm')) return false;
       if (!(!filters.completeOnly || p.season <= currentSeason - FULL_DATA_LAG)) return false;
@@ -1594,6 +1615,9 @@ export default function DraftAnalysisPage() {
       seen.add(key);
       return true;
     });
+    // When incomplete players are included, project their final TPE so they
+    // compare fairly with complete classes.
+    return filters.completeOnly ? raw : applyProjections(raw, currentSeason);
   }, [picks, filters.roundMin, filters.roundMax, filters.includeGM, filters.completeOnly, filters.pickView, filters.modernOnly, currentSeason]);
 
   const classTrends = useMemo(() => computeClassTrends(filteredPicks), [filteredPicks]);
