@@ -51,6 +51,56 @@ const BUCKET_WIDTH = 100 / BUCKET_COUNT;
 // Number of seasons per era for team efficiency trend analysis.
 const ERA_SIZE = 5;
 
+// A player earns TPE across 7 seasons: draft_season through draft_season+6.
+// Regression begins at draft_season+7 so the class is "complete" once that many
+// seasons have elapsed since the draft.
+export const EARNING_WINDOW = 8; // seasons D-1 through D+6
+export const FULL_DATA_LAG = 7; // complete filter: season <= currentSeason - 7
+
+/**
+ * Project a player's final peak TPE via linear interpolation over the earning
+ * window. Returns `highestTPE` unchanged for complete players.
+ *
+ * @param highestTPE - current highest TPE
+ * @param draftSeason - season the player was drafted
+ * @param currentSeason - most recent season in the data
+ */
+const BASE_TPE = 50; // every player starts with this; only earned TPE is projected
+
+// The current season is in progress — assume we're roughly halfway through it,
+// so the snapshot underrepresents that season's earnings by this fraction.
+// Subtract it from seasonsElapsed so the per-season rate isn't deflated.
+// A larger value boosts recent players more (0.5 out of 3 elapsed seasons is
+// a ~20 % correction vs. 0.5 out of 7 being ~7 %).
+const SEASON_PROGRESS = 0.5;
+
+export function projectTPE(
+  highestTPE: number,
+  draftSeason: number,
+  currentSeason: number,
+): number {
+  // Earning starts at draftSeason−1 and the current season counts as in progress.
+  // S59 player at S60: S58 + S59 + S60 = 3 seasons elapsed, minus the incomplete
+  // fraction of the current season.
+  const seasonsElapsed = currentSeason - draftSeason + 2 - SEASON_PROGRESS;
+  if (seasonsElapsed >= EARNING_WINDOW) return highestTPE;
+  const earned = highestTPE - BASE_TPE;
+  return Math.round((earned * EARNING_WINDOW) / seasonsElapsed) + BASE_TPE;
+}
+
+/**
+ * Return a new picks array where incomplete players have their `highestTPE`
+ * replaced with a projected final value. Complete players are returned as-is
+ * (same object reference).
+ */
+export function applyProjections(picks: DraftPick[], currentSeason: number): DraftPick[] {
+  return picks.map((p) => {
+    const projected = projectTPE(p.highestTPE, p.season, currentSeason);
+    if (projected === p.highestTPE) return p;
+    return { ...p, highestTPE: projected };
+  });
+}
+
 function interpolateExpected(bucketAvgs: number[], pct: number): number {
   const bucketF = pct / BUCKET_WIDTH;
   const bucket = Math.floor(bucketF);
