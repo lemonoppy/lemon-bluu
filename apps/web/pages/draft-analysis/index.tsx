@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
 
-import { useTheme } from 'next-themes';
 import {
   Area,
   CartesianGrid,
@@ -15,6 +14,9 @@ import {
 } from 'recharts';
 
 import { PageLayout } from '@/components/layout/page-layout';
+import { Accordion } from '@/components/ui/accordion';
+import { ChartCard } from '@/components/ui/chart-card';
+import { tooltipStyle, useChartColors } from '@/lib/chart-utils';
 import {
   BUCKET_COUNT,
   computeAllPickDeltas,
@@ -67,57 +69,6 @@ type SortKey = 'team' | 'picks' | 'avgTPE' | 'expectedTPE' | 'delta' | 'adj';
 
 type PickView = 'round' | 'percentile';
 type TeamMode = 'owning' | 'original';
-
-// ---------------------------------------------------------------------------
-// Theme-aware chart colors
-// ---------------------------------------------------------------------------
-
-function useChartColors() {
-  const { resolvedTheme } = useTheme();
-  const isDark = resolvedTheme === 'dark';
-  return {
-    grid: isDark ? 'oklch(0.28 0.08 264)' : 'oklch(0.88 0.012 240)',
-    tick: isDark ? 'oklch(0.67 0.04 240)' : '#64748b',
-    tooltipBg: isDark ? 'oklch(0.22 0.09 264)' : '#ffffff',
-    tooltipBorder: isDark ? 'oklch(0.28 0.08 264)' : '#e2e8f0',
-    tooltipText: isDark ? 'oklch(0.99 0 0)' : '#0f172a',
-    bar: isDark ? 'oklch(0.62 0.14 222)' : '#1e3a8a',
-    lineAvg: isDark ? 'oklch(0.696 0.17 162.48)' : '#15803d',
-    lineMedian: isDark ? 'oklch(0.62 0.14 222)' : '#1e3a8a',
-    lineTop10: isDark ? 'oklch(0.769 0.188 70.08)' : '#b45309',
-    lineTop20: isDark ? 'oklch(0.75 0.15 50)' : '#c2410c',
-  };
-}
-
-function tooltipStyle(c: ReturnType<typeof useChartColors>) {
-  return {
-    backgroundColor: c.tooltipBg,
-    border: `1px solid ${c.tooltipBorder}`,
-    borderRadius: '8px',
-    fontSize: 12,
-    color: c.tooltipText,
-    boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
-  };
-}
-
-// ---------------------------------------------------------------------------
-// Shared card wrapper
-// ---------------------------------------------------------------------------
-
-function ChartCard({
-  title,
-  children,
-}: {
-  title: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="bg-card border border-border rounded-xl p-4 shadow-sm space-y-3">
-      <h3 className="text-sm font-semibold text-foreground">{title}</h3>
-      {children}
-    </div>
-  );
-}
 
 // ---------------------------------------------------------------------------
 // Filter bar
@@ -451,33 +402,6 @@ function ClassTrendsChart({ data }: { data: ClassTrend[] }) {
   );
 }
 
-// ---------------------------------------------------------------------------
-// Accordion wrapper
-// ---------------------------------------------------------------------------
-
-function Accordion({
-  title,
-  defaultOpen = false,
-  children,
-}: {
-  title: string;
-  defaultOpen?: boolean;
-  children: React.ReactNode;
-}) {
-  const [open, setOpen] = useState(defaultOpen);
-  return (
-    <div className="bg-card border border-border rounded-xl shadow-sm overflow-hidden">
-      <button
-        onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-center justify-between px-4 py-3 text-sm font-semibold text-foreground hover:bg-muted/40 transition-colors"
-      >
-        {title}
-        <span className="text-muted-foreground text-xs">{open ? '▲' : '▼'}</span>
-      </button>
-      {open && <div className="border-t border-border">{children}</div>}
-    </div>
-  );
-}
 
 // ---------------------------------------------------------------------------
 // Pick EV table
@@ -1501,6 +1425,133 @@ function PicksAtPercentileTable({ picks }: { picks: DraftPick[] }) {
 }
 
 // ---------------------------------------------------------------------------
+// Draft lookup
+// ---------------------------------------------------------------------------
+
+function DraftLookupTable({ picks }: { picks: DraftPick[] }) {
+  const allDeltas = useMemo(() => computeAllPickDeltas(picks), [picks]);
+
+  const teams = useMemo(
+    () => [...new Set(picks.map((p) => p.owningTeam))].sort(),
+    [picks],
+  );
+
+  const [team, setTeam] = useState('');
+  const [season, setSeason] = useState(0);
+
+  const teamSeasons = useMemo(() => {
+    const t = team || teams[0];
+    return [...new Set(picks.filter((p) => p.owningTeam === t).map((p) => p.season))].sort(
+      (a, b) => b - a,
+    );
+  }, [picks, team, teams]);
+
+  const effectiveTeam = team || teams[0] || '';
+  const effectiveSeason = season || teamSeasons[0] || 0;
+
+  const rows = useMemo(
+    () =>
+      allDeltas
+        .filter((r) => r.owningTeam === effectiveTeam && r.season === effectiveSeason)
+        .sort((a, b) => a.pick - b.pick),
+    [allDeltas, effectiveTeam, effectiveSeason],
+  );
+
+  const avgTPE = rows.length ? Math.round(rows.reduce((s, r) => s + r.highestTPE, 0) / rows.length) : 0;
+  const avgExp = rows.length ? Math.round(rows.reduce((s, r) => s + r.expectedTPE, 0) / rows.length) : 0;
+  const avgDelta = rows.length ? Math.round(rows.reduce((s, r) => s + r.delta, 0) / rows.length) : 0;
+
+  function DeltaCell({ value }: { value: number }) {
+    return (
+      <td
+        className="px-3 py-2 font-semibold tabular-nums"
+        style={{
+          color: value > 0 ? 'oklch(0.55 0.18 145)' : value < 0 ? 'oklch(0.55 0.2 25)' : undefined,
+        }}
+      >
+        {value > 0 ? '+' : ''}{value}
+      </td>
+    );
+  }
+
+  return (
+    <>
+      <div className="px-4 py-3 flex flex-wrap items-center gap-3 border-b border-border">
+        <select
+          value={effectiveTeam}
+          onChange={(e) => { setTeam(e.target.value); setSeason(0); }}
+          className="rounded-md border border-border bg-background px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-border"
+        >
+          {teams.map((t) => <option key={t} value={t}>{t}</option>)}
+        </select>
+        <select
+          value={effectiveSeason}
+          onChange={(e) => setSeason(Number(e.target.value))}
+          className="rounded-md border border-border bg-background px-2 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-border"
+        >
+          {teamSeasons.map((s) => <option key={s} value={s}>S{s}</option>)}
+        </select>
+        {rows.length > 0 && (
+          <div className="flex gap-4 text-xs text-muted-foreground ml-auto">
+            <span>Avg TPE <span className="text-foreground font-medium">{avgTPE}</span></span>
+            <span>Avg expected <span className="text-foreground font-medium">{avgExp}</span></span>
+            <span>
+              Avg Δ{' '}
+              <span
+                className="font-semibold"
+                style={{ color: avgDelta > 0 ? 'oklch(0.55 0.18 145)' : avgDelta < 0 ? 'oklch(0.55 0.2 25)' : undefined }}
+              >
+                {avgDelta > 0 ? '+' : ''}{avgDelta}
+              </span>
+            </span>
+          </div>
+        )}
+      </div>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead className="border-b border-border">
+            <tr>
+              <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground">Round</th>
+              <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground">Pick #</th>
+              <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground">Pctile</th>
+              <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground">Player</th>
+              <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground">TPE</th>
+              <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground">Expected</th>
+              <th className="px-3 py-2 text-left text-xs font-semibold text-muted-foreground">Delta</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row) => (
+              <tr
+                key={`${row.pid}-${row.season}`}
+                className="border-b border-border last:border-0 hover:bg-muted/40 transition-colors"
+              >
+                <td className="px-3 py-2 text-muted-foreground tabular-nums">{row.round}</td>
+                <td className="px-3 py-2 text-muted-foreground tabular-nums">{row.pick}</td>
+                <td className="px-3 py-2 text-muted-foreground tabular-nums">{Math.round(100 - row.pct)}th</td>
+                <td className="px-3 py-2 font-medium">
+                  <a
+                    href={`https://portal.sim-football.com/player/${row.pid}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:underline"
+                  >
+                    {row.name}
+                  </a>
+                </td>
+                <td className="px-3 py-2 tabular-nums">{row.highestTPE}</td>
+                <td className="px-3 py-2 tabular-nums text-muted-foreground">{row.expectedTPE}</td>
+                <DeltaCell value={row.delta} />
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Page
 // ---------------------------------------------------------------------------
 
@@ -1629,6 +1680,10 @@ export default function DraftAnalysisPage() {
 
         <Accordion title="All Picks by Delta">
           <AllPicksByDeltaTable picks={filteredPicks} />
+        </Accordion>
+
+        <Accordion title="Draft Lookup">
+          <DraftLookupTable picks={filteredPicks} />
         </Accordion>
       </div>
     </PageLayout>
