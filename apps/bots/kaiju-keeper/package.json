@@ -18,11 +18,11 @@
     "patch-package": "patch-package"
   },
   "dependencies": {
-    "@discordjs/rest": "^2.2.0",
+    "@discordjs/rest": "^2.6.1",
     "@google-cloud/local-auth": "2.1.0",
     "@google/genai": "^0.13.0",
     "@lemon-bluu/discord": "*",
-    "axios": "^1.12.0",
+    "axios": "^1.14.0",
     "cheerio": "^1.0.0",
     "cron": "^3.1.7",
     "csv-parse": "^5.6.0",
@@ -37,7 +37,7 @@
     "lz-string": "^1.5.0",
     "neverthrow": "^8.2.0",
     "pg": "^8.20.0",
-    "puppeteer": "^24.39.1",
+    "puppeteer": "^24.40.0",
     "tsc-alias": "^1.8.11"
   },
   "devDependencies": {
@@ -45,7 +45,7 @@
     "@types/jest": "^30.0.0",
     "@types/lodash": "^4.17.0",
     "@types/node": "^20.10.2",
-    "@types/pg": "^8.18.0",
+    "@types/pg": "^8.20.0",
     "@typescript-eslint/eslint-plugin": "^8",
     "@typescript-eslint/parser": "^8",
     "eslint": "^9",
