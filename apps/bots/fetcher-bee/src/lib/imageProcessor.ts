@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { createCanvas, loadImage } from 'canvas';
 import sharp from 'sharp';
 import { logger } from 'src/lib/logger';
@@ -47,11 +48,8 @@ export const processPackImage = async (imageUrl: string): Promise<Buffer> => {
   try {
     logger.info(`Processing pack image from: ${imageUrl}`);
 
-    // Import axios dynamically
-    const axios = await import('axios');
-
     // Download the image with proper error handling
-    const response = await axios.default.get(imageUrl, {
+    const response = await axios.get(imageUrl, {
       responseType: 'arraybuffer',
       headers: {
         'User-Agent': 'Mozilla/5.0 (compatible; DiscordBot/1.0)',

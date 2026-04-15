@@ -62,7 +62,7 @@ function buildMilestoneChases(records: any[], statKey: string, marker: { target:
     .filter(milestoneChase => milestoneChase.milestone <= marker.min);
 }
 
-export default {
+export const command = {
   command: new SlashCommandBuilder()
     .setName('player-milestones')
     .setDescription('See some player milestones!'),

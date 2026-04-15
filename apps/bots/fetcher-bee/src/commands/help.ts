@@ -69,7 +69,7 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   });
 };
 
-export default {
+export const command = {
   command: new SlashCommandBuilder()
     .setName('help')
     .setDescription('Display all available commands'),

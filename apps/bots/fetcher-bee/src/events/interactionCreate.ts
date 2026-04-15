@@ -10,7 +10,7 @@ import { BotEvent } from 'typings/event';
 
 // Initialize Keyv with SQLite
 
-export default {
+export const event = {
   name: Events.InteractionCreate,
   execute: async (interaction: Interaction) => {
     if (interaction.isChatInputCommand()) {

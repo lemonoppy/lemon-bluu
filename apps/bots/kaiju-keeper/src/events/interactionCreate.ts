@@ -7,7 +7,7 @@ import { logger } from 'src/lib/logger';
 import { checkRole } from 'src/lib/role';
 import { BotEvent } from 'typings/event';
 
-export default {
+export const event = {
   name: Events.InteractionCreate,
   execute: async (interaction: Interaction) => {
     if (interaction.isChatInputCommand()) {

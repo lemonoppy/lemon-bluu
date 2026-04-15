@@ -20,7 +20,7 @@ const statNames: {
 
 const choices = Object.entries(statNames).map(([value, name]) => ({ name, value }));
 
-export default {
+export const command = {
   command: new SlashCommandBuilder()
     .setName('receiving-leaders')
     .addStringOption((option) => {

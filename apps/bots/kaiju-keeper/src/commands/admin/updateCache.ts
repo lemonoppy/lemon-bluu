@@ -4,7 +4,7 @@ import { UserRole } from 'src/lib/config/config';
 
 import { SlashCommand } from 'typings/command';
 
-export default {
+export const command = {
   command: new SlashCommandBuilder()
     .setName('update-cache')
     .setDescription('Update the internal bot cache.'),
