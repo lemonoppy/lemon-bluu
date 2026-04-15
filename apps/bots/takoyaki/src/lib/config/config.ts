@@ -23,6 +23,26 @@ export const TIMEOUTS = {
   CACHE_REFRESH: 30 * 60 * 1000, // 30 minutes
 } as const;
 
+const TPE_WEBHOOK_TEAM_CODES = [
+  'AZ',
+  'AUS',
+  'BAL',
+  'BFB',
+  'CTC',
+  'HON',
+  'NOLA',
+  'OCO',
+  'OSK',
+  'SJS',
+  'SAR',
+  'YKW',
+  'BBB',
+  'DAL',
+  'LON',
+  'NOR',
+  'TIJ',
+] as const;
+
 export const Config = {
   portalApiUrl: `https://portal.sim-football.com/api/isfl/v1`,
   googleSheetUrl: (sheetId: string) =>
@@ -38,6 +58,14 @@ export const Config = {
   botErrorChannelId: process.env.BOT_ERROR_CHANNEL_ID,
   botCDNChannelId: process.env.CDN_CHANNEL_ID,
 };
+
+export const tpeTeamWebhookMap: Record<string, string> = {};
+for (const team of TPE_WEBHOOK_TEAM_CODES) {
+  const webhook = process.env[`TPE_WEBHOOK_${team}`];
+  if (webhook) {
+    tpeTeamWebhookMap[team] = webhook;
+  }
+}
 
 export enum UserRole {
   REGULAR = 0,

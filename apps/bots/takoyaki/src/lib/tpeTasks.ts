@@ -1,13 +1,12 @@
 import { PortalClient } from 'src/db/portal/PortalClient';
 import { users } from 'src/db/users';
+import { tpeTeamWebhookMap } from 'src/lib/config/config';
 import { logger } from 'src/lib/logger';
 import { findTeamByName } from 'src/lib/teams';
 import { PendingTask, Player } from 'typings/portal';
 
-const teamWebhookMap: Record<string, string> = {
-  'AZ': `https://discord.com/api/webhooks/1357723119217021173/-SUmpQ2tI_MEfIhKNnKNDn3OnXS7MuRNNRLEIB3oNdxQxiy1Z2u_qzg8_Zdl5S12rJ_0`,
-  // 'OSK': `https://discord.com/api/webhooks/1370479946308386887/0EAH5SVIPDmvQhK1c8h57XxWliW1lkhSmeYMGT7pbaJSY5vJIsnJbr7EFqQQIs3GRk-X`,
-};
+const teamWebhookMap = tpeTeamWebhookMap;
+
 
 const getTaskLink = (task: PendingTask): string => {
   if (task.type === 'PT' || task.type === 'OT' || task.type === 'Other') {
