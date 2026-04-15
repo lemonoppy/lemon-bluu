@@ -11,6 +11,8 @@ export type UserInfo = {
   forumUserId: number; // Add handling to get this later
   pid?: number; // connecting to portal
   team?: string;
+	isflTeam?: string;
+	tpeNotifications?: boolean;
 };
 
 export const users = new Keyv<UserInfo>({ store: new KeyvSqlite('sqlite://src/db/users/users.sqlite') });

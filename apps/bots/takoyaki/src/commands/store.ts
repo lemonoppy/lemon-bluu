@@ -48,6 +48,8 @@ export const command = {
       forumUserId: user.uid,
       pid: player?.pid ?? 0,
       team: team?.abbreviation ?? undefined,
+			isflTeam: player?.isflTeam ?? undefined,
+			tpeNotifications: false
     };
 
     await users.set(interaction.user.id, userInfo);

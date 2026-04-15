@@ -1,7 +1,9 @@
+import { users } from 'src/db/users';
 import { Config } from 'src/lib/config/config';
 import { DynamicConfig } from 'src/lib/config/dynamicConfig';
 import { logger } from 'src/lib/logger';
-import { Award, BankAccountHeaderData, BasicUserInfo, GMRecord, IATracker, ManagerInfo, Player, PlayerSeasonStat, Season, StandingsResponse, TeamHistoryResponse } from 'typings/portal';
+import { findTeamByName } from 'src/lib/teams';
+import { Award, BankAccountHeaderData, BasicUserInfo, GMRecord, IATracker, ManagerInfo, PTTask, PendingTask, Player, PlayerSeasonStat, PortalPasses, PredictionTask, Season, StandingsResponse, TaskListTask, TeamHistoryResponse } from 'typings/portal';
 
 class PortalApiClient {
   #userInfo: Array<BasicUserInfo> = [];
@@ -20,12 +22,12 @@ class PortalApiClient {
   #lastLoadTimestamp = 0;
 
   async #getData<T>(
-    data: Array<T>,
+    data: T | null,
     reload: boolean = false,
     fetchOptions: Parameters<typeof fetch>,
     additionalQueryParams?: Record<string, string>,
-  ): Promise<T[]> {
-    if (data.length > 0 && !reload) {
+  ): Promise<T> {
+    if (data !== null && !reload) {
       return data;
     }
     const [url, ...options] = fetchOptions;
@@ -45,7 +47,7 @@ class PortalApiClient {
       );
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
-    return response.json();
+    return response.json() as Promise<T>;
   }
 
   async getUserInfo(reload: boolean = false): Promise<Array<BasicUserInfo>> {
@@ -168,6 +170,130 @@ class PortalApiClient {
     }
     return response.json();
   }
+
+	async updatePlayerAssignment() {
+		const players = await this.getActivePlayers(true);
+		const activePlayersMap = new Map<number, Player>();
+			players.forEach((player) => {
+				activePlayersMap.set(player.uid, player);
+			});
+
+			for await (const [, value] of users.iterator()) {
+				const player = activePlayersMap.get(value.forumUserId);
+				const team = findTeamByName(player?.currentLeague === 'ISFL' ? player?.isflTeam ?? '' : player?.dsflTeam ?? '');
+
+				const userInfo = value;
+				userInfo.pid = player?.pid ?? 0
+				userInfo.team = team?.abbreviation ?? undefined
+				userInfo.isflTeam = player?.isflTeam ?? undefined
+			}
+	}
+
+	async getPlayerTasks(uids: number[]): Promise<PendingTask[]> {
+		if (uids.length === 0) {
+			return [];
+		}
+
+		const now = new Date();
+		const upcomingSunday = new Date(now);
+		upcomingSunday.setDate(now.getDate() + (7 - now.getDay()) % 7);
+		upcomingSunday.setHours(23, 59, 59, 999);
+		const upcomingFriday = new Date(now);
+		upcomingFriday.setDate(now.getDate() + (5 - now.getDay() + 7) % 7);
+		upcomingFriday.setHours(19, 59, 59, 999);
+
+		const season = await this.getCurrentSeason();
+
+		const teamTasks: Record<number, TaskListTask[]> = {};
+
+		for (const uid of uids) {
+			const { hasPTPass, hasOTPass } = await this.#getData<PortalPasses>(null, true, ['bank/transactions/passes'], { uid: uid.toString(), season: season.toString() });
+			const predictionTasks = await this.#getData<PredictionTask[]>(null, true, ['predictions/list-tasks'], { userId: uid.toString(), includeInactive: 'false' });
+			const ptTasks = await this.#getData<PTTask[]>(null, true, ['threads/tpe-checklist'], { userId: uid.toString(), currentSeason: season.toString() });
+			const players = await this.getActivePlayers();
+
+			const playerMap = new Map<number, Player>();
+			players.forEach((player) => {
+				playerMap.set(player.uid, player);
+			});
+			const player = playerMap.get(3743);
+			const allTasks: TaskListTask[] = []
+
+			predictionTasks.forEach((task) => {
+				allTasks.push({
+					id: task.id,
+					name: task.title,
+					done: task.hasSubmitted,
+					pass: false,
+					type: 'Prediction',
+					openDate: task.openDate,
+					closeDate: task.closeDate
+				})
+			})
+
+			ptTasks.forEach((task) => {
+				const type = task.subject.includes('PT') ? 'PT' : task.subject.includes('Offseason Task') ? 'OT' : 'Other'
+
+				allTasks.push({
+					id: task.tid,
+					name: task.subject,
+					done: task.done,
+					pass: type === 'PT' ? hasPTPass : type === 'OT' ? hasOTPass : false,
+					type: type,
+					closeDate: (type !== 'PT' && type !== 'OT') ? upcomingFriday.toISOString() : upcomingSunday.toISOString(),
+				})
+			})
+
+			allTasks.push({
+				id: 0,
+				name: 'Weekly Activity Check',
+				done: !!player?.weeklyActivityCheck,
+				pass: false,
+				type: 'Activity',
+				closeDate: upcomingSunday.toISOString(),
+			})
+			allTasks.push({
+				id: 1,
+				name: 'Weekly Training',
+				done: !!player?.weeklyTraining,
+				pass: false,
+				type: 'Activity',
+				closeDate: upcomingSunday.toISOString(),
+			})
+			teamTasks[uid] = allTasks;
+		}
+
+		const pendingTasks = this.getPendingTasks(teamTasks);
+
+		logger.info(`Compiled pending tasks: ${JSON.stringify(pendingTasks)}`);
+		return pendingTasks;
+	}
+
+	async getPendingTasks(teamTasks: Record<number, TaskListTask[]>): Promise<PendingTask[]> {
+		const taskMap = new Map<string, PendingTask>();
+		for (const [uid, tasks] of Object.entries(teamTasks)) {
+			for (const task of tasks) {
+				const isComplete = task.done || task.pass;
+				if (isComplete) continue;
+
+				const key = `${task.type}-${task.id}`;
+				if (!taskMap.has(key)) {
+					taskMap.set(key, {
+						taskId: task.id,
+						taskName: task.name,
+						type: task.type,
+						closeDate: task.closeDate,
+						pendingUids: [],
+					});
+				}
+				taskMap.get(key)!.pendingUids.push(Number(uid));
+			}
+		}
+
+		return Array.from(taskMap.values()).sort((a, b) =>
+			(a.closeDate ?? '').localeCompare(b.closeDate ?? '')
+		);
+	}
 
   async reload(): Promise<void> {
     this.#loaded = false;
