@@ -8,7 +8,7 @@ import { delay, extractCareerFieldingStats, fetchPage, saveToJson, saveToTsv } f
 // Configuration
 const BASE_URL = 'http://www.pbesim.com';
 const START_YEAR = 2017;
-const END_YEAR = 2073;
+const END_YEAR = 2076;
 
 /**
  * Extract Second Basemen player links from a fielding page
