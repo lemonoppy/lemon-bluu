@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "module": "CommonJS",
+    "module": "Node16",
     "outDir": "./build",
     "strict": true,
     "allowJs": false,
@@ -14,15 +14,18 @@
     "resolveJsonModule": true,
     "forceConsistentCasingInFileNames": true,
     "removeComments": true,
-    "typeRoots": ["node_modules/@types", "./typings"],
+    "typeRoots": [
+      "node_modules/@types",
+      "../../../node_modules/@types",
+      "./typings"
+    ],
     "isolatedModules": true,
     "types": ["node", "jest"],
     "sourceMap": false,
-    "ignoreDeprecations": "6.0",
     "baseUrl": ".",
     "paths": {
-      "src/*": ["src/*"],
-      "*": ["*"]
+      "src/*": ["./src/*"],
+      "*": ["./*"]
     }
   },
 
