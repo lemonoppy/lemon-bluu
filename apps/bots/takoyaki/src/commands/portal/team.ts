@@ -9,13 +9,14 @@ import {
   createTeamEmbed,
 } from 'src/lib/helpers/buttons/teamButton';
 import { withErrorHandling } from 'src/lib/helpers/command';
+import { getPlayerFromDiscordUser } from 'src/lib/helpers/playerHelpers';
 import { logger } from 'src/lib/logger';
 import { findTeamByName } from 'src/lib/teams';
 
 import { SlashCommand } from 'typings/command';
 import { ManagerInfo } from 'typings/portal';
 
-export default {
+export const command = {
   command: new SlashCommandBuilder()
     .setName('team')
     .addStringOption((option) =>
@@ -50,8 +51,6 @@ export default {
     await interaction.deferReply();
 
       const view = interaction.options.getString('view') ?? 'overview';
-
-      const { getPlayerFromDiscordUser } = await import('src/lib/helpers/playerHelpers');
 
       const currentSeason = await PortalClient.getCurrentSeason();
       const season = interaction.options.getNumber('season') ?? currentSeason;

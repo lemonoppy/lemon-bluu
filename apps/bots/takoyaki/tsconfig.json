@@ -22,6 +22,7 @@
     "isolatedModules": true,
     "types": ["node", "jest"],
     "sourceMap": false,
+    "ignoreDeprecations": "6.0",
     "baseUrl": ".",
     "paths": {
       "src/*": ["src/*"],

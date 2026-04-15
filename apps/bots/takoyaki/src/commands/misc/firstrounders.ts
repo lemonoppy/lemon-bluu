@@ -7,7 +7,7 @@ import { SlashCommand } from 'typings/command';
 
 import { DraftUsers } from 'typings/sheets';
 
-export default {
+export const command = {
   command: new SlashCommandBuilder()
     .setName('firstrounders')
     .setDescription('Check the consensus first rounders for a season')

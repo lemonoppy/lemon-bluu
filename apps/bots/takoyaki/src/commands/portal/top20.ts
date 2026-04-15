@@ -4,7 +4,7 @@ import { BaseEmbed } from 'src/lib/embed';
 import { formatBalance } from 'src/lib/helpers/playerHelpers';
 import { SlashCommand } from 'typings/command';
 
-export default {
+export const command = {
   command: new SlashCommandBuilder()
     .setName('top20')
     .setDescription('Who are the 1%?'),

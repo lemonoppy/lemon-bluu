@@ -69,7 +69,7 @@ function formatDraftOrder(entries: DraftEntry[]): string {
   return lines.join('\n');
 }
 
-export default {
+export const command = {
   command: new SlashCommandBuilder()
     .setName('draft-order')
     .setDescription('Get the ISFL draft order for a season.')

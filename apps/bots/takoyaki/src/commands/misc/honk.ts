@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from 'discord.js';
 import { logger } from 'src/lib/logger';
 import { SlashCommand } from 'typings/command';
 
-export default {
+export const command = {
   command: new SlashCommandBuilder()
     .setName('honk')
     .setDescription('HONKS'),

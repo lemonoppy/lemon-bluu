@@ -11,7 +11,7 @@ import { findTeamByName } from 'src/lib/teams';
 import { SlashCommand } from 'typings/command';
 import { IATracker, Player } from 'typings/portal';
 
-export default {
+export const command = {
   command: new SlashCommandBuilder()
     .setName('ia-tracker')
     .addStringOption((option) =>

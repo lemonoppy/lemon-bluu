@@ -10,7 +10,7 @@ import { InternalStandings } from 'src/lib/index/standings';
 
 import { SlashCommand } from 'typings/command';
 
-export default {
+export const command = {
   command: new SlashCommandBuilder()
     .setName('standings')
     .addNumberOption((option) =>

@@ -71,7 +71,7 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   return;
 }
 
-export default {
+export const command = {
   command: new SlashCommandBuilder()
     .setName('ff-team')
     .setDescription('Look up an ISFL fantasy team')

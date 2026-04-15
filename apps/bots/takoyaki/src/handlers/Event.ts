@@ -10,7 +10,8 @@ module.exports = (client: Client) => {
 
   readdirSync(eventsDir).forEach((file) => {
     if (!file.endsWith('.js') && !file.endsWith('.ts')) return;
-    const event: BotEvent = require(`${eventsDir}/${file}`).default;
+    const loaded = require(`${eventsDir}/${file}`);
+    const event: BotEvent = loaded.default ?? loaded.event ?? loaded;
 
     if (event.once) {
       client.once(event.name, event.execute);

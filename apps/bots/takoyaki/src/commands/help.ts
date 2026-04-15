@@ -12,7 +12,7 @@ import {
 import { logger } from 'src/lib/logger';
 import { SlashCommand } from 'typings/command';
 
-export default {
+export const command = {
   command: new SlashCommandBuilder()
     .setName('help')
     .setDescription('Display all available commands'),

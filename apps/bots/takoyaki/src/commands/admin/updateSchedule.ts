@@ -21,7 +21,7 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   return;
 };
 
-export default {
+export const command = {
   command: new SlashCommandBuilder()
     .setName('update-schedule')
     .addStringOption((option) =>

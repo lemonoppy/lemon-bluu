@@ -8,7 +8,7 @@ import { formatBalance } from 'src/lib/helpers/playerHelpers';
 import { logger } from 'src/lib/logger';
 import { SlashCommand } from 'typings/command';
 
-export default {
+export const command = {
   command: new SlashCommandBuilder()
     .setName('balance')
     .addStringOption((option) =>

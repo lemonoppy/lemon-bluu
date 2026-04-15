@@ -4,12 +4,13 @@ import {
 import { PortalClient } from 'src/db/portal/PortalClient';
 import { BaseEmbed } from 'src/lib/embed';
 import { withErrorHandling } from 'src/lib/helpers/command';
+import { getPlayerFromDiscordUser } from 'src/lib/helpers/playerHelpers';
 import schedule, { InternalSchedule } from 'src/lib/index/schedule';
 
 import { findTeamByName } from 'src/lib/teams';
 import { SlashCommand } from 'typings/command';
 
-export default {
+export const command = {
   command: new SlashCommandBuilder()
     .setName('schedule')
     .addNumberOption((option) =>
@@ -31,8 +32,6 @@ export default {
     .setDescription('Get a team\'s schedule for a season.'),
   execute: withErrorHandling(async (interaction) => {
     await interaction.deferReply();
-
-      const { getPlayerFromDiscordUser } = await import('src/lib/helpers/playerHelpers');
 
       const currentSeason = await PortalClient.getCurrentSeason();
       const season = interaction.options.getNumber('season') ?? currentSeason;

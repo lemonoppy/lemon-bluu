@@ -8,7 +8,7 @@ import { SlashCommand } from 'typings/command';
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-export default {
+export const command = {
   command: new SlashCommandBuilder()
     .setName('ask')
     .addStringOption((option) =>

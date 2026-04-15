@@ -44,7 +44,7 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   return;
 };
 
-export default {
+export const command = {
   command: new SlashCommandBuilder()
     .setName('ff-top')
     .setDescription('Top 10 fantasy players this season'),

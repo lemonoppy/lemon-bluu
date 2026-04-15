@@ -143,7 +143,7 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   return;
 }
 
-export default {
+export const command = {
   command: new SlashCommandBuilder()
     .setName('ff-recs')
     .setDescription('Recommendations for your fantasy team'),
