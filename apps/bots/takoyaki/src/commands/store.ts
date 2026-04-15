@@ -6,7 +6,7 @@ import { BaseEmbed } from 'src/lib/embed';
 import { findTeamByName } from 'src/lib/teams';
 import { SlashCommand } from 'typings/command';
 
-export default {
+export const command = {
   command: new SlashCommandBuilder()
     .setName('store')
     .addStringOption((option) =>

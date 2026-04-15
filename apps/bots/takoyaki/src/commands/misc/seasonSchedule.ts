@@ -5,7 +5,7 @@ import { DynamicConfig } from 'src/lib/config/dynamicConfig';
 import { logger } from 'src/lib/logger';
 import { SlashCommand } from 'typings/command';
 
-export default {
+export const command = {
   command: new SlashCommandBuilder()
     .setName('league-schedule')
     .setDescription('View the current league schedule'),

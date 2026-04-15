@@ -4,7 +4,7 @@ import { SlashCommandBuilder } from 'discord.js';
 
 import { SlashCommand } from 'typings/command';
 
-export default {
+export const command = {
   command: new SlashCommandBuilder()
     .setName('minjeong')
     .setDescription('Stan Minjeong'),

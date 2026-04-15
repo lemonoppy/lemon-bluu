@@ -25,7 +25,8 @@ module.exports = (client: Client) => {
       const isDirectory = statSync(file).isDirectory();
       if (!isDirectory) {
         if (!file.endsWith('.js') && !file.endsWith('.ts')) return false;
-        const command: SlashCommand = require(file).default;
+        const loaded = require(file);
+        const command: SlashCommand = loaded.default ?? loaded.command ?? loaded;
         slashCommands.push(command.command);
         client.commands.set(command.command.name, command);
       }
@@ -35,7 +36,8 @@ module.exports = (client: Client) => {
   commandDir.forEach((commandsDir) => {
     readdirSync(commandsDir).forEach((file) => {
       if (!file.endsWith('.js') && !file.endsWith('.ts')) return;
-      const command: SlashCommand = require(`${commandsDir}/${file}`).default;
+      const loaded = require(`${commandsDir}/${file}`);
+      const command: SlashCommand = loaded.default ?? loaded.command ?? loaded;
       slashCommands.push(command.command);
       client.commands.set(command.command.name, command);
     });

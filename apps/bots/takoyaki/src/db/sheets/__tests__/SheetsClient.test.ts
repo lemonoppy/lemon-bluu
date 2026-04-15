@@ -1,4 +1,4 @@
-import { GoogleSpreadsheet } from 'google-spreadsheet';
+let GoogleSpreadsheet: unknown;
 
 // Provide a factory so Jest never loads the real module (avoids ESM-only ky dep)
 jest.mock('google-spreadsheet', () => ({
@@ -60,8 +60,10 @@ describe('SheetsClient', () => {
   let mockGetCellsInRange: jest.Mock;
   let mockSheetsByTitle: any;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     jest.clearAllMocks();
+    const googleSpreadsheetModule = await import('google-spreadsheet');
+    GoogleSpreadsheet = googleSpreadsheetModule.GoogleSpreadsheet;
 
     mockLoadInfo = jest.fn();
     mockGetCellsInRange = jest.fn();

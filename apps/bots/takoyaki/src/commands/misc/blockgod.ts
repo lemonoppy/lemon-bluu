@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from 'discord.js';
 
 import { SlashCommand } from 'typings/command';
 
-export default {
+export const command = {
   command: new SlashCommandBuilder()
     .setName('blockgod')
     .setDescription('Sing me the song of the block god'),

@@ -8,7 +8,7 @@ import { logger } from 'src/lib/logger';
 import { withUserInfo } from 'src/lib/user';
 import { SlashCommand } from 'typings/command';
 
-export default {
+export const command = {
   command: new SlashCommandBuilder()
     .setName('user')
     .addStringOption((option) =>

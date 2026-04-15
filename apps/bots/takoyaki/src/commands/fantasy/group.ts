@@ -94,7 +94,7 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   return;
 };
 
-export default {
+export const command = {
   command: new SlashCommandBuilder()
     .setName('ff-group')
     .setDescription('Check in on your fantasy group')

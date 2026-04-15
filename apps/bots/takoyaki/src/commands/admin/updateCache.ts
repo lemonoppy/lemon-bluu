@@ -20,7 +20,7 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   return;
 };
 
-export default {
+export const command = {
   command: new SlashCommandBuilder()
     .setName('update-cache')
     .setDescription('Update the internal bot cache.'),

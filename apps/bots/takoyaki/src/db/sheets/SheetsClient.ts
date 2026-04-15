@@ -1,5 +1,4 @@
 import { JWT } from 'google-auth-library';
-import { GoogleSpreadsheet } from 'google-spreadsheet';
 import { google } from 'googleapis';
 import { PortalClient } from 'src/db/portal/PortalClient';
 import { DynamicConfig } from 'src/lib/config/dynamicConfig';
@@ -107,6 +106,7 @@ class SheetsApiClient {
       sheetId = combineSheetId
     }
 
+    const { GoogleSpreadsheet } = await import('google-spreadsheet');
     const doc = new GoogleSpreadsheet(sheetId, {
       apiKey: process.env.GOOGLE_API_KEY ?? '',
     });

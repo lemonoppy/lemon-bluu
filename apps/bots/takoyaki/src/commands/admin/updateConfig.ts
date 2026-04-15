@@ -22,7 +22,7 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   return;
 };
 
-export default {
+export const command = {
   command: new SlashCommandBuilder()
     .setName('update-config')
     .addStringOption((option) =>
