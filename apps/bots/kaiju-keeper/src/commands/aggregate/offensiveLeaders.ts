@@ -68,7 +68,7 @@ function mergeOffensiveStats(
   return Array.from(merged.values());
 }
 
-export default {
+export const command = {
   command: new SlashCommandBuilder()
     .setName('offensive-leaders')
     .addStringOption((option) => {

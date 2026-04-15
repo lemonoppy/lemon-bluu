@@ -9,7 +9,7 @@ import { getTeamForGuild } from 'src/lib/teamInfo';
 import { SlashCommand } from 'typings/command';
 import { PortalPlayer } from 'typings/portal';
 
-export default {
+export const command = {
   command: new SlashCommandBuilder()
     .setName('roster')
     .setDescription('Get current team roster'),

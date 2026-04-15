@@ -15,7 +15,7 @@ function getRecordFromSchedule(games: InternalSchedule[]) {
   };
 }
 
-export default {
+export const command = {
   command: new SlashCommandBuilder()
     .setName('team-info')
     .setDescription('Get Osaka Kaiju Team Records'),

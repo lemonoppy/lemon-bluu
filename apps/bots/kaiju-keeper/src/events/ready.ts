@@ -3,7 +3,7 @@ import { Client, Events } from 'discord.js';
 import { logger } from 'src/lib/logger';
 import { BotEvent } from 'typings/event';
 
-export default {
+export const event = {
   name: Events.ClientReady,
   once: true,
   execute: (client: Client) => {

@@ -24,7 +24,7 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   });
 };
 
-export default {
+export const command = {
   command: new SlashCommandBuilder()
     .setName('rp1p1')
     .setDescription('Generate a random Pack 1, Pick 1 from one of our cubes'),

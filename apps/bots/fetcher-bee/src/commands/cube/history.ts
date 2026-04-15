@@ -56,7 +56,7 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   });
 };
 
-export default {
+export const command = {
   command: new SlashCommandBuilder()
     .setName('history')
     .setDescription('View cube selection statistics from random picks'),

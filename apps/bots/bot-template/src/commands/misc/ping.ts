@@ -15,7 +15,7 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   );
 };
 
-export default {
+export const command = {
   command: new SlashCommandBuilder()
     .setName('ping')
     .setDescription('Replies with Pong!'),

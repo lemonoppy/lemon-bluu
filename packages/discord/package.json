@@ -17,6 +17,6 @@
     "@lemon-bluu/eslint-config": "*",
     "@lemon-bluu/tsconfig": "*",
     "eslint": "^9",
-    "typescript": "^5"
+    "typescript": "^6.0.2"
   }
 }
