@@ -111,7 +111,7 @@ export default {
     await interaction.editReply({
       embeds: [
         BaseEmbed(interaction, {})
-          .setTitle(`ISFL Season ${season} Draft Order`)
+          .setTitle(`ISFL Season ${season + 1} Draft Order`)
           .setDescription(`\`\`\`\n${body}\n\`\`\``),
       ],
     });
