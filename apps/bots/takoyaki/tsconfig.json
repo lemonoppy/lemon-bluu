@@ -22,7 +22,7 @@
     "isolatedModules": true,
     "types": ["node", "jest"],
     "sourceMap": false,
-    "rootDir": "./src",
+    "rootDir": ".",
     "ignoreDeprecations": "6.0",
     "baseUrl": ".",
     "paths": {
