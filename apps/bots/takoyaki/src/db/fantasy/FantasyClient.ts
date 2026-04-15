@@ -1,4 +1,5 @@
 import { DynamicConfig } from 'src/lib/config/dynamicConfig';
+import { loadGoogleSpreadsheet } from 'src/lib/googleSpreadsheetLoader';
 import { logger } from 'src/lib/logger';
 import { FantasyPlayer, FantasyRosteredPlayer, FantasyUser } from 'typings/fantasy';
 
@@ -46,7 +47,7 @@ class PortalApiClient {
     }
 
     const currentFantasySheetId = DynamicConfig.fantasySheetId.get();
-    const { GoogleSpreadsheet } = await import('google-spreadsheet');
+    const { GoogleSpreadsheet } = await loadGoogleSpreadsheet();
     const doc = new GoogleSpreadsheet(currentFantasySheetId, {
       apiKey: process.env.GOOGLE_API_KEY ?? '',
     });

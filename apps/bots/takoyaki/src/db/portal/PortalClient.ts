@@ -27,7 +27,12 @@ class PortalApiClient {
     fetchOptions: Parameters<typeof fetch>,
     additionalQueryParams?: Record<string, string>,
   ): Promise<T> {
-    if (data !== null && !reload) {
+    const hasCachedData =
+      data !== null &&
+      !reload &&
+      (!(Array.isArray(data)) || data.length > 0);
+
+    if (hasCachedData) {
       return data;
     }
     const [url, ...options] = fetchOptions;

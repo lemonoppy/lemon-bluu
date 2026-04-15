@@ -2,6 +2,7 @@ import { JWT } from 'google-auth-library';
 import { google } from 'googleapis';
 import { PortalClient } from 'src/db/portal/PortalClient';
 import { DynamicConfig } from 'src/lib/config/dynamicConfig';
+import { loadGoogleSpreadsheet } from 'src/lib/googleSpreadsheetLoader';
 import { logger } from 'src/lib/logger';
 import { CombinePlayer, DraftSeason, DraftUsers } from 'typings/sheets';
 
@@ -106,7 +107,7 @@ class SheetsApiClient {
       sheetId = combineSheetId
     }
 
-    const { GoogleSpreadsheet } = await import('google-spreadsheet');
+    const { GoogleSpreadsheet } = await loadGoogleSpreadsheet();
     const doc = new GoogleSpreadsheet(sheetId, {
       apiKey: process.env.GOOGLE_API_KEY ?? '',
     });

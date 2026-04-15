@@ -1,8 +1,9 @@
-let GoogleSpreadsheet: unknown;
+let GoogleSpreadsheet: jest.Mock;
+let loadGoogleSpreadsheetMock: jest.Mock;
 
-// Provide a factory so Jest never loads the real module (avoids ESM-only ky dep)
-jest.mock('google-spreadsheet', () => ({
-  GoogleSpreadsheet: jest.fn(),
+// Mock the loader used by FantasyClient for google-spreadsheet
+jest.mock('src/lib/googleSpreadsheetLoader', () => ({
+  loadGoogleSpreadsheet: jest.fn(),
 }));
 
 // Mock DynamicConfig
@@ -31,10 +32,14 @@ describe('FantasyClient', () => {
   let mockGetCellsInRange: jest.Mock;
   let mockSheetsByTitle: any;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     jest.clearAllMocks();
-    const googleSpreadsheetModule = await import('google-spreadsheet');
-    GoogleSpreadsheet = googleSpreadsheetModule.GoogleSpreadsheet;
+    const googleSpreadsheetModule = require('src/lib/googleSpreadsheetLoader');
+    loadGoogleSpreadsheetMock = googleSpreadsheetModule.loadGoogleSpreadsheet as jest.Mock;
+    GoogleSpreadsheet = jest.fn();
+    loadGoogleSpreadsheetMock.mockResolvedValue({
+      GoogleSpreadsheet,
+    });
 
     mockLoadInfo = jest.fn();
     mockGetCellsInRange = jest.fn();
