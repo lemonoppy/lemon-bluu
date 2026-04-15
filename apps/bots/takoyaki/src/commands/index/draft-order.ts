@@ -87,7 +87,7 @@ export default {
     const currentSeason = await PortalClient.getCurrentSeason();
     const season = interaction.options.getNumber('season') ?? currentSeason;
 
-    const standings = await PortalClient.getStandings(season);
+    const standings = await PortalClient.getStandings(season, true);
     if (!standings) {
       await interaction.editReply({ content: 'Failed to fetch standings data.' });
       return;
