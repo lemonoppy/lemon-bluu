@@ -9,6 +9,7 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "ignoreDeprecations": "6.0",
+    "rootDir": "./src",
     "baseUrl": "."
   },
   "include": ["src"],
