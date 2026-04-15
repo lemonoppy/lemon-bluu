@@ -237,3 +237,44 @@ export type PlayerSeasonStat = {
   defSack: number;
   defInt: number;
 };
+
+export type PortalPasses = {
+	hasPTPass: boolean;
+	hasOTPass: boolean;
+}
+
+export type PredictionTask = {
+	id: number;
+	league: 'ISFL' | 'DSFL' | 'WFC';
+	season: number;
+	taskType: string;
+	title: string;
+	openDate: string;
+	closeDate: string;
+	hasSubmitted: boolean;
+}
+
+export type PTTask = {
+	tid: number;
+	subject: string;
+	link: string;
+	done: boolean;
+}
+
+export type TaskListTask = {
+	id: number;
+	done: boolean;
+	pass: boolean;
+	type: 'PT' | 'OT' | 'Prediction' | 'Other' | 'Activity';
+	openDate?: string;
+	closeDate: string;
+	name: string;
+}
+
+export type PendingTask = {
+  taskId: number;
+  taskName: string;
+  type: string;
+  closeDate?: string;
+  pendingUids: number[];
+};

@@ -6,6 +6,7 @@ import { SheetsClient } from 'src/db/sheets/SheetsClient';
 import { StatsClient } from 'src/db/stats/StatsClient';
 import { Config } from 'src/lib/config/config';
 import { logger } from 'src/lib/logger';
+import { postTPEReminders } from 'src/lib/tpeTasks';
 
 /**
  * Wrapper for cron jobs that handles error reporting and success notifications
@@ -74,6 +75,16 @@ module.exports = async (client: Client) => {
     }).start();
   }
 
+	// Daily TPE Task TODO every day at 6 PM
+  new CronJob('0 18 * * *', async () => {
+    const errorChannel = Config.botErrorChannelId ? client.channels.cache.get(Config.botErrorChannelId) as TextBasedChannel | undefined : undefined;
+    await withCronErrorHandling(
+      'Daily TPE TODO Refresh',
+      async () => await postTPEReminders(),
+      errorChannel
+    );
+  }).start();
+
   // Daily TPE Tracker Refresh every day at 8 AM
   new CronJob('0 8 * * *', async () => {
     const errorChannel = Config.botErrorChannelId ? client.channels.cache.get(Config.botErrorChannelId) as TextBasedChannel | undefined : undefined;
@@ -90,6 +101,16 @@ module.exports = async (client: Client) => {
     await withCronErrorHandling(
       'Weekly TPE Tracker Refresh',
       async () => await SheetsClient.refreshTPETrackerViaWebApp('weekly'),
+      errorChannel
+    );
+  }).start();
+
+  // Weekly Player Assignment Refresh every Monday at 9 AM
+  new CronJob('0 9 * * 1', async () => {
+    const errorChannel = Config.botErrorChannelId ? client.channels.cache.get(Config.botErrorChannelId) as TextBasedChannel | undefined : undefined;
+    await withCronErrorHandling(
+      'Weekly Player Assignment Refresh',
+      async () => await PortalClient.updatePlayerAssignment(),
       errorChannel
     );
   }).start();
