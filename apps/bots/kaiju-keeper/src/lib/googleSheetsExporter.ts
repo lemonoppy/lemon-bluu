@@ -2,7 +2,6 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 import { JWT } from 'google-auth-library';
-import { GoogleSpreadsheet } from 'google-spreadsheet';
 import { logger } from 'src/lib/logger';
 import { UnifiedPlayerStat } from 'src/lib/process-week';
 
@@ -164,6 +163,7 @@ export const exportToGoogleSheets = async (
     });
 
     // Initialize Google Spreadsheet with service account authentication
+    const { GoogleSpreadsheet } = await import('google-spreadsheet');
     const doc = new GoogleSpreadsheet(DSFL_SHEET_ID, serviceAccountAuth);
 
     await doc.loadInfo();

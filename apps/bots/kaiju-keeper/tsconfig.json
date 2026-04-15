@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "module": "CommonJS",
+    "module": "Node16",
     "outDir": "./build",
     "strict": true,
     "allowJs": false,
@@ -22,11 +22,10 @@
     "isolatedModules": true,
     "types": ["node", "jest"],
     "sourceMap": false,
-    "ignoreDeprecations": "6.0",
     "baseUrl": ".",
     "paths": {
-      "src/*": ["src/*"],
-      "*": ["*"]
+      "src/*": ["./src/*"],
+      "*": ["./*"]
     }
   },
 
