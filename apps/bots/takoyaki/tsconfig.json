@@ -5,7 +5,7 @@
     "outDir": "./build",
     "strict": true,
     "allowJs": false,
-    "moduleResolution": "node",
+    "moduleResolution": "node16",
     "importHelpers": true,
     "experimentalDecorators": true,
     "esModuleInterop": true,
@@ -14,10 +14,15 @@
     "resolveJsonModule": true,
     "forceConsistentCasingInFileNames": true,
     "removeComments": true,
-    "typeRoots": ["node_modules/@types", "../../../node_modules/@types", "./typings"],
+    "typeRoots": [
+      "node_modules/@types",
+      "../../../node_modules/@types",
+      "./typings"
+    ],
     "isolatedModules": true,
     "types": ["node", "jest"],
     "sourceMap": false,
+    "ignoreDeprecations": "6.0",
     "baseUrl": ".",
     "paths": {
       "src/*": ["src/*"],
