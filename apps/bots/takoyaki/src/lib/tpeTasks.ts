@@ -50,10 +50,18 @@ export async function postTPEReminders(): Promise<void> {
     const uids = teams.get(teamAbbreviation) ?? [];
     logger.info(`Team ${teamAbbreviation}: ${uids.length} UIDs with TPE notifications`);
 
-		const in24Hours = new Date(Date.now() + 24 * 60 * 60 * 1000);
+    const now = new Date();
+    const in24Hours = new Date(Date.now() + 24 * 60 * 60 * 1000);
 
-		const pendingTasks = (await PortalClient.getPlayerTasks(uids))
-			.filter((task) => task.closeDate && new Date(task.closeDate) <= in24Hours);
+    const pendingTasks = (await PortalClient.getPlayerTasks(uids))
+      .filter((task) => {
+        if (!task.closeDate) {
+          return false;
+        }
+
+        const closeDate = new Date(task.closeDate);
+        return !Number.isNaN(closeDate.getTime()) && closeDate >= now && closeDate <= in24Hours;
+      });
 
     const lines = pendingTasks.length > 0
       ? pendingTasks.map((task) => {
