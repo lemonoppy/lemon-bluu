@@ -35,7 +35,7 @@
     "fuzzysort": "^3.0.2",
     "google-spreadsheet": "^4.1.4",
     "googleapis": "105",
-    "keyv": "^4.5.4",
+    "keyv": "^5.6.0",
     "keyv-file": "^0.3.1",
     "lodash": "^4.17.21",
     "pg": "^8.20.0",
