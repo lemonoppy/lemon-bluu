@@ -33,7 +33,7 @@
     "discord.js": "^14.19.3",
     "dotenv": "^16.3.1",
     "fuzzysort": "^3.0.2",
-    "google-spreadsheet": "^4.1.4",
+    "google-spreadsheet": "^5.2.0",
     "googleapis": "105",
     "keyv": "^4.5.4",
     "keyv-file": "^0.3.1",
