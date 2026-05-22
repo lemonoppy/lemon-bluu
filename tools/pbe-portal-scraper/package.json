@@ -24,8 +24,8 @@
     "@typescript-eslint/parser": "^8",
     "eslint": "^9",
     "eslint-plugin-import-x": "^4",
-    "tsc-alias": "^1.8.11",
+    "tsc-alias": "^1.8.17",
     "ts-node": "^10.9.1",
-    "typescript": "^6.0.2"
+    "typescript": "^6.0.3"
   }
 }

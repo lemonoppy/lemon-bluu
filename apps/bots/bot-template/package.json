@@ -16,9 +16,9 @@
   "dependencies": {
     "@lemon-bluu/discord": "*",
     "cron": "^3.1.7",
-    "discord.js": "^14.19.3",
+    "discord.js": "^14.26.4",
     "dotenv": "^16.3.1",
-    "tsc-alias": "^1.8.11"
+    "tsc-alias": "^1.8.17"
   },
   "devDependencies": {
     "@lemon-bluu/eslint-config": "*",
@@ -32,7 +32,7 @@
     "pino-pretty": "^11.0.0",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^6.0.2"
+    "typescript": "^6.0.3"
   },
   "nodemonConfig": {
     "execMap": {
