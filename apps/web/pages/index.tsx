@@ -614,8 +614,8 @@ export default function Home() {
 						>
 							(lemonoppy)
 						</span>{' '}
-						— a Senior Front-End Engineer based in Ottawa. At Trend Micro I
-						architect enterprise React applications, lead cross-team
+						— a Senior Front-End Engineer based in Ottawa. At Warner Bros. Discovery I
+						architect enterprise React applications, cross-platform integrations, lead cross-team
 						infrastructure work, and help engineers across the org ship better
 						code.
 					</p>
