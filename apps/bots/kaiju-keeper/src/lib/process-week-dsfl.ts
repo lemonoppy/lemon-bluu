@@ -6,7 +6,6 @@ import {
 import {
   getSeasonGameDataDSFL
 } from 'src/lib/dataPipelineUtils-dsfl';
-import { exportToGoogleSheets } from 'src/lib/googleSheetsExporter';
 import { logger } from 'src/lib/logger';
 import { processPlayerStats } from 'src/lib/process-week';
 
@@ -36,7 +35,10 @@ const filterDSFLPlayers = async (): Promise<{ [simId: number]: number }> => {
 /**
  * Main function to process DSFL stats for a specific week and export to Google Sheets
  */
-export const processWeeksDSFL = async (targetWeek: number): Promise<{
+export const processWeeksDSFL = async (
+  targetWeek: number,
+  season: number = 58,
+): Promise<{
   success: boolean;
   totalRecords: number;
   exportedCount: number;
@@ -44,23 +46,23 @@ export const processWeeksDSFL = async (targetWeek: number): Promise<{
   message: string;
 }> => {
   try {
-    logger.info(`Starting DSFL S58 processing for week ${targetWeek}`);
+    logger.info(`Starting DSFL S${season} processing for week ${targetWeek}`);
 
     // Step 1: Fetch DSFL schedule
     logger.info('Fetching DSFL schedule...');
-    const gameData = await getSeasonGameDataDSFL(true);
+    const gameData = await getSeasonGameDataDSFL(season, true);
 
     if (gameData.length === 0) {
       return {
         success: false,
         totalRecords: 0,
         exportedCount: 0,
-        errors: ['No DSFL game data found for Season 58'],
-        message: 'No DSFL game data found for Season 58'
+        errors: [`No DSFL game data found for Season ${season}`],
+        message: `No DSFL game data found for Season ${season}`
       };
     }
 
-    logger.info(`Found ${gameData.length} games in DSFL S58`);
+    logger.info(`Found ${gameData.length} games in DSFL S${season}`);
 
     // Create week mapping for easy lookup
     const weekMap: { [gameId: string]: number } = {};
@@ -75,14 +77,14 @@ export const processWeeksDSFL = async (targetWeek: number): Promise<{
         success: false,
         totalRecords: 0,
         exportedCount: 0,
-        errors: [`Week ${targetWeek} not found. DSFL Season 58 has ${maxWeek} weeks available.`],
+        errors: [`Week ${targetWeek} not found. DSFL Season ${season} has ${maxWeek} weeks available.`],
         message: `Week ${targetWeek} exceeds available weeks (max: ${maxWeek})`
       };
     }
 
     // Step 2: Fetch and decompress all game data for the season
     logger.info('Fetching and decompressing DSFL game data files...');
-    const fetchedGameData = await fetchAllSeasonGameDataDSFL();
+    const fetchedGameData = await fetchAllSeasonGameDataDSFL(season);
 
     // Validate the fetched data structure
     const validation = validateGameDataStructure(fetchedGameData);
@@ -131,7 +133,7 @@ export const processWeeksDSFL = async (targetWeek: number): Promise<{
       fetchedGameData.boxData,
       fetchedGameData.playerData,
       weekMap,
-      58, // DSFL Season 58
+      season,
       targetWeek,
       dsflPlayerMapping
     );
@@ -141,33 +143,19 @@ export const processWeeksDSFL = async (targetWeek: number): Promise<{
         success: false,
         totalRecords: 0,
         exportedCount: 0,
-        errors: [`No player stats found for DSFL S58 week ${targetWeek}`],
+        errors: [`No player stats found for DSFL S${season} week ${targetWeek}`],
         message: 'No player stats found'
       };
     }
 
     logger.info(`Week ${targetWeek} complete: ${weekStats.length} player records`);
 
-    // Step 5: Export to Google Sheets
-    logger.info('Exporting to Google Sheets...');
-    const exportResult = await exportToGoogleSheets(weekStats);
-
-    if (!exportResult.success) {
-      return {
-        success: false,
-        totalRecords: weekStats.length,
-        exportedCount: exportResult.exportedCount,
-        errors: exportResult.errors,
-        message: 'Failed to export to Google Sheets'
-      };
-    }
-
     return {
       success: true,
       totalRecords: weekStats.length,
-      exportedCount: exportResult.exportedCount,
-      errors: exportResult.errors,
-      message: `Successfully processed and exported ${exportResult.exportedCount} player stat records for DSFL S58 W${targetWeek}`
+      exportedCount: weekStats.length,
+      errors: [],
+      message: `Successfully processed ${weekStats.length} player stat records for DSFL S${season} W${targetWeek}`
     };
 
   } catch (error) {
@@ -178,7 +166,7 @@ export const processWeeksDSFL = async (targetWeek: number): Promise<{
       totalRecords: 0,
       exportedCount: 0,
       errors: [errorMessage],
-      message: `Error processing DSFL S58 week ${targetWeek}: ${errorMessage}`
+      message: `Error processing DSFL S${season} week ${targetWeek}: ${errorMessage}`
     };
   }
 };

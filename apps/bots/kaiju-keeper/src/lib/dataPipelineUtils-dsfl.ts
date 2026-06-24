@@ -7,10 +7,14 @@ export interface SeasonGameData {
 }
 
 /**
- * Get DSFL Season 58 game IDs and week mappings by scraping GameResults.html
+ * Get DSFL game IDs and week mappings by scraping the season's GameResults.html page
  */
-export const getSeasonGameDataDSFL = async (includePostseason: boolean = true): Promise<SeasonGameData[]> => {
-  const url = 'https://index.sim-football.com/DSFLS58/GameResults.html';
+export const getSeasonGameDataDSFL = async (
+  season: number = 58,
+  includePostseason: boolean = true,
+): Promise<SeasonGameData[]> => {
+  const seasonLabel = season < 10 ? `0${season}` : `${season}`;
+  const url = `https://index.sim-football.com/DSFLS${seasonLabel}/GameResults.html`;
 
   try {
     const response = await fetch(url, {
