@@ -1,4 +1,4 @@
-const PORTAL = 'https://portal.sim-football.com/api/isfl/v1';
+const PORTAL = 'https://portal-api.sim-football.com/api/isfl/v1';
 
 export async function portalFetch<T>(path: string): Promise<T> {
   const res = await fetch(`${PORTAL}/${path}`, {
