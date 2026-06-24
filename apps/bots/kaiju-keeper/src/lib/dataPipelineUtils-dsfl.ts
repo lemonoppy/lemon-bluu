@@ -14,7 +14,7 @@ export const getSeasonGameDataDSFL = async (
   includePostseason: boolean = true,
 ): Promise<SeasonGameData[]> => {
   const seasonLabel = season < 10 ? `0${season}` : `${season}`;
-  const url = `https://index.sim-football.com/DSFLS${seasonLabel}/GameResults.html`;
+  const url = `https://sheets.sim-football.com/DSFLS${seasonLabel}/GameResults.html`;
 
   try {
     const response = await fetch(url, {
