@@ -11,11 +11,12 @@ export interface GameDataFiles {
  * DSFL uses Season 58 with the same compressed file format as ISFL
  */
 export const fetchAndDecompressGameDataDSFL = async (
-  fileNumber: number
+  season: number = 58,
+  fileNumber: number,
 ): Promise<GameDataFiles | null> => {
   try {
-    // DSFL Season 58 base URL
-    const baseUrl = 'https://index.sim-football.com/DSFLS58';
+    const seasonLabel = season < 10 ? `0${season}` : `${season}`;
+    const baseUrl = `https://sheets.sim-football.com/DSFLS${seasonLabel}`;
 
     // Construct URLs for the three data files
     const pbpUrl = `${baseUrl}/Logs/pbpData${fileNumber}.txt`;
@@ -94,14 +95,16 @@ export const fetchAndDecompressGameDataDSFL = async (
 /**
  * Fetch all DSFL game data files for Season 58 (typically files 1-10)
  */
-export const fetchAllSeasonGameDataDSFL = async (): Promise<GameDataFiles> => {
+export const fetchAllSeasonGameDataDSFL = async (
+  season: number = 58,
+): Promise<GameDataFiles> => {
   const allPbpData: any[] = [];
   const allBoxData: any[] = [];
   const allPlayerData: any[] = [];
 
   // Fetch files 1 through 10 (standard for most seasons)
   for (let fileNumber = 1; fileNumber <= 10; fileNumber++) {
-    const gameData = await fetchAndDecompressGameDataDSFL(fileNumber);
+    const gameData = await fetchAndDecompressGameDataDSFL(season, fileNumber);
 
     if (gameData) {
       allPbpData.push(...gameData.pbpData);
