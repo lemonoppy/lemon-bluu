@@ -1,8 +1,8 @@
+import { portalFetch } from '@/lib/isfl/portal';
 import type { DraftPick, GMData } from '@/lib/isfl/types';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-const PORTAL = 'https://portal.sim-football.com/api/isfl/v1';
 const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 
 // Permanent cache: past season picks never change once the draft is done
@@ -11,14 +11,6 @@ const picksCache = new Map<number, DraftPick[]>();
 // Volatile caches: refreshed weekly
 let tpeCache: { map: Map<number, number>; fetchedAt: number } | null = null;
 let gmCache: { data: GMData[]; fetchedAt: number } | null = null;
-
-async function portalFetch<T>(path: string): Promise<T> {
-  const res = await fetch(`${PORTAL}/${path}`, {
-    headers: { 'User-Agent': 'lemon-bluu/draft-analysis' },
-  });
-  if (!res.ok) throw new Error(`Portal ${path} returned ${res.status}`);
-  return res.json();
-}
 
 type RawPick = {
   season: number;

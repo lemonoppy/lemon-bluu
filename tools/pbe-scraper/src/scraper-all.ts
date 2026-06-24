@@ -7,7 +7,7 @@ import { delay, extractCareerFieldingStats, fetchPage, saveToJson, saveToTsv } f
 
 // Configuration
 const BASE_URL = 'http://www.pbesim.com';
-const CURRENT_SEASON = 2076; // Update this each season
+const CURRENT_SEASON = 2077; // Update this each season
 const ACTIVITY_THRESHOLD_YEARS = 3; // Only re-scrape players active within this many years
 
 /**
