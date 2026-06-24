@@ -31,7 +31,7 @@ try {
 }
 
 // Configuration — override with SEASON env var (e.g. from CI)
-const SEASON = parseInt(process.env.SEASON ?? '61', 10);
+const SEASON = parseInt(process.env.SEASON ?? '63', 10);
 const PLAYER_LIST_URL =
   'https://pbe.simflow.io/view/player_list.php?league=MiLPBE&retired=Exclude&filler=Exclude';
 const OUTPUT_FILE = `drafted-players-s${SEASON}.json`;
@@ -83,7 +83,7 @@ async function scrapePlayerData(): Promise<PlayerData[]> {
         xpInput.dispatchEvent(new Event('keyup', { bubbles: true }));
         xpInput.dispatchEvent(new Event('change', { bubbles: true }));
 
-         
+
         const win = window as any;
         const $table = win.jQuery && win.jQuery('table').first();
         if ($table && $table.bootstrapTable) {
