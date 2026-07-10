@@ -16,9 +16,9 @@
   "dependencies": {
     "@lemon-bluu/discord": "*",
     "cron": "^3.1.7",
-    "discord.js": "^14.19.3",
+    "discord.js": "^14.26.5",
     "dotenv": "^16.3.1",
-    "tsc-alias": "^1.8.11"
+    "tsc-alias": "^1.9.0"
   },
   "devDependencies": {
     "@lemon-bluu/eslint-config": "*",
