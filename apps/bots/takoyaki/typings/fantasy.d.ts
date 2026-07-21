@@ -5,6 +5,15 @@ export type FantasyPlayer = {
   score: number;
 };
 
+export type FantasyAdpPlayer = {
+  player: string;
+  team: string;
+  position: string;
+  adp: number;
+  median: number;
+  count: number;
+};
+
 export type FantasyRosteredPlayer = {
   username: string;
   group: number | string;
@@ -23,4 +32,4 @@ export type FantasyUser = {
   score: number;
   rank: number;
   overall: number;
-}
+};

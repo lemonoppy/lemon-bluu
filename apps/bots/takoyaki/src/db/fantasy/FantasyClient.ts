@@ -1,17 +1,31 @@
 import { DynamicConfig } from 'src/lib/config/dynamicConfig';
 import { loadGoogleSpreadsheet } from 'src/lib/googleSpreadsheetLoader';
 import { logger } from 'src/lib/logger';
-import { FantasyPlayer, FantasyRosteredPlayer, FantasyUser } from 'typings/fantasy';
+import {
+  FantasyAdpPlayer,
+  FantasyPlayer,
+  FantasyRosteredPlayer,
+  FantasyUser,
+} from 'typings/fantasy';
 
 type sheetInfo = {
   sheet: string;
   range: string;
-  type: 'players' | 'users' | 'rostered-player';
-}
+  type: 'adp' | 'players' | 'users' | 'rostered-player';
+  sheetId?: string;
+};
+
+const FANTASY_ADP_SHEET_ID = '1UjWlGattioFkZeVr7dZqxBX74MueMJCmUAt_1InAwFg';
 
 const SHEET_RANGES: {
   [key: string]: sheetInfo;
 } = {
+  ADP: {
+    sheet: 'FantasyADP',
+    range: 'O4:T',
+    type: 'adp',
+    sheetId: FANTASY_ADP_SHEET_ID,
+  },
   PLAYERS: {
     sheet: 'Player Scores',
     range: 'A4:E',
@@ -27,9 +41,10 @@ const SHEET_RANGES: {
     range: 'A2:I',
     type: 'rostered-player',
   },
-}
+};
 
 class PortalApiClient {
+  #adpPlayers: Array<FantasyAdpPlayer> = [];
   #players: Array<FantasyPlayer> = [];
   #rosteredPlayers: Array<FantasyRosteredPlayer> = [];
   #users: Array<FantasyUser> = [];
@@ -46,7 +61,8 @@ class PortalApiClient {
       return data;
     }
 
-    const currentFantasySheetId = DynamicConfig.fantasySheetId.get();
+    const currentFantasySheetId =
+      sheetInfo.sheetId ?? DynamicConfig.fantasySheetId.get();
     const { GoogleSpreadsheet } = await loadGoogleSpreadsheet();
     const doc = new GoogleSpreadsheet(currentFantasySheetId, {
       apiKey: process.env.GOOGLE_API_KEY ?? '',
@@ -58,12 +74,36 @@ class PortalApiClient {
       // Load document properties and worksheets
       await doc.loadInfo();
       const sheet = doc.sheetsByTitle[sheetInfo.sheet];
-      const rows = await sheet.getCellsInRange(sheetInfo.range)
+      const rows = await sheet.getCellsInRange(sheetInfo.range);
 
       // Process the data
       rows.forEach((row: string[]) => {
-        if (row[0] && row[0].length > 0) {
+        if (row[0] && row[0].length > 0 && row[0] !== 'Player') {
           switch (sheetInfo.type) {
+            case 'adp': {
+              const adp = parseFloat(row[3]?.replace(/,/g, ''));
+              const median = parseFloat(row[4]?.replace(/,/g, ''));
+              const count = parseInt(row[5]?.replace(/,/g, ''));
+
+              if (
+                !Number.isFinite(adp) ||
+                !Number.isFinite(median) ||
+                !Number.isFinite(count)
+              ) {
+                break;
+              }
+
+              const adpPlayer: FantasyAdpPlayer = {
+                player: row[0],
+                team: row[1],
+                position: row[2],
+                adp,
+                median,
+                count,
+              };
+              sheetResponseData.push(adpPlayer as T);
+              break;
+            }
             case 'players': {
               const fantasyPlayer: FantasyPlayer = {
                 name: row[0],
@@ -114,9 +154,18 @@ class PortalApiClient {
     return sheetResponseData;
   }
 
-  async getPlayers(
+  async getAdpPlayers(
     reload: boolean = true,
-  ): Promise<Array<FantasyPlayer>> {
+  ): Promise<Array<FantasyAdpPlayer>> {
+    this.#adpPlayers = await this.#getData(
+      this.#adpPlayers,
+      reload,
+      SHEET_RANGES.ADP,
+    );
+    return this.#adpPlayers;
+  }
+
+  async getPlayers(reload: boolean = true): Promise<Array<FantasyPlayer>> {
     this.#players = await this.#getData(
       this.#players,
       reload,
@@ -136,14 +185,8 @@ class PortalApiClient {
     return this.#rosteredPlayers;
   }
 
-  async getUsers(
-    reload: boolean = true,
-  ): Promise<Array<FantasyUser>> {
-    this.#users = await this.#getData(
-      this.#users,
-      reload,
-      SHEET_RANGES.USERS,
-    );
+  async getUsers(reload: boolean = true): Promise<Array<FantasyUser>> {
+    this.#users = await this.#getData(this.#users, reload, SHEET_RANGES.USERS);
     return this.#users;
   }
 
@@ -151,6 +194,7 @@ class PortalApiClient {
     this.#loaded = false;
 
     await Promise.all([
+      await this.getAdpPlayers(true),
       await this.getPlayers(true),
       await this.getUsers(true),
       await this.getRosteredPlayers(true),

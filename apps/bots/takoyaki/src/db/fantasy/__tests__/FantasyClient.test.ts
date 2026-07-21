@@ -35,7 +35,8 @@ describe('FantasyClient', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     const googleSpreadsheetModule = require('src/lib/googleSpreadsheetLoader');
-    loadGoogleSpreadsheetMock = googleSpreadsheetModule.loadGoogleSpreadsheet as jest.Mock;
+    loadGoogleSpreadsheetMock =
+      googleSpreadsheetModule.loadGoogleSpreadsheet as jest.Mock;
     GoogleSpreadsheet = jest.fn();
     loadGoogleSpreadsheetMock.mockResolvedValue({
       GoogleSpreadsheet,
@@ -45,13 +46,16 @@ describe('FantasyClient', () => {
     mockGetCellsInRange = jest.fn();
 
     mockSheetsByTitle = {
+      FantasyADP: {
+        getCellsInRange: mockGetCellsInRange,
+      },
       'Player Scores': {
         getCellsInRange: mockGetCellsInRange,
       },
       'Users Scores': {
         getCellsInRange: mockGetCellsInRange,
       },
-      'Rosters': {
+      Rosters: {
         getCellsInRange: mockGetCellsInRange,
       },
     };
@@ -63,6 +67,80 @@ describe('FantasyClient', () => {
 
     // Set GOOGLE_API_KEY for tests
     process.env.GOOGLE_API_KEY = 'test-api-key';
+  });
+
+  describe('getAdpPlayers', () => {
+    it('should fetch and parse ADP players successfully', async () => {
+      const mockSheetData = [
+        ['Player', 'Team', 'Position', 'ADP', 'Median', 'Count'],
+        ['Player One', 'Team A', 'RB', '1.25', '1', '1,234'],
+        ['Player Two', 'Team B', 'WR', '2.50', '2.5', '10'],
+      ];
+
+      mockGetCellsInRange.mockResolvedValueOnce(mockSheetData);
+
+      const result = await FantasyClient.getAdpPlayers(true);
+
+      expect(result).toEqual([
+        {
+          player: 'Player One',
+          team: 'Team A',
+          position: 'RB',
+          adp: 1.25,
+          median: 1,
+          count: 1234,
+        },
+        {
+          player: 'Player Two',
+          team: 'Team B',
+          position: 'WR',
+          adp: 2.5,
+          median: 2.5,
+          count: 10,
+        },
+      ]);
+      expect(mockGetCellsInRange).toHaveBeenCalledWith('O4:T');
+      expect(GoogleSpreadsheet).toHaveBeenCalledWith(
+        '1UjWlGattioFkZeVr7dZqxBX74MueMJCmUAt_1InAwFg',
+        { apiKey: 'test-api-key' },
+      );
+    });
+
+    it('should skip empty rows, the header, and invalid numeric data', async () => {
+      const mockSheetData = [
+        ['Player', 'Team', 'Position', 'ADP', 'Median', 'Count'],
+        ['', '', '', '', '', ''],
+        ['Invalid Player', 'Team A', 'RB', 'N/A', '1', '2'],
+        ['Valid Player', 'Team B', 'WR', '3', '3', '4'],
+      ];
+
+      mockGetCellsInRange.mockResolvedValueOnce(mockSheetData);
+
+      const result = await FantasyClient.getAdpPlayers(true);
+
+      expect(result).toHaveLength(1);
+      expect(result[0].player).toBe('Valid Player');
+    });
+
+    it('should use cached ADP data when reload is false', async () => {
+      mockGetCellsInRange.mockResolvedValueOnce([
+        ['Player One', 'Team A', 'RB', '1.25', '1', '5'],
+      ]);
+
+      const result1 = await FantasyClient.getAdpPlayers(true);
+      const result2 = await FantasyClient.getAdpPlayers(false);
+
+      expect(result1).toEqual(result2);
+      expect(mockLoadInfo).toHaveBeenCalledTimes(1);
+    });
+
+    it('should handle ADP sheet errors gracefully', async () => {
+      mockLoadInfo.mockRejectedValueOnce(new Error('Sheet access error'));
+
+      const result = await FantasyClient.getAdpPlayers(true);
+
+      expect(result).toEqual([]);
+    });
   });
 
   describe('getPlayers', () => {
@@ -110,9 +188,7 @@ describe('FantasyClient', () => {
     });
 
     it('should handle scores with commas', async () => {
-      const mockSheetData = [
-        ['Player One', 'C', 'Team A', '', '1,234.56'],
-      ];
+      const mockSheetData = [['Player One', 'C', 'Team A', '', '1,234.56']];
 
       mockGetCellsInRange.mockResolvedValueOnce(mockSheetData);
 
@@ -122,9 +198,7 @@ describe('FantasyClient', () => {
     });
 
     it('should use cached data when reload is false', async () => {
-      const mockSheetData = [
-        ['Player One', 'C', 'Team A', '', '100.5'],
-      ];
+      const mockSheetData = [['Player One', 'C', 'Team A', '', '100.5']];
 
       mockGetCellsInRange.mockResolvedValueOnce(mockSheetData);
 
@@ -166,7 +240,7 @@ describe('FantasyClient', () => {
       expect(result[1]).toEqual({
         username: 'User2',
         group: 'A',
-        score: 450.50,
+        score: 450.5,
         rank: 2,
         overall: 10,
       });
@@ -187,9 +261,7 @@ describe('FantasyClient', () => {
     });
 
     it('should handle scores with commas', async () => {
-      const mockSheetData = [
-        ['User1', '1', '1,234.56', '1', '1'],
-      ];
+      const mockSheetData = [['User1', '1', '1,234.56', '1', '1']];
 
       mockGetCellsInRange.mockResolvedValueOnce(mockSheetData);
 
@@ -237,7 +309,17 @@ describe('FantasyClient', () => {
 
     it('should handle group as string', async () => {
       const mockSheetData = [
-        ['User1', 'Premier', 'C1', 'Player One', 'C', 'Team A', '1', '10', '150.5'],
+        [
+          'User1',
+          'Premier',
+          'C1',
+          'Player One',
+          'C',
+          'Team A',
+          '1',
+          '10',
+          '150.5',
+        ],
       ];
 
       mockGetCellsInRange.mockResolvedValueOnce(mockSheetData);
@@ -261,7 +343,17 @@ describe('FantasyClient', () => {
 
     it('should handle scores with commas', async () => {
       const mockSheetData = [
-        ['User1', '1', 'C1', 'Player One', 'C', 'Team A', '1', '10', '1,500.75'],
+        [
+          'User1',
+          '1',
+          'C1',
+          'Player One',
+          'C',
+          'Team A',
+          '1',
+          '10',
+          '1,500.75',
+        ],
       ];
 
       mockGetCellsInRange.mockResolvedValueOnce(mockSheetData);
@@ -274,19 +366,23 @@ describe('FantasyClient', () => {
 
   describe('reload', () => {
     it('should reload all data sources', async () => {
+      const mockAdpData = [['Player', 'Team', 'RB', '1', '1', '1']];
       const mockPlayersData = [['Player', 'C', 'Team', '', '100']];
       const mockUsersData = [['User', '1', '500', '1', '1']];
-      const mockRosteredData = [['User', '1', 'C1', 'Player', 'C', 'Team', '1', '10', '100']];
+      const mockRosteredData = [
+        ['User', '1', 'C1', 'Player', 'C', 'Team', '1', '10', '100'],
+      ];
 
       mockGetCellsInRange
+        .mockResolvedValueOnce(mockAdpData)
         .mockResolvedValueOnce(mockPlayersData)
         .mockResolvedValueOnce(mockUsersData)
         .mockResolvedValueOnce(mockRosteredData);
 
       await FantasyClient.reload();
 
-      expect(mockLoadInfo).toHaveBeenCalledTimes(3);
-      expect(mockGetCellsInRange).toHaveBeenCalledTimes(3);
+      expect(mockLoadInfo).toHaveBeenCalledTimes(4);
+      expect(mockGetCellsInRange).toHaveBeenCalledTimes(4);
     });
   });
 
