@@ -17,6 +17,21 @@ const POSITION_FILTERS: Record<string, string[]> = {
   'CB/FS/SS': ['CB', 'FS', 'SS'],
 };
 
+const POSITION_COLORS: Record<string, string> = {
+  QB: '🟥',
+  RB: '🟩',
+  WR: '🟦',
+  TE: '🟧',
+  OL: '⬜',
+  K: '🟪',
+  DE: '🟫',
+  DT: '🟫',
+  LB: '🟨',
+  CB: '🟦',
+  FS: '🟦',
+  SS: '🟦',
+};
+
 const execute = async (interaction: ChatInputCommandInteraction) => {
   await interaction.deferReply();
 
@@ -45,14 +60,19 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
     embeds: [
       BaseEmbed(interaction, {})
         .setTitle(title)
-        .addFields(
-          players.map((player, index) => ({
-            name: `#${index + 1}. ${player.player} - ${player.team} - ${player.position}`,
-            value: `ADP: ${player.adp.toFixed(
-              2,
-            )} | Median: ${player.median} | Count: ${player.count}`,
-            inline: false,
-          })),
+        .setDescription(
+          players
+            .map(
+              (player, index) =>
+                `${POSITION_COLORS[player.position] ?? '⬜'} **${index + 1}. ${
+                  player.player
+                }** (${player.team} · ${
+                  player.position
+                }) — ADP **${player.adp.toFixed(2)}** · Med ${
+                  player.median
+                } · n=${player.count}`,
+            )
+            .join('\n'),
         ),
     ],
   });
