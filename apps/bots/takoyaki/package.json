@@ -34,7 +34,7 @@
     "dotenv": "^16.3.1",
     "fuzzysort": "^3.0.2",
     "google-spreadsheet": "^4.1.4",
-    "googleapis": "105",
+    "googleapis": "171",
     "keyv": "^4.5.4",
     "keyv-file": "^0.3.1",
     "lodash": "^4.17.21",
