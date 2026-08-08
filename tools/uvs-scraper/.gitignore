@@ -5,3 +5,7 @@ drafted-players-*.json
 *.log
 .DS_Store
 .env
+
+# Ignore generated tournament standings data
+*_standings.csv
+*_standings.json
