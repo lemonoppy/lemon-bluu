@@ -1,0 +1,25 @@
+{
+  "name": "@lemon-bluu/uvs-scraper",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "scrape": "ts-node src/scraper.ts",
+    "build": "tsc && tsc-alias",
+    "lint": "eslint src --ext .ts",
+    "format": "prettier --write src"
+  },
+  "dependencies": {
+    "puppeteer": "^24.39.1"
+  },
+  "devDependencies": {
+    "@lemon-bluu/eslint-config": "*",
+    "@types/node": "^26.2.0",
+    "@typescript-eslint/eslint-plugin": "^8",
+    "@typescript-eslint/parser": "^8",
+    "eslint": "^9",
+    "eslint-plugin-import-x": "^4",
+    "ts-node": "^10.9.1",
+    "tsc-alias": "^1.8.11",
+    "typescript": "^6.0.2"
+  }
+}
