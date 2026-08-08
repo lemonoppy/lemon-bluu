@@ -11,7 +11,7 @@
     "format": "prettier --write src"
   },
   "dependencies": {
-    "axios": "^1.13.2"
+    "axios": "^1.18.1"
   },
   "devDependencies": {
     "@lemon-bluu/eslint-config": "*",
