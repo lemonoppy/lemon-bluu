@@ -17,10 +17,11 @@
     "isfl-draft-order": "yarn workspace @lemon-bluu/isfl-draft-order start"
   },
   "devDependencies": {
+    "@types/node": "^26.2.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.4.0",
     "prettier": "latest",
-    "turbo": "latest"
+    "turbo": "2.9.14"
   },
   "packageManager": "yarn@1.22.22",
   "engines": {
