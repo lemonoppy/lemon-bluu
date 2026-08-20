@@ -11,6 +11,13 @@ const REQUEST_TIMEOUT_MS = 10_000;
 const EVENTS_LIST_TIMEOUT_MS = 20_000;
 const PAGE_SIZE = 1000;
 
+// Riftbound is game id 3 on the UVS/Hydra platform (Lorcana=1, MTG=298, ...).
+// Stores also run non-Riftbound events on the same API, so we must filter.
+const RIFTBOUND_GAME_ID = 3;
+
+export const isRiftboundEvent = (gameType: string | null): boolean =>
+  gameType === 'RIFTBOUND';
+
 const fetchWithTimeout = (url: string, timeoutMs = REQUEST_TIMEOUT_MS) => {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
@@ -22,6 +29,7 @@ const fetchWithTimeout = (url: string, timeoutMs = REQUEST_TIMEOUT_MS) => {
 export interface UVSEventSummary {
   id: number;
   name: string;
+  game_type: string | null;
   start_datetime: string;
   end_datetime: string | null;
   heuristic_end_datetime: string | null;
@@ -43,7 +51,7 @@ export async function fetchEventsByStore(
     try {
       for (let page = 1; page > 0; ) {
         const response = await fetchWithTimeout(
-          `${Config.uvsApiBaseUrl}/events/?store=${storeId}&page=${page}&page_size=100`,
+          `${Config.uvsApiBaseUrl}/events/?store=${storeId}&game=${RIFTBOUND_GAME_ID}&page=${page}&page_size=100`,
           EVENTS_LIST_TIMEOUT_MS,
         );
         if (!response.ok) {
@@ -52,7 +60,11 @@ export async function fetchEventsByStore(
           );
         }
         const data = (await response.json()) as UVSEventsPaginatedResponse;
-        allEvents.push(...(data.results ?? []));
+        allEvents.push(
+          ...(data.results ?? []).filter((event) =>
+            isRiftboundEvent(event.game_type),
+          ),
+        );
         const next = data.next ?? data.next_page_number;
         if (next == null || next <= page) break;
         page = next;
