@@ -1,7 +1,7 @@
 import { Config } from 'src/lib/config/config';
 import Query from 'src/lib/db';
 import { logger } from 'src/lib/logger';
-import { UVSEventSummary, fetchEventsByStore } from 'src/lib/uvs/client';
+import { UVSEventSummary, fetchEventSummary, fetchEventsByStore } from 'src/lib/uvs/client';
 import { EventParticipant, fetchEventParticipants } from 'src/lib/uvs/scraper';
 import { squadMemberByPlayerId, squadMembers } from 'src/lib/uvs/squad';
 
@@ -28,6 +28,22 @@ export interface ProcessResult {
   eloHistoriesFetched: number;
   requestsUsed: number;
   stoppedEarly: boolean;
+}
+
+export interface ProcessSingleEventResult {
+  eventName: string;
+  participants: number;
+  processedPlayers: number;
+  eloComplete: boolean;
+  stoppedEarly: boolean;
+  requestsUsed: number;
+}
+
+interface ProcessEventResult {
+  completed: boolean;
+  participants: number;
+  processedPlayers: number;
+  eloComplete: boolean;
 }
 
 interface PlayerMapping {
@@ -472,19 +488,18 @@ const upsertEventPlayer = async (
 };
 
 /**
- * Processes a single event. Returns false if the run's EloShowdown request
- * budget was hit mid-event, in which case nothing is recorded so the event is
- * retried on the next run.
+ * Processes a single event. If the run's EloShowdown request budget is hit
+ * mid-event, nothing is recorded so the event is retried on the next run.
  */
 const processEvent = async (
   event: UVSEventSummary,
-): Promise<boolean> => {
+): Promise<ProcessEventResult> => {
   const { event: eventData, participants } = await fetchEventParticipants(event.id);
 
   if (participants.length === 0) {
     await upsertEvent(event, true);
     logger.warn(`Event ${event.id} (${event.name}) has no standings; recorded`);
-    return true;
+    return { completed: true, participants: 0, processedPlayers: 0, eloComplete: true };
   }
 
   const start = new Date(eventData.start_datetime);
@@ -518,7 +533,12 @@ const processEvent = async (
   logger.info(
     `Processed event ${event.id} (${event.name}) with ${processed.length}/${participants.length} participants${eloComplete ? '' : ' (elo incomplete)'}`,
   );
-  return true;
+  return {
+    completed: true,
+    participants: participants.length,
+    processedPlayers: processed.length,
+    eloComplete,
+  };
 };
 
 export async function processOttawaEvents(
@@ -557,7 +577,7 @@ export async function processOttawaEvents(
     for (const event of events.slice(0, maxEvents)) {
       try {
         const completed = await processEvent(event);
-        if (!completed) {
+        if (!completed.completed) {
           stoppedEarly = true;
           break;
         }
@@ -595,4 +615,58 @@ export async function processOttawaEvents(
       `${result.requestsUsed} requests used${result.stoppedEarly ? ' (stopped early)' : ''}`,
   );
   return result;
+}
+
+/**
+ * Processes a single event by id and records it for elo tracking. Intended for
+ * events held at stores outside Config.ottawaStoreIds (e.g. large regional
+ * events that come to Ottawa) that the daily backfill never sees. Skips the
+ * squad sync so the request budget is reserved for the event's players.
+ */
+export async function processOttawaEventById(
+  eventId: number,
+): Promise<ProcessSingleEventResult> {
+  const summary = await fetchEventSummary(eventId);
+
+  eloHistoryCache.clear();
+  resetRequestCount();
+  counters.playersMapped = 0;
+  counters.eloHistoriesFetched = 0;
+
+  await buildNameIndex();
+
+  let result: ProcessEventResult;
+  try {
+    result = await processEvent(summary);
+  } catch (error) {
+    if (
+      error instanceof BudgetExceededError ||
+      (error instanceof EloShowdownApiError && error.status === 429)
+    ) {
+      logger.warn('EloShowdown budget/rate limit hit while processing event; stopping');
+      return {
+        eventName: summary.name,
+        participants: 0,
+        processedPlayers: 0,
+        eloComplete: false,
+        stoppedEarly: true,
+        requestsUsed: getRequestCount(),
+      };
+    }
+    throw error;
+  }
+
+  logger.info(
+    `Single event processed: ${summary.name} with ${result.processedPlayers}/${result.participants} participants` +
+      `${result.eloComplete ? '' : ' (elo incomplete)'}${result.completed ? '' : ' (stopped early)'}`,
+  );
+
+  return {
+    eventName: summary.name,
+    participants: result.participants,
+    processedPlayers: result.processedPlayers,
+    eloComplete: result.eloComplete,
+    stoppedEarly: !result.completed,
+    requestsUsed: getRequestCount(),
+  };
 }
