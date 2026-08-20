@@ -50,9 +50,12 @@ export const getPlayerRecentEvents = (
   ).map((result) => result.rows);
 
 export const getOttawaLeaderboard = (
-  limit: number,
-): ResultAsync<OttawaLeaderboardRow[], DatabaseError> =>
-  Query<OttawaLeaderboardRow>(
+  limit: number | null,
+): ResultAsync<OttawaLeaderboardRow[], DatabaseError> => {
+  const params: unknown[] = [Config.ottawaCommunityMinEvents];
+  const limitClause = limit != null ? ` LIMIT $${params.length + 1}` : '';
+  if (limit != null) params.push(limit);
+  return Query<OttawaLeaderboardRow>(
     `SELECT p.player_id,
             p.display_name,
             p.current_elo,
@@ -64,6 +67,24 @@ export const getOttawaLeaderboard = (
      GROUP BY p.player_id, p.display_name, p.current_elo
      HAVING COUNT(ep.event_id) >= $1
      ORDER BY p.current_elo DESC NULLS LAST
-     LIMIT $2`,
-    [Config.ottawaCommunityMinEvents, limit],
+     ${limitClause}`,
+    params,
+  ).map((result) => result.rows as OttawaLeaderboardRow[]);
+};
+
+export const getOttawaLeaderboardForPlayers = (
+  playerIds: number[],
+): ResultAsync<OttawaLeaderboardRow[], DatabaseError> =>
+  Query<OttawaLeaderboardRow>(
+    `SELECT p.player_id,
+            p.display_name,
+            p.current_elo,
+            COUNT(ep.event_id)::int AS ottawa_events,
+            MAX(e.start_datetime) AS last_event
+     FROM eloshowdown_players p
+     LEFT JOIN event_players ep ON ep.player_id = p.player_id
+     LEFT JOIN ottawa_events e ON e.id = ep.event_id
+     WHERE p.player_id = ANY($1::int[])
+     GROUP BY p.player_id, p.display_name, p.current_elo`,
+    [playerIds],
   ).map((result) => result.rows as OttawaLeaderboardRow[]);
