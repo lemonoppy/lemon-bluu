@@ -273,7 +273,8 @@ async function scrapePlayerData(eventId: number): Promise<ScrapeResult> {
 
   const topCutSize = eventTopCutSize ?? getTopCutSize(players.length);
 
-  const roundsRemaining = activePhase.rounds.filter(r => r.round_number > latestRound.round_number).length;
+  const allRounds = sortedPhases.flatMap(phase => phase.rounds);
+  const roundsRemaining = allRounds.filter(r => r.round_number > latestRound.round_number).length;
   const isComplete = roundsRemaining === 0 && latestRound.status === 'COMPLETE';
 
   let displayRound = latestRound.round_number;
