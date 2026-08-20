@@ -30,7 +30,7 @@ describe('formatSquadStatusLines', () => {
   const statusLine = (
     overrides: Partial<SquadStatusLine> = {},
   ): SquadStatusLine => ({
-    member: { username: 'BNutty', name: 'Bennett' },
+    member: { username: 'BNutty', name: 'Bennett', eloShowdownId: 74345 },
     rank: 4,
     record: '3-1-0',
     points: 9,

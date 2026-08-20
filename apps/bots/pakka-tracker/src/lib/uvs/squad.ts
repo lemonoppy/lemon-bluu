@@ -4,19 +4,25 @@ import { ScrapeResult, UVSResultData } from './types';
 export interface SquadMember {
   username: string;
   name: string;
+  eloShowdownId: number;
 }
 
 export const squadMembers: SquadMember[] = [
-  { username: 'badboijerbear', name: 'Jerry' },
-  { username: 'Miss Play', name: 'Chloe' },
-  { username: 'Sphere Itself', name: 'Sam' },
-  { username: 'BNutty', name: 'Bennett' },
-  { username: 'lolford', name: 'Luka' },
-  { username: 'Nova', name: 'Ernest' },
+  { username: 'badboijerbear', name: 'Jerry', eloShowdownId: 74340 },
+  { username: 'Miss Play', name: 'Chloe', eloShowdownId: 74339 },
+  { username: 'Sphere Itself', name: 'Sam', eloShowdownId: 74343 },
+  { username: 'BNutty', name: 'Bennett', eloShowdownId: 74345 },
+  { username: 'lolford', name: 'Luka', eloShowdownId: 74335 },
+  { username: 'Nova', name: 'Ernest', eloShowdownId: 74041 },
+  { username: 'lemonoppy', name: 'Nelson', eloShowdownId: 128962 },
 ];
 
 export const squadMemberByUsername = new Map(
   squadMembers.map((member) => [member.username.toLowerCase(), member]),
+);
+
+export const squadMemberByPlayerId = new Map(
+  squadMembers.map((member) => [member.eloShowdownId, member]),
 );
 
 export type SquadPlayerStatus =
