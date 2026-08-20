@@ -1,0 +1,51 @@
+{
+  "name": "@lemon-bluu/pakka-tracker",
+  "version": "1.0.0",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc && tsc-alias",
+    "start:dev": "NODE_ENV=development nodemon -r tsconfig-paths/register --files src/index.ts | pino-pretty -i pid,hostname -t 'yyyy-mm-dd HH:MM:ss'",
+    "start:prod": "ts-node -r tsconfig-paths/register --files src/index.ts",
+    "start:built": "node build/index.js",
+    "start:restart": "while true; do npm run start:prod; echo 'Bot crashed, restarting in 5 seconds...'; sleep 5; done",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest",
+    "test:watch": "NODE_OPTIONS=--experimental-vm-modules jest --watch",
+    "test:coverage": "NODE_OPTIONS=--experimental-vm-modules jest --coverage",
+    "lint": "eslint src --ext .ts",
+    "format": "prettier --write src"
+  },
+  "dependencies": {
+    "@lemon-bluu/discord": "*",
+    "discord.js": "^14.19.3",
+    "dotenv": "^16.3.1",
+    "tsc-alias": "^1.8.11"
+  },
+  "devDependencies": {
+    "@lemon-bluu/eslint-config": "*",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^20.10.2",
+    "@typescript-eslint/eslint-plugin": "^8",
+    "@typescript-eslint/parser": "^8",
+    "eslint": "^9",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-import-x": "^4",
+    "jest": "^30.3.0",
+    "nodemon": "^3.0.2",
+    "pino-pretty": "^11.0.0",
+    "ts-jest": "^29.4.6",
+    "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^6.0.2"
+  },
+  "nodemonConfig": {
+    "execMap": {
+      "ts": "ts-node"
+    },
+    "ignore": [
+      "build/*",
+      ".vscode/*"
+    ],
+    "delay": "2500"
+  }
+}
