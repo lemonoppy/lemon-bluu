@@ -1,10 +1,15 @@
+import { suffix } from '@lemon-bluu/discord';
+
 import { SquadPlayerStatus, SquadStatusLine } from './squad';
 
 export const squadStatusLabel = (
   status: SquadPlayerStatus,
   topCutSize: number,
+  rank: number,
 ): string => {
   switch (status) {
+    case 'FINISHED':
+      return `Finished ${suffix(rank)}`;
     case 'MISSED_DAY_2':
       return 'Missed Day 2';
     case 'MADE_CUT':
@@ -37,7 +42,7 @@ export function formatSquadStatusLines(
   topCutSize: number,
 ): string[] {
   return statuses.map(({ member, rank, record, points, status }) => {
-    const tag = squadStatusLabel(status, topCutSize);
+    const tag = squadStatusLabel(status, topCutSize, rank);
     return `${member.name} (${member.username}) - Rank ${rank} | ${record} | ${points} pts - [${tag}]`;
   });
 }
