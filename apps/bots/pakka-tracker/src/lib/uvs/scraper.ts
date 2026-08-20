@@ -3,7 +3,9 @@ import { logger } from 'src/lib/logger';
 import { fetchAllStandings, fetchEventDetails } from './client';
 import {
   ScrapeResult,
+  UVSEventData,
   UVSRoundResultItem,
+  UVSTournamentPhase,
   UVSTournamentRound,
 } from './types';
 
@@ -11,6 +13,21 @@ const getTopCutSize = (totalPlayers: number): number => {
   if (totalPlayers > 15) return 8;
   if (totalPlayers >= 9) return 4;
   return 0;
+};
+
+const findActivePhase = (
+  phases: UVSTournamentPhase[],
+): { activePhase: UVSTournamentPhase; generatedRounds: UVSTournamentRound[] } => {
+  for (let i = phases.length - 1; i >= 0; i--) {
+    const phase = phases[i];
+    const genRoundsInPhase = phase.rounds.filter(
+      (r) => r.standings_status === 'GENERATED',
+    );
+    if (genRoundsInPhase.length > 0) {
+      return { activePhase: phase, generatedRounds: genRoundsInPhase };
+    }
+  }
+  return { activePhase: phases[0], generatedRounds: [] };
 };
 
 export async function scrapePlayerData(eventId: number): Promise<ScrapeResult> {
@@ -40,21 +57,7 @@ export async function scrapePlayerData(eventId: number): Promise<ScrapeResult> {
     .slice(0, firstCutIndex >= 0 ? firstCutIndex : sortedPhases.length)
     .reduce((sum, phase) => sum + (phase.number_of_rounds ?? 0), 0);
 
-  // Find the most recently active phase with generated standings
-  let activePhase = sortedPhases[0];
-  let generatedRounds: UVSTournamentRound[] = [];
-
-  for (let i = sortedPhases.length - 1; i >= 0; i--) {
-    const phase = sortedPhases[i];
-    const genRoundsInPhase = phase.rounds.filter(
-      (r) => r.standings_status === 'GENERATED',
-    );
-    if (genRoundsInPhase.length > 0) {
-      activePhase = phase;
-      generatedRounds = genRoundsInPhase;
-      break;
-    }
-  }
+  const { activePhase, generatedRounds } = findActivePhase(sortedPhases);
 
   const phaseName = activePhase?.phase_name ?? 'Phase 1';
   const totalPhaseRounds = activePhase
@@ -176,4 +179,43 @@ export function timerStatusLabel(data: ScrapeResult): string {
     return 'Round timer: ROUND COMPLETE (Waiting for next round)';
   }
   return 'Round timer: NOT RUNNING';
+}
+
+export interface EventParticipant {
+  userId: number;
+  username: string;
+  rank: number;
+  record: string;
+  points: number;
+  status: string;
+}
+
+export async function fetchEventParticipants(
+  eventId: number,
+): Promise<{ event: UVSEventData; participants: EventParticipant[] }> {
+  const eventData = await fetchEventDetails(eventId);
+  const sortedPhases = [...eventData.tournament_phases].sort(
+    (a, b) => a.order_in_phases - b.order_in_phases,
+  );
+  const { generatedRounds } = findActivePhase(sortedPhases);
+  if (generatedRounds.length === 0) {
+    return { event: eventData, participants: [] };
+  }
+
+  const latestRound = generatedRounds[generatedRounds.length - 1];
+  const rawResults = await fetchAllStandings(latestRound.id);
+
+  const participants = rawResults.map((item: UVSRoundResultItem) => ({
+    userId: item.user_event_status?.user?.id ?? 0,
+    username:
+      item.user_event_status?.best_identifier ??
+      item.player?.best_identifier ??
+      'Unknown',
+    rank: item.rank,
+    record: item.record ?? '',
+    points: item.points ?? item.match_points ?? 0,
+    status: item.user_event_status?.registration_status ?? 'ACTIVE',
+  }));
+
+  return { event: eventData, participants };
 }
