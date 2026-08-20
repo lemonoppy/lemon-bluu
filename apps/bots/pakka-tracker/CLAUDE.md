@@ -40,8 +40,6 @@ Discord bot for tracking UVS (Riftbound) tournament events, built on the shared 
 - `squad.ts` — tracked users (`squadMembers`) + `evaluateSquadStatus` (returns structured statuses, no console output)
 - `format.ts` — status labels parameterized by cut size + squad status formatting
 
-The same UVS logic lives in `tools/uvs-scraper/` (CLI). Keep the two in sync when changing cut detection or squad status rules.
-
 ## Testing
 
 Tests live alongside source (`__tests__/` subdirectories or `*.test.ts`) and use ts-jest. `src/__tests__/setup.ts` loads dotenv.
