@@ -63,7 +63,7 @@ export const getOttawaLeaderboard = (
             p.display_name,
             p.current_elo,
             COUNT(ep.event_id)::int AS ottawa_events,
-            MAX(e.start_datetime) AS last_event
+            MAX(COALESCE(e.end_datetime, e.start_datetime)) AS last_event
      FROM event_players ep
      JOIN eloshowdown_players p ON p.player_id = ep.player_id
      JOIN ottawa_events e ON e.id = ep.event_id
@@ -71,7 +71,8 @@ export const getOttawaLeaderboard = (
      HAVING p.is_squad
          OR (
            COUNT(ep.event_id) >= $1
-           AND MAX(e.start_datetime) >= now() - make_interval(days => $2::int)
+           AND MAX(COALESCE(e.end_datetime, e.start_datetime)) >=
+               now() - make_interval(days => $2::int)
          )
      ORDER BY p.current_elo DESC NULLS LAST
      ${limitClause}`,
