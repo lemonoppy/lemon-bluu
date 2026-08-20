@@ -52,7 +52,10 @@ export const getPlayerRecentEvents = (
 export const getOttawaLeaderboard = (
   limit: number | null,
 ): ResultAsync<OttawaLeaderboardRow[], DatabaseError> => {
-  const params: unknown[] = [Config.ottawaCommunityMinEvents];
+  const params: unknown[] = [
+    Config.ottawaCommunityMinEvents,
+    Config.ottawaRecentWindowDays,
+  ];
   const limitClause = limit != null ? ` LIMIT $${params.length + 1}` : '';
   if (limit != null) params.push(limit);
   return Query<OttawaLeaderboardRow>(
@@ -64,8 +67,12 @@ export const getOttawaLeaderboard = (
      FROM event_players ep
      JOIN eloshowdown_players p ON p.player_id = ep.player_id
      JOIN ottawa_events e ON e.id = ep.event_id
-     GROUP BY p.player_id, p.display_name, p.current_elo
-     HAVING COUNT(ep.event_id) >= $1
+     GROUP BY p.player_id, p.display_name, p.current_elo, p.is_squad
+     HAVING p.is_squad
+         OR (
+           COUNT(ep.event_id) >= $1
+           AND MAX(e.start_datetime) >= now() - make_interval(days => $2::int)
+         )
      ORDER BY p.current_elo DESC NULLS LAST
      ${limitClause}`,
     params,

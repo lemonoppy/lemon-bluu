@@ -39,12 +39,14 @@ export const Config = {
   ],
 
   // A player counts as "recently played in Ottawa" if their last Ottawa event
-  // was within this many days.
-  ottawaRecentWindowDays: 21,
+  // was within this many days. Non-squad members must meet this to appear on
+  // the /ottawa leaderboard.
+  ottawaRecentWindowDays: 30,
 
-  // Players appearing in at least this many Ottawa events are part of the
-  // community.
-  ottawaCommunityMinEvents: 1,
+  // Non-squad players appearing in at least this many Ottawa events are part
+  // of the community and eligible for the /ottawa leaderboard. Squad members
+  // always appear regardless.
+  ottawaCommunityMinEvents: 3,
 
   // Number of finished Ottawa events to process per job run.
   ottawaMaxEventsPerRun: 1,
