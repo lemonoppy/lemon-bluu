@@ -35,9 +35,11 @@ export const ensureWithinBudget = () => {
 
 async function fetchWithRetry(url: string, retries = 3): Promise<Response> {
   for (let attempt = 0; ; attempt++) {
-    const response = await fetch(url, {
-      headers: { Accept: 'application/json' },
-    });
+    const headers: Record<string, string> = { Accept: 'application/json' };
+    if (Config.eloshowdownApiKey) {
+      headers['X-API-Key'] = Config.eloshowdownApiKey;
+    }
+    const response = await fetch(url, { headers });
     if (response.status !== 429 || attempt >= retries) {
       return response;
     }

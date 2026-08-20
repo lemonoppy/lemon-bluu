@@ -1,4 +1,5 @@
 import { Config } from 'src/lib/config/config';
+import { logger } from 'src/lib/logger';
 
 import {
   UVSEventData,
@@ -7,6 +8,7 @@ import {
 } from './types';
 
 const REQUEST_TIMEOUT_MS = 10_000;
+const EVENTS_LIST_TIMEOUT_MS = 20_000;
 const PAGE_SIZE = 1000;
 
 const fetchWithTimeout = (url: string, timeoutMs = REQUEST_TIMEOUT_MS) => {
@@ -38,20 +40,28 @@ export async function fetchEventsByStore(
 ): Promise<UVSEventSummary[]> {
   const allEvents: UVSEventSummary[] = [];
   for (const storeId of storeIds) {
-    for (let page = 1; page > 0; ) {
-      const response = await fetchWithTimeout(
-        `${Config.uvsApiBaseUrl}/events/?store=${storeId}&page=${page}&page_size=100`,
-      );
-      if (!response.ok) {
-        throw new Error(
-          `Failed to fetch events for store ${storeId}: ${response.statusText}`,
+    try {
+      for (let page = 1; page > 0; ) {
+        const response = await fetchWithTimeout(
+          `${Config.uvsApiBaseUrl}/events/?store=${storeId}&page=${page}&page_size=100`,
+          EVENTS_LIST_TIMEOUT_MS,
         );
+        if (!response.ok) {
+          throw new Error(
+            `Failed to fetch events for store ${storeId}: ${response.statusText}`,
+          );
+        }
+        const data = (await response.json()) as UVSEventsPaginatedResponse;
+        allEvents.push(...(data.results ?? []));
+        const next = data.next ?? data.next_page_number;
+        if (next == null || next <= page) break;
+        page = next;
       }
-      const data = (await response.json()) as UVSEventsPaginatedResponse;
-      allEvents.push(...(data.results ?? []));
-      const next = data.next ?? data.next_page_number;
-      if (next == null || next <= page) break;
-      page = next;
+    } catch (error) {
+      logger.warn(
+        { error, storeId },
+        `Failed to fetch events for store ${storeId}; skipping`,
+      );
     }
   }
   return allEvents;
