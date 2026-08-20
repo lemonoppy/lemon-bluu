@@ -89,6 +89,22 @@ export async function fetchEventDetails(eventId: number): Promise<UVSEventData> 
   return (await response.json()) as UVSEventData;
 }
 
+// Builds an event summary from a single event id so events from stores outside
+// Config.ottawaStoreIds (e.g. large regional events held at non-local venues)
+// can still be tracked.
+export async function fetchEventSummary(eventId: number): Promise<UVSEventSummary> {
+  const data = await fetchEventDetails(eventId);
+  return {
+    id: data.id,
+    name: data.name,
+    game_type: 'RIFTBOUND',
+    start_datetime: data.start_datetime,
+    end_datetime: data.end_datetime,
+    heuristic_end_datetime: null,
+    store: data.store,
+  };
+}
+
 export async function fetchAllStandings(
   roundId: number,
 ): Promise<UVSRoundResultItem[]> {
