@@ -56,6 +56,8 @@ const statements: string[] = [
     PRIMARY KEY (player_id, match_id)
   )`,
   `CREATE INDEX IF NOT EXISTS idx_elo_history_date ON elo_history (match_date)`,
+  `ALTER TABLE ottawa_events
+    ADD COLUMN IF NOT EXISTS elo_complete boolean NOT NULL DEFAULT false`,
 ];
 
 async function main() {
