@@ -63,15 +63,20 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   });
 
   const { wins, losses, draws } = squad.squadTotals;
-  embed.addFields({
-    name: 'Squad Summary',
-    value: [
-      `Combined Record: ${wins}-${losses}-${draws} (${squad.combinedWinPercent.toFixed(2)}%)`,
-      `Combined Points: ${wins * 3 + draws}/${(wins + losses + draws) * 3} (${squad.combinedPointsPercent.toFixed(2)}%)`,
+  const summaryLines = [
+    `Combined Record: ${wins}-${losses}-${draws} (${squad.combinedWinPercent.toFixed(2)}%)`,
+    `Combined Points: ${wins * 3 + draws}/${(wins + losses + draws) * 3} (${squad.combinedPointsPercent.toFixed(2)}%)`,
+  ];
+  if (!result.isComplete) {
+    summaryLines.push(
       squad.thresholdPoints !== undefined
         ? `Estimated cut line: ${squad.thresholdPoints} pts`
         : 'No cut line (event has no top cut)',
-    ].join('\n'),
+    );
+  }
+  embed.addFields({
+    name: 'Squad Summary',
+    value: summaryLines.join('\n'),
     inline: false,
   });
 

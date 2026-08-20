@@ -20,6 +20,7 @@ export const squadMemberByUsername = new Map(
 );
 
 export type SquadPlayerStatus =
+  | 'FINISHED'
   | 'MISSED_DAY_2'
   | 'MADE_CUT'
   | 'MISSED_CUT'
@@ -105,30 +106,30 @@ export function evaluateSquadStatus(data: ScrapeResult): SquadStatusResult | nul
 
     let status: SquadPlayerStatus;
 
-    // 1. Elimination phase: the cut is decided
-    if (isElimination) {
+    // 0. Event finished: show the final placement from the standings rank
+    if (isComplete) {
+      status = 'FINISHED';
+
+      // 1. Elimination phase: the cut is decided
+    } else if (isElimination) {
       status = rankNum <= topCutSize ? 'MADE_CUT' : 'MISSED_CUT';
 
       // 2. Final Swiss phase feeding the cut: chasing the top cut
     } else if (isCuttingPhase) {
-      if (isComplete) {
-        status = rankNum <= topCutSize ? 'MADE_CUT' : 'MISSED_CUT';
-      } else {
-        const maxWinOut = manualPoints + roundsRemaining * 3;
-        const maxDrawOut = manualPoints + roundsRemaining;
+      const maxWinOut = manualPoints + roundsRemaining * 3;
+      const maxDrawOut = manualPoints + roundsRemaining;
 
-        if (rankNum <= topCutSize) {
-          status =
-            roundsRemaining === 1 && rankNum <= topCutSize - 2
-              ? 'SECURE'
-              : 'IN_CUT_POSITION';
-        } else if (thresholdPoints !== undefined && maxWinOut < thresholdPoints) {
-          status = 'DEAD_FOR_CUT';
-        } else if (thresholdPoints !== undefined && maxDrawOut >= thresholdPoints) {
-          status = 'LIVE_TO_WIN_OR_DRAW';
-        } else {
-          status = 'MUST_WIN_OUT';
-        }
+      if (rankNum <= topCutSize) {
+        status =
+          roundsRemaining === 1 && rankNum <= topCutSize - 2
+            ? 'SECURE'
+            : 'IN_CUT_POSITION';
+      } else if (thresholdPoints !== undefined && maxWinOut < thresholdPoints) {
+        status = 'DEAD_FOR_CUT';
+      } else if (thresholdPoints !== undefined && maxDrawOut >= thresholdPoints) {
+        status = 'LIVE_TO_WIN_OR_DRAW';
+      } else {
+        status = 'MUST_WIN_OUT';
       }
 
       // 3. Early Swiss phase (or no-cut event): day 1 processing
@@ -141,7 +142,7 @@ export function evaluateSquadStatus(data: ScrapeResult): SquadStatusResult | nul
         status = 'MISSED_DAY_2';
       } else if (droppedPoints > MAX_DROPPED_POINTS_FOR_DAY_2) {
         status = 'OUT_FOR_DAY_2';
-      } else if (isComplete || maxLosses <= 2) {
+      } else if (maxLosses <= 2) {
         status = 'CLINCHED_DAY_2';
       } else if (droppedPoints === MAX_DROPPED_POINTS_FOR_DAY_2 || remainingDay1 === 1) {
         status = 'BUBBLE';

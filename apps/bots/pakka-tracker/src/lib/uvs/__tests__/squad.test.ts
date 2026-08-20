@@ -82,20 +82,13 @@ describe('evaluateSquadStatus', () => {
     expect(evaluateSquadStatus(result)?.players[0].status).toBe('SECURE');
   });
 
-  it('marks made/missed cut when the cutting phase is complete', () => {
-    const made = makeResult({
+  it('marks players as finished once the event is complete', () => {
+    const result = makeResult({
       isComplete: true,
       roundsRemaining: 0,
-      players: [makePlayer({ rank: '2' })],
+      players: [makePlayer({ rank: '4' })],
     });
-    expect(evaluateSquadStatus(made)?.players[0].status).toBe('MADE_CUT');
-
-    const missed = makeResult({
-      isComplete: true,
-      roundsRemaining: 0,
-      players: [makePlayer({ rank: '10' })],
-    });
-    expect(evaluateSquadStatus(missed)?.players[0].status).toBe('MISSED_CUT');
+    expect(evaluateSquadStatus(result)?.players[0].status).toBe('FINISHED');
   });
 
   it('marks made/missed cut during the elimination phase', () => {

@@ -57,7 +57,9 @@ export async function scrapePlayerData(eventId: number): Promise<ScrapeResult> {
   }
 
   const phaseName = activePhase?.phase_name ?? 'Phase 1';
-  const totalPhaseRounds = activePhase?.number_of_rounds ?? 0;
+  const totalPhaseRounds = activePhase
+    ? (activePhase.number_of_rounds ?? activePhase.rounds.length)
+    : 0;
   const lowerPhaseName = phaseName.toLowerCase();
 
   const isDay2 = lowerPhaseName.includes('day 2') || activePhase?.order_in_phases === 2;
@@ -118,15 +120,20 @@ export async function scrapePlayerData(eventId: number): Promise<ScrapeResult> {
   ).length;
   const isComplete = roundsRemaining === 0 && latestRound.status === 'COMPLETE';
 
-  // Show the round number relative to the active phase (round numbers are
-  // event-wide, so subtract the rounds from all prior phases).
+  // Show the round number relative to the active phase. Round numbers are
+  // event-wide; use the phase's own rounds when present (works for elimination
+  // phases whose rounds are numbered after prior phases), otherwise fall back
+  // to summing prior phases' round counts.
   const activePhaseIndex = sortedPhases.findIndex(
     (phase) => phase.id === activePhase.id,
   );
+  const phaseRoundNumbers = activePhase.rounds.map((round) => round.round_number);
   const phaseStartRound =
-    sortedPhases
-      .slice(0, activePhaseIndex)
-      .reduce((sum, phase) => sum + (phase.number_of_rounds ?? 0), 0) + 1;
+    phaseRoundNumbers.length > 0
+      ? Math.min(...phaseRoundNumbers)
+      : sortedPhases
+          .slice(0, activePhaseIndex)
+          .reduce((sum, phase) => sum + (phase.number_of_rounds ?? 0), 0) + 1;
   const displayRound = Math.max(1, latestRound.round_number - phaseStartRound + 1);
 
   return {
