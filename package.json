@@ -29,12 +29,13 @@
   },
   "resolutions": {
     "tar": ">=7.5.7",
-    "undici": ">=6.23.0"
+    "undici": ">=6.23.0 <7.0.0"
   },
   "lint-staged": {
     "apps/bots/takoyaki/src/**/*.ts": "eslint --fix",
     "apps/bots/kaiju-keeper/src/**/*.ts": "eslint --fix",
     "apps/bots/fetcher-bee/src/**/*.ts": "eslint --fix",
+    "apps/bots/pakka-finder/src/**/*.ts": "eslint --fix",
     "apps/bots/bot-template/src/**/*.ts": "eslint --fix",
     "packages/discord/src/**/*.ts": "eslint --fix",
     "packages/ui/src/**/*.{ts,tsx}": "eslint --fix",

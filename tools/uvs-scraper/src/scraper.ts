@@ -1,6 +1,11 @@
 import fs from 'fs';
 import process from 'process';
 
+import { simulateSwissWithDraws } from './cut-finder';
+
+// --- Configuration & Constants ---
+const API_BASE_URL = 'https://api.cloudflare.riftbound.uvsgames.com/hydraproxy/api/v2';
+
 const USERS_OF_NOTE = [
   { username: 'badboijerbear', name: 'Jerry' },
   { username: 'Miss Play', name: 'Chloe' },
@@ -10,18 +15,20 @@ const USERS_OF_NOTE = [
   { username: 'Nova', name: 'Ernest' }
 ];
 
-// --- API Interfaces ---
-export interface UVSDeckDefiningCard {
-  id: string;
-  name: string;
-  image_url: string | null;
-}
+const COLORS = {
+  dimStrike: '\x1b[9m\x1b[2m',
+  reset: '\x1b[0m',
+  red: '\x1b[31m',
+  green: '\x1b[32m',
+  yellow: '\x1b[33m',
+  cyan: '\x1b[36m',
+  gray: '\x1b[90m',
+};
 
-export interface UVSUser {
-  id: number;
-  pronouns: string | null;
-  country_code: string | null;
-}
+// --- API Interfaces ---
+export interface UVSDeckDefiningCard { id: string; name: string; image_url: string | null; }
+export interface UVSUser { id: number; pronouns: string | null; country_code: string | null; }
+export interface UVSPlayer { id: number; best_identifier: string; }
 
 export interface UVSUserEventStatus {
   id: number;
@@ -35,11 +42,6 @@ export interface UVSUserEventStatus {
   is_guest: boolean;
   user: UVSUser;
   deck_defining_card: UVSDeckDefiningCard | null;
-}
-
-export interface UVSPlayer {
-  id: number;
-  best_identifier: string;
 }
 
 export interface UVSRoundResultItem {
@@ -62,10 +64,7 @@ export interface UVSRoundStandingsPaginatedResponse {
   count: number;
   total: number;
   current_page_number: number;
-  next_page_number: number | null;
   next: string | null;
-  previous: string | null;
-  previous_page_number: number | null;
   results: UVSRoundResultItem[];
 }
 
@@ -84,8 +83,9 @@ interface UVSTournamentPhase {
   phase_name: string;
   status: string;
   order_in_phases: number;
-  number_of_rounds: number;
+  number_of_rounds: number | null;
   round_type: string;
+  rank_required_to_enter_phase: number | null;
   rounds: UVSTournamentRound[];
 }
 
@@ -96,10 +96,7 @@ interface UVSEventData {
   timer_is_running: boolean;
   timer_end_datetime: string;
   name: string;
-  store: {
-    id: number;
-    name: string;
-  };
+  store: { id: number; name: string; };
   tournament_phases: UVSTournamentPhase[];
 }
 
@@ -120,22 +117,30 @@ interface ScrapeResult {
   players: UVSResultData[];
   event: UVSEventData;
   currentRound: number;
+  displayRound: number;
   totalRounds: number;
+  roundsRemaining: number;
   isComplete: boolean;
+  latestRoundStatus: string;
   phaseName: string;
   isDay2: boolean;
+  isElimination: boolean;
+  isCuttingPhase: boolean;
+  totalSwissRounds: number;
+  topCutSize: number;
+  activePhase: UVSTournamentPhase;
+  allPhases: UVSTournamentPhase[];
 }
 
-// --- Configuration & Utilities ---
-const API_BASE_URL = 'https://api.cloudflare.riftbound.uvsgames.com/hydraproxy/api/v2';
-
-const getEventUrl = (eventId: number) => `${API_BASE_URL}/events/${eventId}/`;
-const getRoundUrl = (roundId: number) =>
-  `${API_BASE_URL}/tournament-rounds/${roundId}/standings/paginated/?page_size=1000`;
+// --- Utilities ---
+const fetchWithTimeout = (url: string, timeoutMs = 10000) => {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+  return fetch(url, { signal: controller.signal }).finally(() => clearTimeout(timeout));
+};
 
 function resolveEventId(): number {
   const cliEventId = process.argv[2];
-
   if (!cliEventId) {
     console.error('Usage: yarn scrape <eventId>');
     process.exit(1);
@@ -146,88 +151,115 @@ function resolveEventId(): number {
     console.error(`Invalid event id passed: ${cliEventId}`);
     process.exit(1);
   }
-
   return parsed;
 }
 
-// Dependency-free CSV generator
+function getTopCutSize(totalPlayers: number): number {
+  if (totalPlayers > 15) return 8;
+  if (totalPlayers >= 9) return 4;
+  return 0;
+}
+
+// The event structure declares the cut: the first phase with a
+// rank_required_to_enter_phase (e.g. RANKED_SINGLE_ELIMINATION) is the top cut.
+function getEventTopCutSize(phases: UVSTournamentPhase[]): number | undefined {
+  const firstCutPhase = phases.find(
+    (phase) => phase.rank_required_to_enter_phase != null,
+  );
+  return firstCutPhase?.rank_required_to_enter_phase ?? undefined;
+}
+
 function generateCSV(data: UVSResultData[]): string {
   if (data.length === 0) return '';
   const headers = Object.keys(data[0]).join(',');
   const rows = data.map((row) =>
     Object.values(row)
-      .map((val) => `"${String(val).replace(/"/g, '""')}"`) // Escape quotes
+      .map((val) => `"${String(val).replace(/"/g, '""')}"`)
       .join(',')
   );
   return [headers, ...rows].join('\n');
 }
 
-// --- Main Core Logic ---
-async function scrapePlayerData(): Promise<ScrapeResult> {
-  const eventId = resolveEventId();
-  console.log(`Starting scraper for event ${eventId}...`);
+// --- Data Fetching ---
+async function fetchEventDetails(eventId: number): Promise<UVSEventData> {
+  const response = await fetchWithTimeout(`${API_BASE_URL}/events/${eventId}/`);
+  if (!response.ok) throw new Error(`Failed to fetch event details: ${response.statusText}`);
+  return (await response.json()) as UVSEventData;
+}
 
-  // 1. Fetch Event metadata
-  const eventResponse = await fetch(getEventUrl(eventId));
-  if (!eventResponse.ok) {
-    throw new Error(`Failed to fetch event details: ${eventResponse.statusText}`);
+async function fetchAllStandings(roundId: number): Promise<UVSRoundResultItem[]> {
+  const allResults: UVSRoundResultItem[] = [];
+  let currentUrl: string | null = `${API_BASE_URL}/tournament-rounds/${roundId}/standings/paginated/?page_size=1000`;
+  let pageNumber = 1;
+
+  while (currentUrl) {
+    const response = await fetchWithTimeout(currentUrl);
+    if (!response.ok) throw new Error(`Failed to fetch standings on page ${pageNumber}: ${response.statusText}`);
+
+    const data = (await response.json()) as UVSRoundStandingsPaginatedResponse;
+    allResults.push(...(data.results ?? []));
+    currentUrl = data.next;
+    pageNumber++;
   }
+  return allResults;
+}
 
-  const eventData = (await eventResponse.json()) as UVSEventData;
+// --- Core Logic ---
+async function scrapePlayerData(eventId: number): Promise<ScrapeResult> {
+  console.log(`Starting scraper for event ${eventId}...`);
+  const eventData = await fetchEventDetails(eventId);
   console.log(`✓ Event loaded: "${eventData.name}"`);
 
-  // 2. Locate all rounds across phases with generated standings
-  const generatedRounds = eventData.tournament_phases
-    .flatMap((phase) => phase.rounds)
-    .filter((round) => round.standings_status === 'GENERATED');
+  const sortedPhases = [...eventData.tournament_phases].sort((a, b) => a.order_in_phases - b.order_in_phases);
 
-  // Find the active phase containing generated rounds
-  const activePhase = eventData.tournament_phases.find((phase) =>
-    phase.rounds.some((r) => generatedRounds.some((gr) => gr.id === r.id))
-  ) ?? eventData.tournament_phases[0];
+  const cutPhases = sortedPhases.filter(phase => phase.rank_required_to_enter_phase != null);
+  const firstCutIndex = sortedPhases.findIndex(phase => phase.rank_required_to_enter_phase != null);
+  const cuttingPhase = firstCutIndex > 0 ? sortedPhases[firstCutIndex - 1] : undefined;
+  const eventTopCutSize = getEventTopCutSize(sortedPhases);
+  const totalSwissRounds =
+    firstCutIndex >= 0
+      ? sortedPhases.slice(0, firstCutIndex).reduce((sum, phase) => sum + (phase.number_of_rounds ?? 0), 0)
+      : sortedPhases.reduce((sum, phase) => sum + (phase.number_of_rounds ?? 0), 0);
 
-  const totalPhaseRounds = activePhase?.number_of_rounds ?? 0;
+  // Find the most recently active phase with generated standings
+  let activePhase = sortedPhases[0];
+  let generatedRounds: UVSTournamentRound[] = [];
+
+  for (let i = sortedPhases.length - 1; i >= 0; i--) {
+    const phase = sortedPhases[i];
+    const genRoundsInPhase = phase.rounds.filter(r => r.standings_status === 'GENERATED');
+    if (genRoundsInPhase.length > 0) {
+      activePhase = phase;
+      generatedRounds = genRoundsInPhase;
+      break;
+    }
+  }
+
   const phaseName = activePhase?.phase_name ?? 'Phase 1';
-  const isDay2 = phaseName.toLowerCase().includes('day 2') || activePhase?.order_in_phases > 1;
+  const totalPhaseRounds = activePhase?.number_of_rounds ?? 0;
+  const lowerPhaseName = phaseName.toLowerCase();
+
+  const isDay2 = lowerPhaseName.includes('day 2') || activePhase?.order_in_phases === 2;
+  const isElimination = activePhase != null && cutPhases.some(phase => phase.id === activePhase.id);
+  const isCuttingPhase = activePhase != null && cuttingPhase != null && activePhase.id === cuttingPhase.id;
 
   if (generatedRounds.length === 0) {
     console.warn('⚠️ No rounds with generated standings found for this event.');
     return {
-      players: [],
-      event: eventData,
-      currentRound: 0,
-      totalRounds: totalPhaseRounds,
-      isComplete: false,
-      phaseName,
-      isDay2,
+      players: [], event: eventData, currentRound: 0, displayRound: 0,
+      totalRounds: totalPhaseRounds, roundsRemaining: 0, isComplete: false,
+      latestRoundStatus: 'NOT_STARTED', phaseName, isDay2, isElimination,
+      isCuttingPhase, totalSwissRounds, topCutSize: eventTopCutSize ?? 8,
+      activePhase, allPhases: sortedPhases,
     };
   }
 
-  // Pick the latest available complete round
   const latestRound = generatedRounds[generatedRounds.length - 1];
   console.log(`✓ Fetching standings for Round ${latestRound.round_number} (${phaseName})`);
 
-  // 3. Fetch paginated standings payload via a while loop
-  const allRawResults: UVSRoundResultItem[] = [];
-  let currentUrl: string | null = getRoundUrl(latestRound.id);
-  let pageNumber = 1;
+  const rawResults = await fetchAllStandings(latestRound.id);
 
-  while (currentUrl) {
-    const roundResponse = await fetch(currentUrl);
-
-    if (!roundResponse.ok) {
-      throw new Error(`Failed to fetch round standings on page ${pageNumber}: ${roundResponse.statusText}`);
-    }
-
-    const standingsData = (await roundResponse.json()) as UVSRoundStandingsPaginatedResponse;
-    allRawResults.push(...(standingsData.results ?? []));
-
-    currentUrl = standingsData.next;
-    pageNumber++;
-  }
-
-  // 4. Map the aggregated API results directly to UVSResultData[]
-  const players = allRawResults.map((item) => ({
+  const players = rawResults.map((item) => ({
     rank: String(item.rank),
     username: item.user_event_status?.best_identifier ?? item.player?.best_identifier ?? 'Unknown',
     legend: item.user_event_status?.deck_defining_card?.name ?? '',
@@ -239,127 +271,186 @@ async function scrapePlayerData(): Promise<ScrapeResult> {
     status: item.user_event_status?.registration_status ?? 'ACTIVE',
   }));
 
-  const isPhaseComplete = latestRound.round_number >= totalPhaseRounds && latestRound.status === 'COMPLETE';
+  const topCutSize = eventTopCutSize ?? getTopCutSize(players.length);
+
+  const roundsRemaining = activePhase.rounds.filter(r => r.round_number > latestRound.round_number).length;
+  const isComplete = roundsRemaining === 0 && latestRound.status === 'COMPLETE';
+
+  let displayRound = latestRound.round_number;
+  if (isDay2 && sortedPhases.length > 1) {
+    const day1RoundsCount = sortedPhases[0].number_of_rounds ?? 0;
+    if (displayRound > day1RoundsCount) displayRound -= day1RoundsCount;
+  }
 
   return {
-    players,
-    event: eventData,
-    currentRound: latestRound.round_number,
-    totalRounds: totalPhaseRounds,
-    isComplete: isPhaseComplete,
-    phaseName,
-    isDay2,
+    players, event: eventData, currentRound: latestRound.round_number,
+    displayRound, totalRounds: totalPhaseRounds, roundsRemaining,
+    isComplete, latestRoundStatus: latestRound.status, phaseName,
+    isDay2, isElimination, isCuttingPhase, totalSwissRounds, topCutSize,
+    activePhase, allPhases: sortedPhases,
   };
 }
 
-// --- Execution ---
-scrapePlayerData()
-  .then(({ players, event, currentRound, totalRounds, isComplete, phaseName, isDay2 }) => {
-    console.log(`Total players: ${players.length}`);
-    console.log(`Phase: ${phaseName} | Progress: Round ${currentRound} of ${totalRounds} ${isComplete ? '(COMPLETE)' : '(IN PROGRESS)'}\n`);
+// --- Output & Logging ---
+function printTimerStatus(event: UVSEventData, isComplete: boolean, roundStatus: string) {
+  if (!isComplete && event.timer_is_running && event.timer_end_datetime) {
+    const endsAt = new Date(event.timer_end_datetime);
+    const diffMs = endsAt.getTime() - Date.now();
 
-    // --- Round Timer Status ---
-    if (!isComplete && event.timer_is_running && event.timer_end_datetime) {
-      const endsAt = new Date(event.timer_end_datetime);
-      const now = new Date();
-      const diffMs = endsAt.getTime() - now.getTime();
+    if (diffMs > 0) {
+      const mins = Math.floor(diffMs / 60000);
+      const secs = Math.floor((diffMs % 60000) / 1000);
+      console.log(`⏱️  Round Timer: RUNNING - ${mins}m ${secs}s remaining (ends at ${endsAt.toLocaleTimeString()})`);
+    } else {
+      console.log(`⏱️  Round Timer: TIME IS UP (ended at ${endsAt.toLocaleTimeString()})`);
+    }
+  } else {
+    if (isComplete) {
+      console.log(`⏱️  Round Timer: PHASE FINISHED`);
+    } else if (roundStatus === 'COMPLETE') {
+      console.log(`⏱️  Round Timer: ROUND COMPLETE (Waiting for next round)`);
+    } else {
+      console.log(`⏱️  Round Timer: NOT RUNNING`);
+    }
+  }
+}
 
-      if (diffMs > 0) {
-        const minutesLeft = Math.floor(diffMs / 60000);
-        const secondsLeft = Math.floor((diffMs % 60000) / 1000);
-        console.log(`⏱️  Round Timer: RUNNING - ${minutesLeft}m ${secondsLeft}s remaining (ends at ${endsAt.toLocaleTimeString()})`);
+function evaluateSquadStatus(data: ScrapeResult) {
+  const { players, currentRound, totalRounds, roundsRemaining, isComplete, isDay2, isElimination, isCuttingPhase, totalSwissRounds, topCutSize, allPhases } = data;
+  const { dimStrike, reset, red, green, yellow, cyan, gray } = COLORS;
+
+  const foundPlayers = players.filter(p => USERS_OF_NOTE.some(u => u.username.toLowerCase() === p.username.toLowerCase()));
+
+  if (foundPlayers.length === 0) {
+    console.log('None of the tracked users were found in this event.');
+    return;
+  }
+
+  const day1Rounds = allPhases[0]?.number_of_rounds ?? 7;
+  const day2CutThresholdPoints = (day1Rounds * 3) - 6; // 15 points
+
+  const squadTotals = { wins: 0, losses: 0, draws: 0 };
+
+  // Fetch the predicted threshold points dynamically
+  let thresholdPoints: number | undefined;
+  if (topCutSize > 0 && players.length > 0) {
+    const simulatedRecords = simulateSwissWithDraws({
+      playerCount: players.length,
+      roundCount: totalSwissRounds > 0 ? totalSwissRounds : totalRounds,
+      topCutSize: topCutSize,
+      trials: 5000,
+      drawWindow: 1,
+    }).probabilityTable.filter(record => record.probabilityOfMakingCut > 0);
+    thresholdPoints = simulatedRecords[simulatedRecords.length - 1]?.points;
+  }
+
+  foundPlayers.forEach((player) => {
+    const localUser = USERS_OF_NOTE.find(u => u.username.toLowerCase() === player.username.toLowerCase());
+    const [wins = 0, losses = 0, draws = 0] = player.record.split('-').map(Number);
+    const manualPoints = (wins * 3) + draws;
+    const rankNum = parseInt(player.rank, 10) || 999;
+
+    squadTotals.wins += wins;
+    squadTotals.losses += losses;
+    squadTotals.draws += draws;
+
+    const prefix = `• ${localUser?.name} (${player.username}): Rank ${player.rank} | Record: ${player.record} | Points: ${manualPoints}`;
+    const day1Finished = currentRound > day1Rounds || (isDay2 && allPhases.length > 1);
+    const madeDay2 = manualPoints >= day2CutThresholdPoints;
+
+    // 1. Elimination phase: the cut is decided
+    if (isElimination) {
+      if (rankNum <= topCutSize) {
+        console.log(`${prefix} ${cyan}[MADE TOP ${topCutSize} CUT / ACTIVE]${reset}`);
       } else {
-        console.log(`⏱️  Round Timer: TIME IS UP (ended at ${endsAt.toLocaleTimeString()})`);
+        console.log(`${dimStrike}${prefix}${reset} ${gray}[MISSED TOP ${topCutSize} CUT]${reset}`);
       }
-    } else {
-      console.log(`⏱️  Round Timer: ${isComplete ? 'PHASE FINISHED' : 'NOT RUNNING'}`);
+      return;
     }
 
-    fs.writeFileSync(`${event.id}_standings.json`, JSON.stringify(players, null, 2));
-    fs.writeFileSync(`${event.id}_standings.csv`, generateCSV(players));
-
-    // --- Find and log Users of Note ---
-    console.log('\n--- 💪 Do Some Work Squad 💪 ---\n');
-
-    // Find players whose username matches one in our USERS_OF_NOTE list (case-insensitive)
-    const foundPlayers = players.filter((player) =>
-      USERS_OF_NOTE.some(
-        (u) => u.username.toLowerCase() === player.username.toLowerCase(),
-      ),
-    );
-
-    if (foundPlayers.length > 0) {
-      foundPlayers.forEach((player) => {
-        const localUser = USERS_OF_NOTE.find(
-          (u) => u.username.toLowerCase() === player.username.toLowerCase()
-        );
-
-        // Parse the record (Format: "W-L-D")
-        const recordParts = player.record.split('-');
-        const wins = parseInt(recordParts[0], 10) || 0;
-        const losses = parseInt(recordParts[1], 10) || 0;
-        const draws = parseInt(recordParts[2], 10) || 0;
-
-        // Manually calculate points: 3 per win, 1 per draw
-        const manualPoints = (wins * 3) + draws;
-        const rankNum = parseInt(player.rank, 10) || 999;
-
-        // ANSI Escape codes for terminal formatting
-        const dimStrike = '\x1b[9m\x1b[2m'; // Strikethrough + Dim
-        const reset = '\x1b[0m';
-        const red = '\x1b[31m';
-        const green = '\x1b[32m';
-        const yellow = '\x1b[33m';
-        const cyan = '\x1b[36m';
-        const gray = '\x1b[90m';
-
-        if (isDay2) {
-          // --- DAY 2 LOGIC (TOP 8 CUT) ---
-          if (rankNum <= 8) {
-            console.log(
-              `• ${localUser?.name} (${player.username}): Rank ${player.rank} | Record: ${player.record} | Points: ${manualPoints} ${cyan}[TOP 8 POSITION]${reset}`
-            );
-          } else if (isComplete && rankNum > 8) {
-            console.log(
-              `${dimStrike}• ${localUser?.name} (${player.username}): Rank ${player.rank} | Record: ${player.record} | Points: ${manualPoints}${reset} ${gray}[MADE DAY 2 / MISSED TOP 8]${reset}`
-            );
-          } else {
-            console.log(
-              `• ${localUser?.name} (${player.username}): Rank ${player.rank} | Record: ${player.record} | Points: ${manualPoints} ${green}[CHASING TOP 8]${reset}`
-            );
-          }
+    // 2. Final Swiss phase feeding the cut: chasing the top cut
+    if (isCuttingPhase) {
+      if (isComplete) {
+        if (rankNum <= topCutSize) {
+          console.log(`${prefix} ${cyan}[MADE TOP ${topCutSize} CUT / ACTIVE]${reset}`);
         } else {
-          // --- DAY 1 LOGIC (X-2 CUT) ---
-          const roundsRemaining = Math.max(0, totalRounds - currentRound);
-          const maxPossibleLosses = losses + roundsRemaining;
-          const hasClinched = maxPossibleLosses <= 2;
-          const droppedPoints = (losses * 3) + (draws * 2);
-          const isEliminated = droppedPoints > 6;
-
-          if (isEliminated) {
-            console.log(
-              `${dimStrike}• ${localUser?.name} (${player.username}): Rank ${player.rank} | Record: ${player.record} | Points: ${manualPoints}${reset} ${red}[OUT]${reset}`
-            );
-          } else if (isComplete || hasClinched) {
-            console.log(
-              `• ${localUser?.name} (${player.username}): Rank ${player.rank} | Record: ${player.record} | Points: ${manualPoints} ${cyan}[CLINCHED DAY 2]${reset}`
-            );
-          } else if (droppedPoints === 6) {
-            console.log(
-              `• ${localUser?.name} (${player.username}): Rank ${player.rank} | Record: ${player.record} | Points: ${manualPoints} ${yellow}[BUBBLE]${reset}`
-            );
-          } else {
-            console.log(
-              `• ${localUser?.name} (${player.username}): Rank ${player.rank} | Record: ${player.record} | Points: ${manualPoints} ${green}[LIVE]${reset}`
-            );
-          }
+          console.log(`${dimStrike}${prefix}${reset} ${gray}[MISSED TOP ${topCutSize} CUT]${reset}`);
         }
-      });
-    } else {
-      console.log('None of the tracked users were found in this event.');
+        return;
+      }
+
+      const maxWinOut = manualPoints + (roundsRemaining * 3);
+      const maxDrawOut = manualPoints + roundsRemaining;
+
+      if (rankNum <= topCutSize) {
+        if (roundsRemaining === 1 && rankNum <= (topCutSize - 2)) {
+          console.log(`${prefix} ${cyan}[SECURE / CAN DRAW IN]${reset}`);
+        } else {
+          console.log(`${prefix} ${cyan}[IN TOP ${topCutSize} POSITION]${reset}`);
+        }
+      } else if (thresholdPoints !== undefined && maxWinOut < thresholdPoints) {
+        console.log(`${dimStrike}${prefix}${reset} ${red}[DEAD FOR TOP ${topCutSize}]${reset}`);
+      } else if (thresholdPoints !== undefined && maxDrawOut >= thresholdPoints) {
+        console.log(`${prefix} ${yellow}[LIVE TO WIN/DRAW INTO TOP ${topCutSize}]${reset}`);
+      } else {
+        console.log(`${prefix} ${green}[MUST WIN OUT FOR TOP ${topCutSize}]${reset}`);
+      }
+      return;
     }
-  })
-  .catch((error) => {
+
+    // 3. Day 1 / early Swiss processing
+    const remainingDay1 = Math.max(0, day1Rounds - currentRound);
+    const maxLosses = losses + remainingDay1;
+    const droppedPoints = (losses * 3) + (draws * 2);
+
+    if (day1Finished && !madeDay2) {
+      console.log(`${dimStrike}${prefix}${reset} ${red}[MISSED DAY 2]${reset}`);
+    } else if (droppedPoints > 6) {
+      console.log(`${dimStrike}${prefix}${reset} ${red}[OUT FOR DAY 2 / TOP ${topCutSize}]${reset}`);
+    } else if (isComplete || maxLosses <= 2) {
+      console.log(`${prefix} ${cyan}[CLINCHED DAY 2]${reset}`);
+    } else if (droppedPoints === 6 || remainingDay1 === 1) {
+      console.log(`${prefix} ${yellow}[BUBBLE]${reset}`);
+    } else {
+      console.log(`${prefix} ${green}[LIVE]${reset}`);
+    }
+  });
+
+  // Log Squad Summary
+  const { wins, losses, draws } = squadTotals;
+  const totalGames = wins + losses + draws;
+  const winPercent = (100 * (wins + 0.5 * draws)) / totalGames;
+
+  const totalPossiblePoints = totalGames * 3;
+  const actualPoints = (wins * 3) + draws;
+  const pointsPercent = (100 * actualPoints) / totalPossiblePoints;
+
+  console.log(`\nCombined Squad Record: ${wins}-${losses}-${draws} (${winPercent.toFixed(2)}%)`);
+  console.log(`Combined Squad Points: ${actualPoints}/${totalPossiblePoints} (${pointsPercent.toFixed(2)}%)\n`);
+}
+
+// --- Execution Entrypoint ---
+async function main() {
+  try {
+    const eventId = resolveEventId();
+    const result = await scrapePlayerData(eventId);
+
+    console.log(`Total players: ${result.players.length} | Dynamic Cut Target: Top ${result.topCutSize}`);
+    console.log(`Phase: ${result.phaseName} | Progress: Round ${result.displayRound} of ${result.totalRounds} (${result.roundsRemaining} rounds remaining) ${result.isComplete ? '(COMPLETE)' : '(IN PROGRESS)'}\n`);
+
+    printTimerStatus(result.event, result.isComplete, result.latestRoundStatus);
+
+    // Write file outputs
+    fs.writeFileSync(`${eventId}_standings.json`, JSON.stringify(result.players, null, 2));
+    fs.writeFileSync(`${eventId}_standings.csv`, generateCSV(result.players));
+
+    console.log('\n--- 💪 Do Some Work Squad 💪 ---\n');
+    evaluateSquadStatus(result);
+
+  } catch (error) {
     console.error('\n✗ Scraping failed:', error);
     process.exit(1);
-  });
+  }
+}
+
+main();
