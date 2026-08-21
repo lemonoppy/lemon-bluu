@@ -89,6 +89,54 @@ export async function fetchEventDetails(eventId: number): Promise<UVSEventData> 
   return (await response.json()) as UVSEventData;
 }
 
+export interface UVSEventRegistration {
+  id: number;
+  user: {
+    id: number;
+    best_identifier: string;
+    pronouns: string | null;
+    country_code: string | null;
+  };
+  registration_status: string;
+  best_identifier: string;
+  is_guest: boolean;
+  matches_won: number;
+  matches_lost: number;
+  matches_drawn: number;
+  total_match_points: number;
+  final_place_in_standings: number | null;
+}
+
+interface UVSRegistrationsPaginatedResponse {
+  total: number;
+  next: string | null;
+  results: UVSEventRegistration[];
+}
+
+// Fetches all enrolled players for an event (the registration list).
+export async function fetchEventRegistrations(
+  eventId: number,
+): Promise<UVSEventRegistration[]> {
+  const allRegistrations: UVSEventRegistration[] = [];
+  let currentUrl: string | null =
+    `${Config.uvsApiBaseUrl}/events/${eventId}/registrations/?page_size=100`;
+  let pageNumber = 1;
+
+  while (currentUrl) {
+    const response = await fetchWithTimeout(currentUrl);
+    if (!response.ok) {
+      throw new Error(
+        `Failed to fetch registrations on page ${pageNumber}: ${response.statusText}`,
+      );
+    }
+    const data = (await response.json()) as UVSRegistrationsPaginatedResponse;
+    allRegistrations.push(...(data.results ?? []));
+    currentUrl = data.next;
+    pageNumber++;
+  }
+  return allRegistrations;
+}
+
 // Builds an event summary from a single event id so events from stores outside
 // Config.ottawaStoreIds (e.g. large regional events held at non-local venues)
 // can still be tracked.
