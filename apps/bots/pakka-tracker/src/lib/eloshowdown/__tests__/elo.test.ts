@@ -47,6 +47,21 @@ describe('computeEventElo', () => {
     );
     expect(elo).toEqual({ eloBefore: 1000, eloAfter: 1010, matches: 2 });
   });
+
+  it('orders matches sharing a date by match_id', () => {
+    // Multiple games from one event share a timestamp; match_id tracks game
+    // order, so the terminal game's elo_after is the current elo.
+    const elo = computeEventElo(
+      [
+        point({ date: '2026-08-05T22:00:00Z', match_id: 101, elo_before: 1000, elo_after: 1018 }),
+        point({ date: '2026-08-05T22:00:00Z', match_id: 103, elo_before: 1120, elo_after: 1101 }),
+        point({ date: '2026-08-05T22:00:00Z', match_id: 102, elo_before: 1018, elo_after: 1120 }),
+      ],
+      start,
+      end,
+    );
+    expect(elo).toEqual({ eloBefore: 1000, eloAfter: 1101, matches: 3 });
+  });
 });
 
 describe('parseRecord', () => {

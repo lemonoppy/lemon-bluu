@@ -12,7 +12,11 @@ const inWindow = (points: EloHistoryPoint[], startMs: number, endMs: number) =>
       const time = new Date(point.date).getTime();
       return time >= startMs && time <= endMs;
     })
-    .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    .sort(
+      (a, b) =>
+        new Date(a.date).getTime() - new Date(b.date).getTime() ||
+        a.match_id - b.match_id,
+    );
 
 /**
  * Given a player's elo-history and an event time window, returns the elo

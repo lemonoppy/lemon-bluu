@@ -310,7 +310,9 @@ const ensureEloHistory = async (
 
   const response = await fetchEloHistory(playerId);
   const points = (response.points ?? []).sort(
-    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
+    (a, b) =>
+      new Date(a.date).getTime() - new Date(b.date).getTime() ||
+      a.match_id - b.match_id,
   );
   counters.eloHistoriesFetched++;
 
