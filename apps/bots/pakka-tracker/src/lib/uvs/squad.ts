@@ -15,6 +15,7 @@ export const squadMembers: SquadMember[] = [
   { username: 'lolford', name: 'Luka', eloShowdownId: 74335 },
   { username: 'Nova', name: 'Ernest', eloShowdownId: 74041 },
   { username: 'lemonoppy', name: 'Nelson', eloShowdownId: 128962 },
+  { username: 'TheGenie', name: 'Eugene', eloShowdownId: 74341 },
 ];
 
 export const squadMemberByUsername = new Map(
