@@ -62,6 +62,12 @@ export const Config = {
   // they appear in a processed event.
   eloshowdownSquadRefreshHours: 6,
 
+  // Tracked community players whose elo history is older than this are
+  // re-fetched each run (oldest first) using leftover request budget. This
+  // keeps current_elo in sync with EloShowdown, which recomputes/adjusts elo
+  // for already-recorded matches over time.
+  eloshowdownStaleRefreshHours: 12,
+
   // Events are only processed once they've been finished this long, giving
   // EloShowdown time to ingest the results.
   eloshowdownGraceHours: 12,
