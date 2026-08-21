@@ -356,18 +356,23 @@ const ensureEloHistory = async (
 const SQUAD_REFRESH_MS = Config.eloshowdownSquadRefreshHours * 60 * 60 * 1000;
 
 // Re-fetches elo history for tracked community players whose stored history is
-// stale (oldest first), using whatever request budget remains after squad sync
-// and event processing. EloShowdown recomputes elo for already-recorded
-// matches over time, so this keeps current_elo in sync without blocking the
-// backfill.
+// stale. Prioritizes players who played most recently (their elo is the most
+// likely to have been recomputed by EloShowdown and is what the leaderboard
+// shows), then oldest-fetched first within that, using the run's request
+// budget.
 const refreshStaleElos = async (): Promise<number> => {
-  const result = await Query<{ player_id: number; elo_updated_at: Date | null }>(
-    `SELECT DISTINCT ep.player_id, p.elo_updated_at
-     FROM event_players ep
-     JOIN eloshowdown_players p ON p.player_id = ep.player_id
+  const result = await Query<{ player_id: number }>(
+    `SELECT q.player_id
+     FROM (
+       SELECT ep.player_id, MAX(e.start_datetime) AS last_event_start
+       FROM event_players ep
+       JOIN ottawa_events e ON e.id = ep.event_id
+       GROUP BY ep.player_id
+     ) q
+     JOIN eloshowdown_players p ON p.player_id = q.player_id
      WHERE p.elo_updated_at IS NULL
         OR p.elo_updated_at < now() - ($1::int * interval '1 hour')
-     ORDER BY p.elo_updated_at ASC NULLS FIRST
+     ORDER BY q.last_event_start DESC NULLS LAST, p.elo_updated_at ASC NULLS FIRST
      LIMIT $2`,
     [Config.eloshowdownStaleRefreshHours, 100],
   );
