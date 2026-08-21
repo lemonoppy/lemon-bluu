@@ -26,7 +26,7 @@ yarn jest path/to/test.ts
 Discord bot for tracking UVS (Riftbound) tournament events and EloShowdown elo, built on the shared lemon-bluu bot pattern:
 
 - **Entry**: `src/index.ts` creates a Discord.js `Client`, dynamically loads all handlers from `src/handlers/` via `readdirSync`
-- **Handlers**: `Command.ts` (auto-discovers `.ts` files under `src/commands/` and registers them with the Discord API), `Event.ts` (loads `src/events/`), `Cron.ts` (daily Ottawa events job, production-only)
+- **Handlers**: `Command.ts` (auto-discovers `.ts` files under `src/commands/` and registers them with the Discord API), `Event.ts` (loads `src/events/`), `Cron.ts` (daily Ottawa events job + periodic stale elo history refresh, production-only)
 - **Commands**: Each command exports a default object with `command` (SlashCommandBuilder) and `execute`; organized into subdirectories by domain
 - **Error handling**: Centralized in `src/events/interactionCreate.ts` — commands throw, the event handler logs and replies a standardized ephemeral error. Do not wrap `execute` in per-command try/catch.
 - **Intents**: Only `GatewayIntentBits.Guilds` (slash commands only; no message content)

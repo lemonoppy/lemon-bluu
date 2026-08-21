@@ -387,6 +387,51 @@ const refreshStaleElos = async (): Promise<number> => {
   return refreshed;
 };
 
+export interface RefreshElosResult {
+  refreshed: number;
+  requestsUsed: number;
+  stoppedEarly: boolean;
+}
+
+/**
+ * Standalone refresh of stale tracked players' elo histories, for the
+ * dedicated cron job. Runs independently of the events backfill, resetting
+ * run state so it never interferes with processOttawaEvents.
+ */
+export async function refreshStalePlayerElos(): Promise<RefreshElosResult> {
+  eloHistoryCache.clear();
+  resetRequestCount();
+  counters.playersMapped = 0;
+  counters.eloHistoriesFetched = 0;
+
+  await buildNameIndex();
+
+  let refreshed = 0;
+  let stoppedEarly = false;
+  try {
+    refreshed = await refreshStaleElos();
+  } catch (error) {
+    if (
+      error instanceof BudgetExceededError ||
+      (error instanceof EloShowdownApiError && error.status === 429)
+    ) {
+      stoppedEarly = true;
+    } else {
+      throw error;
+    }
+  }
+
+  logger.info(
+    `Stale elo refresh: ${refreshed} refreshed, ${getRequestCount()} requests used` +
+      `${stoppedEarly ? ' (stopped early)' : ''}`,
+  );
+  return {
+    refreshed,
+    requestsUsed: getRequestCount(),
+    stoppedEarly,
+  };
+}
+
 const ensureSquadPlayers = async (): Promise<void> => {
   for (const member of squadMembers) {
     try {

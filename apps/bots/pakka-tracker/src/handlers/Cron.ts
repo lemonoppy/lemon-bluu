@@ -1,7 +1,10 @@
 import { CronJob } from 'cron';
 
 import { Config } from 'src/lib/config/config';
-import { processOttawaEvents } from 'src/lib/eloshowdown/service';
+import {
+  processOttawaEvents,
+  refreshStalePlayerElos,
+} from 'src/lib/eloshowdown/service';
 import { logger } from 'src/lib/logger';
 
 module.exports = async () => {
@@ -14,6 +17,13 @@ module.exports = async () => {
   new CronJob('0 9 * * *', async () => {
     logger.info('Running daily Ottawa events job');
     await processOttawaEvents({ maxEvents: Config.ottawaMaxEventsPerRun });
+  }).start();
+
+  // Keep tracked players' current_elo in sync with EloShowdown, which
+  // recomputes elo over time.
+  new CronJob(Config.eloshowdownRefreshCron, async () => {
+    logger.info('Running stale elo history refresh');
+    await refreshStalePlayerElos();
   }).start();
 
   logger.info('Successfully started cron jobs');
