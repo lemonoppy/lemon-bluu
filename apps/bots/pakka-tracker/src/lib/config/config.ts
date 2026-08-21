@@ -68,6 +68,9 @@ export const Config = {
   // for already-recorded matches over time.
   eloshowdownStaleRefreshHours: 12,
 
+  // Cron schedule for the dedicated stale elo history refresh (production only).
+  eloshowdownRefreshCron: '0 */6 * * *',
+
   // Events are only processed once they've been finished this long, giving
   // EloShowdown time to ingest the results.
   eloshowdownGraceHours: 12,
