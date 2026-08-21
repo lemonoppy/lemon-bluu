@@ -223,7 +223,8 @@ const ensurePlayer = async (
       `INSERT INTO eloshowdown_players
          (player_id, riftbound_id, display_name, community_tag, country, is_squad)
        VALUES ($1, $2, $3, $4, $5, $6)
-       ON CONFLICT (riftbound_id) DO UPDATE SET
+       ON CONFLICT (player_id) DO UPDATE SET
+         riftbound_id = EXCLUDED.riftbound_id,
          display_name = EXCLUDED.display_name,
          community_tag = EXCLUDED.community_tag,
          country = EXCLUDED.country,
