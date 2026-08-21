@@ -26,6 +26,7 @@ export interface ProcessResult {
   eventsRemaining: number;
   playersMapped: number;
   eloHistoriesFetched: number;
+  staleElosRefreshed: number;
   requestsUsed: number;
   stoppedEarly: boolean;
 }
@@ -354,6 +355,38 @@ const ensureEloHistory = async (
 
 const SQUAD_REFRESH_MS = Config.eloshowdownSquadRefreshHours * 60 * 60 * 1000;
 
+// Re-fetches elo history for tracked community players whose stored history is
+// stale (oldest first), using whatever request budget remains after squad sync
+// and event processing. EloShowdown recomputes elo for already-recorded
+// matches over time, so this keeps current_elo in sync without blocking the
+// backfill.
+const refreshStaleElos = async (): Promise<number> => {
+  const result = await Query<{ player_id: number; elo_updated_at: Date | null }>(
+    `SELECT DISTINCT ep.player_id, p.elo_updated_at
+     FROM event_players ep
+     JOIN eloshowdown_players p ON p.player_id = ep.player_id
+     WHERE p.elo_updated_at IS NULL
+        OR p.elo_updated_at < now() - ($1::int * interval '1 hour')
+     ORDER BY p.elo_updated_at ASC NULLS FIRST
+     LIMIT $2`,
+    [Config.eloshowdownStaleRefreshHours, 100],
+  );
+  if (result.isErr()) throw result.error;
+
+  let refreshed = 0;
+  for (const { player_id } of result.value.rows) {
+    try {
+      await ensureEloHistory(player_id);
+      refreshed++;
+    } catch (error) {
+      if (error instanceof BudgetExceededError) break;
+      if (error instanceof EloShowdownApiError && error.status === 429) break;
+      throw error;
+    }
+  }
+  return refreshed;
+};
+
 const ensureSquadPlayers = async (): Promise<void> => {
   for (const member of squadMembers) {
     try {
@@ -556,6 +589,7 @@ export async function processOttawaEvents(
   let eventsProcessed = 0;
   let eventsRemaining = 0;
   let stoppedEarly = false;
+  let staleElosRefreshed = 0;
 
   try {
     await ensureSquadPlayers();
@@ -602,18 +636,37 @@ export async function processOttawaEvents(
     }
   }
 
+  // Keep current_elo fresh for tracked players whose stored history predates
+  // EloShowdown's latest computations, using leftover request budget.
+  if (getRequestCount() < Config.eloshowdownMaxRequestsPerRun) {
+    try {
+      staleElosRefreshed = await refreshStaleElos();
+    } catch (error) {
+      if (
+        error instanceof BudgetExceededError ||
+        (error instanceof EloShowdownApiError && error.status === 429)
+      ) {
+        logger.info('EloShowdown budget/rate limit hit during stale elo refresh');
+      } else {
+        throw error;
+      }
+    }
+  }
+
   const result: ProcessResult = {
     eventsProcessed,
     eventsRemaining,
     playersMapped: counters.playersMapped,
     eloHistoriesFetched: counters.eloHistoriesFetched,
+    staleElosRefreshed,
     requestsUsed: getRequestCount(),
     stoppedEarly,
   };
 
   logger.info(
     `Ottawa events job: ${result.eventsProcessed} processed, ${result.eventsRemaining} remaining, ` +
-      `${result.requestsUsed} requests used${result.stoppedEarly ? ' (stopped early)' : ''}`,
+      `${result.staleElosRefreshed} stale elos refreshed, ${result.requestsUsed} requests used` +
+      `${result.stoppedEarly ? ' (stopped early)' : ''}`,
   );
   return result;
 }
