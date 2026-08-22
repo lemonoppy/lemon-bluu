@@ -67,6 +67,7 @@ export function evaluateSquadStatus(data: ScrapeResult): SquadStatusResult | nul
     totalRounds,
     roundsRemaining,
     isComplete,
+    isCutDecided,
     isDay2,
     isElimination,
     isCuttingPhase,
@@ -85,15 +86,15 @@ export function evaluateSquadStatus(data: ScrapeResult): SquadStatusResult | nul
   const day2CutThresholdPoints = day1Rounds * 3 - MAX_DROPPED_POINTS_FOR_DAY_2;
 
   let thresholdPoints: number | undefined;
-  if (topCutSize > 0 && players.length > 0) {
-    const simulatedRecords = simulateSwissWithDraws({
+  if (!isCutDecided && topCutSize > 0 && players.length > 0) {
+    const simulated = simulateSwissWithDraws({
       playerCount: players.length,
       roundCount: totalSwissRounds > 0 ? totalSwissRounds : totalRounds,
       topCutSize,
       trials: 5000,
       drawWindow: 1,
-    }).probabilityTable.filter((record) => record.probabilityOfMakingCut > 0);
-    thresholdPoints = simulatedRecords[simulatedRecords.length - 1]?.points;
+    });
+    thresholdPoints = Math.ceil(simulated.averageCutLinePoints);
   }
 
   const squadTotals = { wins: 0, losses: 0, draws: 0 };
@@ -117,8 +118,9 @@ export function evaluateSquadStatus(data: ScrapeResult): SquadStatusResult | nul
     if (isComplete) {
       status = 'FINISHED';
 
-      // 1. Elimination phase: the cut is decided
-    } else if (isElimination) {
+      // 1. The cut is decided (elimination phase, or the final Swiss phase is
+      //    done and the cut set): mark made/missed cut from the rank
+    } else if (isElimination || isCutDecided) {
       status = rankNum <= topCutSize ? 'MADE_CUT' : 'MISSED_CUT';
 
       // 2. Final Swiss phase feeding the cut: chasing the top cut

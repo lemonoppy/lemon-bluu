@@ -83,6 +83,7 @@ export async function scrapePlayerData(eventId: number): Promise<ScrapeResult> {
       totalRounds: totalPhaseRounds,
       roundsRemaining: 0,
       isComplete: false,
+      isCutDecided: false,
       latestRoundStatus: 'NOT_STARTED',
       phaseName,
       isDay2,
@@ -118,10 +119,27 @@ export async function scrapePlayerData(eventId: number): Promise<ScrapeResult> {
   const topCutSize = eventTopCutSize ?? getTopCutSize(players.length);
 
   const allRounds = sortedPhases.flatMap((phase) => phase.rounds);
-  const roundsRemaining = allRounds.filter(
+  const eventRoundsRemaining = allRounds.filter(
     (r) => r.round_number > latestRound.round_number,
   ).length;
-  const isComplete = roundsRemaining === 0 && latestRound.status === 'COMPLETE';
+  const isComplete =
+    eventRoundsRemaining === 0 && latestRound.status === 'COMPLETE';
+
+  // Rounds left within the active phase only — future phases (e.g. the
+  // elimination phase after the cut) don't count toward the current round.
+  const roundsRemaining = activePhase.rounds.filter(
+    (r) => r.round_number > latestRound.round_number,
+  ).length;
+
+  // The cut is decided once the Swiss phase feeding it has run all its rounds.
+  // This matters in the window after the last Swiss round completes but before
+  // the elimination phase posts its own standings.
+  const activePhaseRoundNumbers = activePhase.rounds.map((round) => round.round_number);
+  const isCutDecided =
+    isCuttingPhase &&
+    activePhaseRoundNumbers.length > 0 &&
+    latestRound.round_number >= Math.max(...activePhaseRoundNumbers) &&
+    latestRound.status === 'COMPLETE';
 
   // Show the round number relative to the active phase. Round numbers are
   // event-wide; use the phase's own rounds when present (works for elimination
@@ -147,6 +165,7 @@ export async function scrapePlayerData(eventId: number): Promise<ScrapeResult> {
     totalRounds: totalPhaseRounds,
     roundsRemaining,
     isComplete,
+    isCutDecided,
     latestRoundStatus: latestRound.status,
     phaseName,
     isDay2,

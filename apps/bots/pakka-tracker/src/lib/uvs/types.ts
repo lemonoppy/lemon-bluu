@@ -105,6 +105,7 @@ export interface ScrapeResult {
   totalRounds: number;
   roundsRemaining: number;
   isComplete: boolean;
+  isCutDecided: boolean;
   latestRoundStatus: string;
   phaseName: string;
   isDay2: boolean;

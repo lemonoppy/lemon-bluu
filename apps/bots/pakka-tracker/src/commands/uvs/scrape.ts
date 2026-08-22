@@ -67,7 +67,7 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
     `Combined Record: ${wins}-${losses}-${draws} (${squad.combinedWinPercent.toFixed(2)}%)`,
     `Combined Points: ${wins * 3 + draws}/${(wins + losses + draws) * 3} (${squad.combinedPointsPercent.toFixed(2)}%)`,
   ];
-  if (!result.isComplete) {
+  if (!result.isComplete && !result.isCutDecided) {
     summaryLines.push(
       squad.thresholdPoints !== undefined
         ? `Estimated cut line: ${squad.thresholdPoints} pts`
