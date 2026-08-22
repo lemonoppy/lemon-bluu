@@ -4,6 +4,8 @@ export interface SimulationConfig {
   topCutSize: number;
   trials?: number;
   drawWindow?: number;
+  drawProb?: number;
+  needsWinFactor?: number;
   winPoints?: number;
   drawPoints?: number;
 }
@@ -27,6 +29,8 @@ export function simulateSwissWithDraws(config: SimulationConfig): {
     topCutSize,
     trials = 5000,
     drawWindow = 1,
+    drawProb = 0.5,
+    needsWinFactor = 0.3,
     winPoints = 3,
     drawPoints = 1,
   } = config;
@@ -84,12 +88,31 @@ export function simulateSwissWithDraws(config: SimulationConfig): {
       const n = playerCount;
       const pairCount = n >> 1;
       const cutLine = inWindow ? points[order[Math.min(topCutSize - 1, n - 1)]] : 0;
+      // The line typically rises at least one point as results post, so drawing
+      // to only tie the current line rarely locks in a spot.
+      const projectedLine = inWindow ? cutLine + drawPoints : 0;
 
       for (let i = 0; i < pairCount; i++) {
         const a = order[i * 2];
         const b = order[i * 2 + 1];
-        const shouldDraw =
-          inWindow && points[a] + drawPoints >= cutLine && points[b] + drawPoints >= cutLine;
+        // Intentional draws only happen between bubble pairs (both players
+        // outside the cut who would each clear the current line with a draw).
+        // A draw is only attractive when it secures a spot: players whose draw
+        // lands below the projected line still need a win to get in, so they
+        // shake hands at a much lower rate. Top seeds always play it out.
+        const pairRank = i * 2;
+        const outsideCut = pairRank >= topCutSize;
+        const aClearsLine = points[a] + drawPoints >= cutLine;
+        const bClearsLine = points[b] + drawPoints >= cutLine;
+        const aSecured = points[a] + drawPoints > projectedLine;
+        const bSecured = points[b] + drawPoints > projectedLine;
+
+        let pDraw = 0;
+        if (inWindow && outsideCut && aClearsLine && bClearsLine) {
+          pDraw =
+            aSecured && bSecured ? drawProb : drawProb * needsWinFactor;
+        }
+        const shouldDraw = Math.random() < pDraw;
 
         if (shouldDraw) {
           draws[a]++;

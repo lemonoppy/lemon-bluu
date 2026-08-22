@@ -62,4 +62,53 @@ describe('simulateSwissWithDraws', () => {
     );
     expect(worstRecordToMakeCut.record).toMatch(/^\d+-\d+(-\d+)?$/);
   });
+
+  it('does not collapse to a single degenerate cut line', () => {
+    const { averageCutLinePoints, worstRecordToMakeCut, cutLineDistribution } =
+      simulateSwissWithDraws({
+        playerCount: 14,
+        roundCount: 4,
+        topCutSize: 4,
+        trials: 2000,
+        drawWindow: 1,
+      });
+    expect(Object.keys(cutLineDistribution).length).toBeGreaterThan(1);
+    expect(worstRecordToMakeCut.points).toBeLessThan(averageCutLinePoints);
+  });
+
+  it('never lets in-cut pairs draw', () => {
+    const { probabilityTable } = simulateSwissWithDraws({
+      playerCount: 16,
+      roundCount: 4,
+      topCutSize: 4,
+      trials: 2000,
+      drawWindow: 1,
+      drawProb: 1,
+    });
+    const perfect = probabilityTable.find((record) => record.record === '4-0');
+    expect(perfect).toBeDefined();
+    expect(perfect!.probabilityOfMakingCut).toBe(1);
+    expect(perfect!.trialsObserved).toBe(2000);
+  });
+
+  it('draws at a lower rate when players need a win to get in', () => {
+    const base = {
+      playerCount: 16,
+      roundCount: 4,
+      topCutSize: 4,
+      trials: 2000,
+      drawWindow: 1,
+      drawProb: 1,
+    };
+    const needsWin = simulateSwissWithDraws({ ...base, needsWinFactor: 0 });
+    expect(needsWin.averageIntentionalDrawsPerTrial).toBe(0);
+
+    const reduced = simulateSwissWithDraws({ ...base, needsWinFactor: 0.3 });
+    expect(reduced.averageIntentionalDrawsPerTrial).toBeGreaterThan(0);
+
+    const fullRate = simulateSwissWithDraws({ ...base, needsWinFactor: 1 });
+    expect(fullRate.averageIntentionalDrawsPerTrial).toBeGreaterThan(
+      reduced.averageIntentionalDrawsPerTrial,
+    );
+  });
 });

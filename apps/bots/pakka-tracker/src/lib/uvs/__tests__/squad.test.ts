@@ -49,6 +49,7 @@ const makeResult = (overrides: Partial<ScrapeResult> = {}): ScrapeResult => {
     totalRounds: 5,
     roundsRemaining: 2,
     isComplete: false,
+    isCutDecided: false,
     latestRoundStatus: 'COMPLETE',
     phaseName: 'Phase 1',
     isDay2: false,
@@ -105,6 +106,25 @@ describe('evaluateSquadStatus', () => {
     expect(evaluateSquadStatus(missed)?.players[0].status).toBe('MISSED_CUT');
   });
 
+  it('marks made/missed cut once the cutting phase finishes', () => {
+    const made = makeResult({
+      isCutDecided: true,
+      isElimination: false,
+      roundsRemaining: 0,
+      players: [makePlayer({ rank: '2' })],
+    });
+    expect(evaluateSquadStatus(made)?.players[0].status).toBe('MADE_CUT');
+    expect(evaluateSquadStatus(made)?.thresholdPoints).toBeUndefined();
+
+    const missed = makeResult({
+      isCutDecided: true,
+      isElimination: false,
+      roundsRemaining: 0,
+      players: [makePlayer({ rank: '9', record: '1-3-0', points: 3 })],
+    });
+    expect(evaluateSquadStatus(missed)?.players[0].status).toBe('MISSED_CUT');
+  });
+
   describe('day 1 processing', () => {
     const day1 = (record: string): ScrapeResult =>
       makeResult({
@@ -136,5 +156,36 @@ describe('evaluateSquadStatus', () => {
     expect(squad?.squadTotals).toEqual({ wins: 4, losses: 1, draws: 1 });
     expect(squad?.combinedWinPercent).toBeCloseTo(75, 2);
     expect(squad?.combinedPointsPercent).toBeCloseTo(72.22, 2);
+  });
+
+  it('uses a realistic cut line to classify bubble players', () => {
+    const fillers = Array.from({ length: 13 }, (_, i) =>
+      makePlayer({
+        username: `Player${i}`,
+        rank: String(i + 1),
+        record: '2-1-0',
+        points: 6,
+      }),
+    );
+
+    const base = makeResult({
+      roundsRemaining: 1,
+      totalRounds: 4,
+      totalSwissRounds: 4,
+    });
+
+    const mustWin = evaluateSquadStatus({
+      ...base,
+      players: [...fillers, makePlayer({ username: 'BNutty', rank: '14', record: '2-2-0', points: 6 })],
+    });
+    expect(mustWin?.thresholdPoints).toBeGreaterThanOrEqual(8);
+    expect(mustWin?.thresholdPoints).toBeLessThanOrEqual(9);
+    expect(mustWin?.players[0].status).toBe('MUST_WIN_OUT');
+
+    const canDraw = evaluateSquadStatus({
+      ...base,
+      players: [...fillers, makePlayer({ username: 'BNutty', rank: '6', record: '3-1-0', points: 9 })],
+    });
+    expect(canDraw?.players[0].status).toBe('LIVE_TO_WIN_OR_DRAW');
   });
 });

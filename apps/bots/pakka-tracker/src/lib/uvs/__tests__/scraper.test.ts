@@ -18,6 +18,7 @@ const makeResult = (overrides: Partial<ScrapeResult> = {}): ScrapeResult => ({
   totalRounds: 5,
   roundsRemaining: 4,
   isComplete: false,
+  isCutDecided: false,
   latestRoundStatus: 'IN_PROGRESS',
   phaseName: 'Phase 1',
   isDay2: false,
