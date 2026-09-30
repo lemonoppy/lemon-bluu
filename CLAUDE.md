@@ -51,18 +51,18 @@ yarn test-new-season  # Dry run: preview what yarn new-season would do
 yarn build            # Compile TypeScript
 ```
 
-`tools/pbe-portal-scraper/` — pbe.simflow.io draft classes (requires `config.json`):
+`tools/pbe-portal-scraper/` — consolidated Simflow player draft classes:
 ```bash
-cp config.example.json config.json  # First-time setup: add credentials
-yarn scrape           # Scrape current draft class (edit SEASON in src/scraper.ts)
+yarn scrape 64        # Scrape every player drafted in S64
 yarn build            # Compile TypeScript
-# Debug scripts (open visible browser window):
-yarn debug-page       # Inspect draftee list page (no login)
-yarn debug-player     # Inspect single player page
-yarn debug-all-xp     # Log XP distribution across all players
-yarn debug-filter     # Inspect bootstrap-table filter behavior
-yarn debug-table      # Inspect label/input structure on player page
-yarn debug-xp-filter  # Inspect table headers and inputs
+```
+
+`tools/pbe-forum-checker/` — qualifying usernames from a PBE forum thread:
+```bash
+yarn scrape "https://forum.pbesim.com/showthread.php?tid=44287"
+yarn scrape "<thread-url>" --ai  # Add Gemini AI-authorship review flags
+yarn test
+yarn build
 ```
 
 `tools/mtg-glicko/` — Glicko-2 ratings for MTG cube drafts:
@@ -93,7 +93,8 @@ packages/
   tsconfig/            # Shared tsconfig bases (base.json, node.json, nextjs.json)
 tools/
   pbe-scraper/         # CLI scrapers for pbesim.com fielding stats (TypeScript, cheerio/axios)
-  pbe-portal-scraper/  # CLI scraper for pbe.simflow.io draft classes (TypeScript, Puppeteer, requires config.json)
+  pbe-portal-scraper/  # CLI scraper for consolidated Simflow draft classes (TypeScript)
+  pbe-forum-checker/   # Browser-based forum reply qualification checker
   mtg-glicko/          # Glicko-2 rating calculator for MTG cube draft results
 ```
 
@@ -128,10 +129,13 @@ All tools extend `@lemon-bluu/eslint-config/bot-flat.js` with `no-console: 'off'
 - `src/scrape-new-season.ts` — adds a single new season to the 2B dataset
 
 **`tools/pbe-portal-scraper/`** (`@lemon-bluu/pbe-portal-scraper`):
-- Uses **Puppeteer** (browser automation); site requires login
-- Credentials in `config.json` (gitignored) — copy from `config.example.json`
-- `src/scraper.ts` — logs in, filters MiLPBE player list to XP=1 (rookies), scrapes pid/username/name/position/archetype/tpe/bankAccount/team, saves `drafted-players-s{SEASON}.json`
-- `src/debug/` — 6 one-off debug scripts for inspecting page structure
+- Uses the public consolidated Simflow players JSON API
+- `src/scraper.ts` — accepts a season argument, selects exact `drafted` matches, maps pid/username/name/position/archetype/tpe/bankAccount/team, and saves `drafted-players-s{season}.{json,tsv}`
+
+**`tools/pbe-forum-checker/`** (`@lemon-bluu/pbe-forum-checker`):
+- Uses a persistent headed Puppeteer profile so Cloudflare can be completed manually
+- Excludes the opening post and quoted content, then qualifies replies over 150 words or containing a link
+- Saves a unique username list and JSON audit report; `--ai` adds non-binding Gemini authorship flags
 
 **`tools/mtg-glicko/`** (`@lemon-bluu/mtg-glicko`):
 - `src/data.ts` — `MatchRecord[]` with all historical cube draft results
