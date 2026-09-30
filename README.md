@@ -20,6 +20,7 @@ lemon-bluu/
 ├── tools/
 │   ├── pbe-scraper/            # pbesim.com fielding stats scraper
 │   ├── pbe-portal-scraper/     # pbe.simflow.io draft class scraper
+│   ├── pbe-forum-checker/      # PBE forum reply qualification checker
 │   └── mtg-glicko/             # Glicko-2 ratings for MTG cube drafts
 ├── package.json                # Root workspace config
 └── turbo.json                  # Turborepo pipeline
@@ -65,9 +66,18 @@ CLI scrapers for career fielding stats from pbesim.com. Includes a year-by-year 
 - **Stack:** TypeScript, cheerio, axios
 
 ### `tools/pbe-portal-scraper`
-Puppeteer scraper for PBE draft class data from pbe.simflow.io. Requires `config.json` with login credentials (copy from `config.example.json`).
+JSON scraper for PBE draft class data from the public consolidated Simflow API.
+Pass a season to select every matching `drafted` player (for example,
+`yarn scrape 64`), including their current bank balance.
 
-- **Stack:** TypeScript, Puppeteer
+- **Stack:** TypeScript
+
+### `tools/pbe-forum-checker`
+Browser-based PBE forum thread checker. It exports unique usernames whose
+replies exceed 150 words or contain a link, with an optional Gemini
+AI-authorship review flag.
+
+- **Stack:** TypeScript, Puppeteer, cheerio, Gemini
 
 ### `tools/mtg-glicko`
 Glicko-2 rating calculator for MTG cube draft history. Match data lives in `src/data.ts`; run `yarn start` to recalculate.
