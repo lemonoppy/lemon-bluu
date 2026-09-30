@@ -1,77 +1,79 @@
 # PBE Draft Scraper
 
-Puppeteer-based scraper for extracting draft class data from [pbe.simflow.io](https://pbe.simflow.io). Logs in, navigates the MiLPBE player list, filters to XP=1 (rookies), visits each player page, and collects name, position, archetype, TPE, team, and bank account.
+JSON scraper for extracting a PBE draft class from the public
+[Simflow Players](https://pbe-backend-consolidated-46775724cb31.herokuapp.com/simflow/players)
+API. It selects every player whose `drafted` field matches the requested season.
 
 ## Setup
 
-1. Copy the example config and add your credentials:
+Install dependencies from the monorepo root:
 
-   ```bash
-   cp config.example.json config.json
-   ```
+```bash
+yarn install
+```
 
-   ```json
-   {
-     "username": "your_username",
-     "password": "your_password",
-     "loginUrl": "https://pbe.simflow.io/index.php"
-   }
-   ```
-
-   `config.json` is gitignored — never commit credentials.
-
-2. Install dependencies from the monorepo root:
-
-   ```bash
-   yarn install
-   ```
+The player API is public, so no credentials or configuration file is needed.
 
 ## Usage
 
 From the tool directory:
+
 ```bash
-yarn scrape    # Run the scraper for the configured SEASON
+yarn scrape 64
 ```
 
 Or from the monorepo root:
+
 ```bash
-yarn workspace @lemon-bluu/pbe-portal-scraper scrape
+yarn workspace @lemon-bluu/pbe-portal-scraper scrape 64
 ```
 
-Edit the `SEASON` constant at the top of `src/scraper.ts` to target a different season.
-
-Output is saved to `drafted-players-s{SEASON}.json` (gitignored).
+The season must be supplied as a positive integer. Output is saved in both JSON
+and TSV formats as `drafted-players-s{season}.{json,tsv}` (gitignored).
 
 ## Output Format
 
 ```json
 [
   {
-    "pid": "501",
-    "username": "player_username",
-    "name": "Player Name",
-    "position": "C",
-    "archetype": "Two-Way",
-    "tpe": "350",
-    "bankAccount": "5000000",
-    "team": "Team Name"
+    "pid": "943",
+    "username": "mystictoejam",
+    "name": "Riley Unova",
+    "position": "2B",
+    "archetype": "Contact",
+    "tpe": "288",
+    "bankAccount": "5150000",
+    "team": "Louisville Lemurs"
   }
 ]
 ```
 
-Players are sorted by PID (ascending). Only XP=1 players (current rookies) are included.
+Players are sorted by external player ID (PID). No league, experience, or
+status filter is applied; every row matching the requested `drafted` season is
+included.
 
-## Debug Scripts
+The TSV file uses the same fields as the JSON output, with a header row:
+`pid`, `username`, `name`, `position`, `archetype`, `tpe`, `bankAccount`, and
+`team`.
 
-Located in `src/debug/`. Useful for inspecting page structure when the site changes:
+## Consolidated Backend Endpoints
 
-```bash
-yarn debug-page        # Inspect draftee list page structure (no login required)
-yarn debug-player      # Inspect a single player page (pid=501)
-yarn debug-all-xp      # Log XP distribution across all MiLPBE players
-yarn debug-filter      # Inspect how bootstrap-table hides rows after XP filter
-yarn debug-table       # Inspect label/input structure on player page
-yarn debug-xp-filter   # Inspect table headers and inputs on MiLPBE player list
-```
+Base URL:
+`https://pbe-backend-consolidated-46775724cb31.herokuapp.com`
 
-All debug scripts open a visible browser window and keep it open for 30–60 seconds for manual inspection.
+- `GET /simflow/players` — all Simflow players as JSON. Supports an optional
+  `league` query parameter and includes player details, `drafted`,
+  `bank_balance`, and nested team data.
+- `GET /simflow/players/html` — the same player dataset as an HTML table for
+  Google Sheets `IMPORTHTML`.
+- `GET /discord/bank/balance?username={username}` — the current bank balance
+  for one username.
+- `GET /discord/bank/transactions?username={username}` — bank transaction
+  history for one username.
+- `GET /simflow/teams` — all Simflow teams as JSON.
+- `GET /simflow/leagues` — all Simflow leagues as JSON.
+- `GET /docs` — interactive Swagger API documentation.
+- `GET /openapi.json` — the complete OpenAPI schema.
+
+The `/scrape/*` routes trigger backend refresh jobs rather than simply reading
+stored data and should not be used by this scraper.
