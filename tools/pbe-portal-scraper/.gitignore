@@ -2,6 +2,7 @@ node_modules/
 build/
 config.json
 drafted-players-*.json
+drafted-players-*.tsv
 *.log
 .DS_Store
 .env

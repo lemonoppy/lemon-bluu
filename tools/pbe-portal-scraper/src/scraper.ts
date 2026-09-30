@@ -1,13 +1,5 @@
 import fs from 'fs';
 
-import puppeteer from 'puppeteer';
-
-interface Config {
-  username: string;
-  password: string;
-  loginUrl: string;
-}
-
 interface PlayerData {
   pid: string;
   username: string;
@@ -17,298 +9,126 @@ interface PlayerData {
   tpe: string;
   bankAccount: string;
   team: string;
-  experience?: string;
 }
 
-// Load credentials from config.json
-let config: Config;
-try {
-  config = JSON.parse(fs.readFileSync('./config.json', 'utf8')) as Config;
-} catch {
-  console.error('Error: config.json not found. Please create it from config.example.json');
-  console.error('Copy config.example.json to config.json and add your credentials.');
-  process.exit(1);
+interface SimflowPlayer {
+  external_id: number | null;
+  username: string | null;
+  player_name: string | null;
+  position: string | null;
+  archetype: string | null;
+  tpe: number | null;
+  drafted: string | null;
+  bank_balance: number | null;
+  team: {
+    team_name: string | null;
+  } | null;
 }
 
-// Configuration — override with SEASON env var (e.g. from CI)
-const SEASON = parseInt(process.env.SEASON ?? '63', 10);
 const PLAYER_LIST_URL =
-  'https://pbe.simflow.io/view/player_list.php?league=MiLPBE&retired=Exclude&filler=Exclude';
-const OUTPUT_FILE = `drafted-players-s${SEASON}.json`;
+  'https://pbe-backend-consolidated-46775724cb31.herokuapp.com/simflow/players';
+const OUTPUT_COLUMNS: (keyof PlayerData)[] = [
+  'pid',
+  'username',
+  'name',
+  'position',
+  'archetype',
+  'tpe',
+  'bankAccount',
+  'team',
+];
 
-const sleep = (ms: number): Promise<void> => new Promise(resolve => setTimeout(resolve, ms));
+function formatTsv(players: PlayerData[]): string {
+  const escapeValue = (value: string): string =>
+    /[\t\r\n"]/.test(value) ? `"${value.replaceAll('"', '""')}"` : value;
+  const rows = players.map(player =>
+    OUTPUT_COLUMNS.map(column => escapeValue(player[column])).join('\t'),
+  );
 
-async function scrapePlayerData(): Promise<PlayerData[]> {
-  console.log(`Starting scraper for Season ${SEASON}...`);
+  return [OUTPUT_COLUMNS.join('\t'), ...rows].join('\n') + '\n';
+}
 
-  const browser = await puppeteer.launch({
-    headless: true,
-    defaultViewport: null,
-    args: ['--no-sandbox', '--disable-setuid-sandbox'],
-  });
+function getSeason(): number {
+  const seasonArgument = process.argv[2];
 
-  try {
-    const page = await browser.newPage();
+  if (!seasonArgument || !/^\d+$/.test(seasonArgument)) {
+    console.error('Usage: yarn scrape <season>');
+    console.error('Example: yarn scrape 64');
+    process.exit(1);
+  }
 
-    // Login
-    console.log('Logging in...');
-    await page.goto(config.loginUrl, { waitUntil: 'networkidle2' });
+  const season = Number.parseInt(seasonArgument, 10);
 
-    await page.waitForSelector('input[name="username"], input[type="text"]', { timeout: 15000 });
-    await page.type('input[name="username"], input[type="text"]', config.username);
-    await page.type('input[name="password"], input[type="password"]', config.password);
-    await Promise.all([
-      page.waitForNavigation({ waitUntil: 'networkidle2' }),
-      page.click('input[type="submit"], button[type="submit"]'),
-    ]);
+  if (season <= 0) {
+    console.error('Error: season must be a positive integer.');
+    process.exit(1);
+  }
 
-    console.log('Login successful!');
-    await sleep(2000);
+  return season;
+}
 
-    // Navigate to player list
-    console.log('Navigating to player list...');
-    await page.goto(PLAYER_LIST_URL, { waitUntil: 'networkidle2' });
-    await sleep(2000);
+async function scrapePlayerData(season: number): Promise<PlayerData[]> {
+  const draftedSeason = `S${season}`;
+  const outputBase = `drafted-players-s${season}`;
 
-    // Apply XP filter
-    console.log('Applying XP filter (value: 1)...');
-    await page.waitForSelector('.bootstrap-table-filter-control-experience');
+  console.log(`Starting scraper for Season ${season}...`);
+  console.log('Loading consolidated player list...');
 
-    await page.evaluate(() => {
-      const xpInput = document.querySelector(
-        '.bootstrap-table-filter-control-experience',
-      ) as HTMLInputElement | null;
-      if (xpInput) {
-        xpInput.value = '1';
-        xpInput.dispatchEvent(new Event('keyup', { bubbles: true }));
-        xpInput.dispatchEvent(new Event('change', { bubbles: true }));
+  const response = await fetch(PLAYER_LIST_URL);
 
+  if (!response.ok) {
+    throw new Error(`Player list request failed: ${response.status} ${response.statusText}`);
+  }
 
-        const win = window as any;
-        const $table = win.jQuery && win.jQuery('table').first();
-        if ($table && $table.bootstrapTable) {
-          $table.bootstrapTable('filterBy', {}, { filterAlgorithm: 'and' });
-        }
-      }
-    });
+  const players: unknown = await response.json();
 
-    console.log('Waiting for table to filter...');
-    await sleep(3000);
+  if (!Array.isArray(players)) {
+    throw new Error('Player list response was not an array.');
+  }
 
-    // Get player links with pagination
-    console.log('Extracting player links from all pages...');
-    const allPlayerLinks: string[] = [];
-    const seenPaginationStates = new Set<string>();
-    let pageNum = 1;
-    let hasMorePages = true;
-
-    while (hasMorePages) {
-      console.log(`  - Page ${pageNum}...`);
-
-      const currentPaginationInfo = await page.evaluate(() => {
-        const paginationInfo = document.querySelector('.page-info, .pagination-info');
-        return paginationInfo ? (paginationInfo as HTMLElement).innerText.trim() : '';
-      });
-
-      if (currentPaginationInfo) {
-        if (seenPaginationStates.has(currentPaginationInfo)) {
-          console.log(
-            `    Detected loop - already seen: "${currentPaginationInfo}". Stopping pagination.`,
-          );
-          break;
-        }
-        seenPaginationStates.add(currentPaginationInfo);
-        console.log(`    Pagination: ${currentPaginationInfo}`);
-      }
-
-      const pageLinks = await page.evaluate(() => {
-        const links: string[] = [];
-        const rows = Array.from(document.querySelectorAll('table tbody tr'));
-
-        rows.forEach(row => {
-          if ((row as HTMLElement).offsetHeight === 0) return;
-
-          const nameCell = row.querySelector('td a[href*="player_page.php"]');
-          if (nameCell) {
-            const href = nameCell.getAttribute('href');
-            if (href) {
-              const cleanHref = href.replace('../forms/', '').replace('/forms/', '');
-              links.push('https://pbe.simflow.io/forms/' + cleanHref);
-            }
-          }
-        });
-
-        return links;
-      });
-
-      console.log(`    Found ${pageLinks.length} players on this page`);
-
-      pageLinks.forEach(link => {
-        if (!allPlayerLinks.includes(link)) {
-          allPlayerLinks.push(link);
-        }
-      });
-
-      const nextPageInfo = await page.evaluate(() => {
-        const links = Array.from(document.querySelectorAll('a, button')) as HTMLElement[];
-        const nextLink = links.find(
-          a =>
-            a.innerText.trim().toLowerCase() === 'next' ||
-            a.innerText.trim() === '>' ||
-            a.innerText.trim() === '»' ||
-            a.innerText.trim() === '›',
-        );
-
-        if (nextLink) {
-          const isDisabled =
-            nextLink.classList.contains('disabled') ||
-            (nextLink as HTMLButtonElement).disabled;
-          if (!isDisabled) {
-            nextLink.click();
-            return { clicked: true };
-          }
-          return { clicked: false };
-        }
-        return { clicked: false };
-      });
-
-      if (nextPageInfo.clicked) {
-        await sleep(2000);
-        pageNum++;
-      } else {
-        hasMorePages = false;
-      }
-    }
-
-    console.log(
-      `\nFound ${allPlayerLinks.length} total unique players across ${pageNum} page(s)\n`,
+  const draftedPlayers = (players as SimflowPlayer[])
+    .filter(player => player.drafted === draftedSeason)
+    .map(
+      (player): PlayerData => ({
+        pid: player.external_id?.toString() ?? '',
+        username: player.username ?? '',
+        name: player.player_name ?? '',
+        position: player.position ?? '',
+        archetype: player.archetype ?? '',
+        tpe: player.tpe?.toString() ?? '',
+        bankAccount: player.bank_balance?.toString() ?? '',
+        team: player.team?.team_name ?? '',
+      }),
     );
 
-    const draftedPlayers: PlayerData[] = [];
+  draftedPlayers.sort((a, b) => {
+    const aPid = Number.parseInt(a.pid, 10);
+    const bPid = Number.parseInt(b.pid, 10);
 
-    for (let i = 0; i < allPlayerLinks.length; i++) {
-      const playerUrl = allPlayerLinks[i];
-      console.log(`\nProcessing player ${i + 1}/${allPlayerLinks.length}: ${playerUrl}`);
+    if (Number.isNaN(aPid) && Number.isNaN(bPid)) return a.name.localeCompare(b.name);
+    if (Number.isNaN(aPid)) return 1;
+    if (Number.isNaN(bPid)) return -1;
+    return aPid - bPid;
+  });
 
-      try {
-        await page.goto(playerUrl, { waitUntil: 'networkidle2' });
-        await sleep(1000);
+  fs.writeFileSync(`${outputBase}.json`, JSON.stringify(draftedPlayers, null, 2));
+  fs.writeFileSync(`${outputBase}.tsv`, formatTsv(draftedPlayers));
 
-        console.log('  - Extracting player data...');
+  console.log(
+    `Scraping complete! Found ${draftedPlayers.length} players drafted in ${draftedSeason}.`,
+  );
+  console.log(`Results saved to ${outputBase}.{json,tsv}`);
 
-        const playerData = await page.evaluate(() => {
-          const getInputValue = (labelText: string): string => {
-            const spans = Array.from(document.querySelectorAll('span.input-group-text'));
-            for (const span of spans) {
-              if ((span as HTMLElement).innerText.trim() === labelText) {
-                const inputGroup = span.closest('.input-group');
-                if (inputGroup) {
-                  const input = inputGroup.querySelector('input.form-control') as HTMLInputElement | null;
-                  if (input) return input.value || '';
-                }
-              }
-            }
-            return '';
-          };
-
-          return {
-            pid: getInputValue('ID'),
-            username: getInputValue('Username'),
-            name: getInputValue('Name'),
-            position: getInputValue('Position(s)'),
-            archetype: getInputValue('Archetype'),
-            tpe: getInputValue('TPE'),
-            team: getInputValue('Team'),
-            experience: getInputValue('Experience'),
-          };
-        });
-
-        if (playerData.experience !== '1') {
-          console.log(`  - Skipping: XP is ${playerData.experience}, not 1`);
-          continue;
-        }
-
-        console.log('  - Extracting bank account from Finances tab...');
-        let bankAccount = '';
-
-        try {
-          const tabs = await page.$$('a, button');
-          let financesClicked = false;
-
-          for (const tab of tabs) {
-            const text = await page.evaluate(el => (el as HTMLElement).innerText, tab);
-            if (text && text.toLowerCase().includes('finance')) {
-              await tab.click();
-              await sleep(1500);
-              financesClicked = true;
-              break;
-            }
-          }
-
-          if (financesClicked) {
-            bankAccount = await page.evaluate(() => {
-              const getInputValue = (labelText: string): string => {
-                const spans = Array.from(document.querySelectorAll('span.input-group-text'));
-                for (const span of spans) {
-                  if ((span as HTMLElement).innerText.trim() === labelText) {
-                    const inputGroup = span.closest('.input-group');
-                    if (inputGroup) {
-                      const input = inputGroup.querySelector('input.form-control') as HTMLInputElement | null;
-                      if (input) return input.value || '';
-                    }
-                  }
-                }
-                return '';
-              };
-              return getInputValue('Bank Account');
-            });
-          } else {
-            console.log('  - Warning: Could not find Finances tab');
-          }
-        } catch (error) {
-          console.log('  - Error accessing Finances tab:', (error as Error).message);
-        }
-
-        const orderedPlayerData: PlayerData = {
-          pid: playerData.pid,
-          username: playerData.username,
-          name: playerData.name,
-          position: playerData.position,
-          archetype: playerData.archetype,
-          tpe: playerData.tpe,
-          bankAccount,
-          team: playerData.team,
-        };
-
-        draftedPlayers.push(orderedPlayerData);
-        console.log('  - Extracted:', JSON.stringify(orderedPlayerData, null, 2));
-      } catch (error) {
-        console.error(`  - Error processing player: ${(error as Error).message}`);
-      }
-    }
-
-    // Sort by PID ascending
-    draftedPlayers.sort((a, b) => parseInt(a.pid) - parseInt(b.pid));
-
-    console.log(`\n\nScraping complete! Found ${draftedPlayers.length} players drafted in S${SEASON}`);
-    fs.writeFileSync(OUTPUT_FILE, JSON.stringify(draftedPlayers, null, 2));
-    console.log(`Results saved to ${OUTPUT_FILE}`);
-
-    return draftedPlayers;
-  } catch (error) {
-    console.error('Error during scraping:', error);
-    throw error;
-  } finally {
-    await browser.close();
-  }
+  return draftedPlayers;
 }
 
-scrapePlayerData()
+const season = getSeason();
+
+scrapePlayerData(season)
   .then(players => {
-    console.log('\n✓ Scraping completed successfully');
     console.log(`Total players: ${players.length}`);
   })
   .catch(error => {
-    console.error('\n✗ Scraping failed:', error);
+    console.error('Scraping failed:', error);
     process.exit(1);
   });
