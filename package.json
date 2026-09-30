@@ -14,7 +14,8 @@
     "format": "turbo run format",
     "prepare": "husky",
     "mtg-glicko": "yarn workspace @lemon-bluu/mtg-glicko start",
-    "isfl-draft-order": "yarn workspace @lemon-bluu/isfl-draft-order start"
+    "isfl-draft-order": "yarn workspace @lemon-bluu/isfl-draft-order start",
+    "pbe-forum": "yarn workspace @lemon-bluu/pbe-forum-checker scrape"
   },
   "devDependencies": {
     "@types/node": "^26.2.0",
@@ -42,6 +43,7 @@
     "apps/web/**/*.{ts,tsx}": "eslint --config apps/web/eslint.config.mjs --fix",
     "tools/pbe-scraper/src/**/*.ts": "eslint --config tools/pbe-scraper/eslint.config.js --fix",
     "tools/pbe-portal-scraper/src/**/*.ts": "eslint --config tools/pbe-portal-scraper/eslint.config.js --fix",
+    "tools/pbe-forum-checker/src/**/*.ts": "eslint --config tools/pbe-forum-checker/eslint.config.js --fix",
     "tools/mtg-glicko/src/**/*.ts": "eslint --config tools/mtg-glicko/eslint.config.js --fix",
     "tools/isfl-draft-order/src/**/*.ts": "eslint --config tools/isfl-draft-order/eslint.config.js --fix"
   }

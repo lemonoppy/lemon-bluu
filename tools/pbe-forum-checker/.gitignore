@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.browser-profile/
+.chrome-profile/
+output/
+.env
+*.log
+.DS_Store

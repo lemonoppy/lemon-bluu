@@ -1,5 +1,7 @@
 # dependencies
 node_modules
+.yarn-cache/
+.npm-cache/
 .pnp
 .pnp.js
 
