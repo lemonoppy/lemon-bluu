@@ -71,6 +71,13 @@ async function main(): Promise<void> {
   const parsedPosts = pages.flatMap((page) =>
     parseThreadPage(page.html, page.url),
   );
+  if (parsedPosts.length === 0) {
+    throw new Error(
+      `Loaded ${pages.length} thread page(s), but could not parse any posts. ` +
+        'The forum markup may have changed.',
+    );
+  }
+
   let posts = evaluatePosts(parsedPosts);
   if (options.enableAi) {
     posts = await reviewEligiblePosts(posts);
