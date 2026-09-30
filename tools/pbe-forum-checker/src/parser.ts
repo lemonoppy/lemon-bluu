@@ -2,7 +2,8 @@ import * as cheerio from 'cheerio';
 
 import { EligibilityReason, EvaluatedPost, ParsedPost } from './types';
 
-const POST_ID_PATTERN = /^post_(\d+)$/;
+const POST_ID_PREFIX_PATTERN = /^post_(\d+)/;
+const BODY_ID_PATTERN = /^pid_(\d+)$/;
 const WORD_PATTERN = /[\p{L}\p{N}]+(?:['’ʼ-][\p{L}\p{N}]+)*/gu;
 
 function normalizeWhitespace(value: string): string {
@@ -17,30 +18,37 @@ export function parseThreadPage(html: string, pageUrl: string): ParsedPost[] {
   const $ = cheerio.load(html);
   const posts: ParsedPost[] = [];
 
-  $('[id^="post_"]').each((_index, element) => {
-    const idAttribute = $(element).attr('id') ?? '';
-    const idMatch = POST_ID_PATTERN.exec(idAttribute);
+  $('.post_body, [id^="pid_"]').each((_index, element) => {
+    const originalBody = $(element);
+    const bodyIdMatch = BODY_ID_PATTERN.exec(originalBody.attr('id') ?? '');
+    const post = originalBody.closest('[id^="post_"]');
+    const postIdMatch = POST_ID_PREFIX_PATTERN.exec(post.attr('id') ?? '');
+    const id = bodyIdMatch?.[1] ?? postIdMatch?.[1];
 
-    if (!idMatch) return;
+    if (!id || post.length === 0) return;
 
-    const id = idMatch[1];
-    const post = $(element);
     const username = normalizeWhitespace(
       post
         .find(
           [
             '.author_information .largetext a',
+            '.author_information .largetext',
+            '.author_information [itemprop="name"]',
+            '.author_information strong',
             '.author_information a[href*="member.php"]',
+            '.post_author a[href*="member.php"]',
+            '.post_author a[href*="user-"]',
             '.post_author strong a',
             '.post_author .largetext',
+            '.post_username',
+            '.author-name',
           ].join(', '),
         )
         .first()
         .text(),
     );
-    const originalBody = post.find(`#pid_${id}, .post_body`).first();
 
-    if (!username || originalBody.length === 0) return;
+    if (!username || posts.some(existingPost => existingPost.id === id)) return;
 
     const body = originalBody.clone();
     body

@@ -45,6 +45,23 @@ test('parses MyBB posts and removes quoted words and links', () => {
   assert.deepEqual(alice.links, []);
 });
 
+test('parses themed post IDs and plain-text author names', () => {
+  const posts = parseThreadPage(
+    `
+      <div id="post_200_classic">
+        <div class="author_information"><strong>ThemeUser</strong></div>
+        <article id="pid_200">Themed reply body.</article>
+      </div>
+    `,
+    THREAD_URL,
+  );
+
+  assert.equal(posts.length, 1);
+  assert.equal(posts[0].id, '200');
+  assert.equal(posts[0].username, 'ThemeUser');
+  assert.equal(posts[0].body, 'Themed reply body.');
+});
+
 test('discovers and deduplicates pagination URLs for the same thread', () => {
   const urls = getThreadPageUrls(
     fixture('thread-page-1.html'),
