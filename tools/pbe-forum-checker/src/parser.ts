@@ -21,14 +21,31 @@ export function parseThreadPage(html: string, pageUrl: string): ParsedPost[] {
   $('.post_body, [id^="pid_"]').each((_index, element) => {
     const originalBody = $(element);
     const bodyIdMatch = BODY_ID_PATTERN.exec(originalBody.attr('id') ?? '');
-    const post = originalBody.closest('[id^="post_"]');
+    const post = originalBody
+      .closest('[id^="post_"], .post, table')
+      .first();
     const postIdMatch = POST_ID_PREFIX_PATTERN.exec(post.attr('id') ?? '');
-    const id = bodyIdMatch?.[1] ?? postIdMatch?.[1];
+    const permalinkHref = post
+      .find(
+        [
+          'a[href*="pid="]',
+          'a[href*="#pid"]',
+          '.postbit_details a[href*="showthread.php"]',
+        ].join(', '),
+      )
+      .first()
+      .attr('href');
+    const permalinkIdMatch = permalinkHref?.match(/(?:[?&]pid=|#pid)(\d+)/);
+    const id =
+      bodyIdMatch?.[1] ??
+      postIdMatch?.[1] ??
+      permalinkIdMatch?.[1] ??
+      `${new URL(pageUrl).searchParams.get('page') ?? '1'}-${_index}`;
 
-    if (!id || post.length === 0) return;
+    const postContext = post.length > 0 ? post : originalBody.parent();
 
     const username = normalizeWhitespace(
-      post
+      postContext
         .find(
           [
             '.author_information .largetext a',
@@ -40,8 +57,14 @@ export function parseThreadPage(html: string, pageUrl: string): ParsedPost[] {
             '.post_author a[href*="user-"]',
             '.post_author strong a',
             '.post_author .largetext',
+            '.postauthor a[href*="member"]',
+            '.postauthor .username',
+            '.author a[href*="member"]',
+            '.author a[href*="user"]',
             '.post_username',
+            '.username',
             '.author-name',
+            'a[href*="member.php?action=profile"]',
           ].join(', '),
         )
         .first()
@@ -77,16 +100,6 @@ export function parseThreadPage(html: string, pageUrl: string): ParsedPost[] {
           !href.startsWith('javascript:'),
       )
       .map((href) => new URL(href, pageUrl).toString());
-    const permalinkHref = post
-      .find(
-        [
-          `a[href*="pid=${id}"]`,
-          `a[href$="#pid${id}"]`,
-          '.postbit_details a[href*="showthread.php"]',
-        ].join(', '),
-      )
-      .first()
-      .attr('href');
 
     posts.push({
       id,

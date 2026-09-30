@@ -62,6 +62,22 @@ test('parses themed post IDs and plain-text author names', () => {
   assert.equal(posts[0].body, 'Themed reply body.');
 });
 
+test('parses post bodies without a standard MyBB post container', () => {
+  const posts = parseThreadPage(
+    `
+      <section>
+        <header class="author"><a href="/user-42.html">CustomUser</a></header>
+        <div class="post_body">Custom theme reply.</div>
+      </section>
+    `,
+    `${THREAD_URL}&page=3`,
+  );
+
+  assert.equal(posts.length, 1);
+  assert.equal(posts[0].id, '3-0');
+  assert.equal(posts[0].username, 'CustomUser');
+});
+
 test('discovers and deduplicates pagination URLs for the same thread', () => {
   const urls = getThreadPageUrls(
     fixture('thread-page-1.html'),
