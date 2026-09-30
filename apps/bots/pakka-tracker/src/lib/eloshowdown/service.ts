@@ -1,7 +1,11 @@
 import { Config } from 'src/lib/config/config';
 import Query from 'src/lib/db';
 import { logger } from 'src/lib/logger';
-import { UVSEventSummary, fetchEventSummary, fetchEventsByStore } from 'src/lib/uvs/client';
+import {
+  UVSEventSummary,
+  fetchEventSummary,
+  fetchEventsByStore,
+} from 'src/lib/uvs/client';
 import { EventParticipant, fetchEventParticipants } from 'src/lib/uvs/scraper';
 import { squadMemberByPlayerId, squadMembers } from 'src/lib/uvs/squad';
 
@@ -72,11 +76,15 @@ const buildNameIndex = async (): Promise<void> => {
     }
   };
 
-  const playersResult = await Query<{ display_name: string; player_id: number }>(
+  const playersResult = await Query<{
+    display_name: string;
+    player_id: number;
+  }>(
     'SELECT display_name, player_id FROM eloshowdown_players WHERE display_name IS NOT NULL',
   );
   if (playersResult.isErr()) throw playersResult.error;
-  for (const row of playersResult.value.rows) addName(row.display_name, row.player_id);
+  for (const row of playersResult.value.rows)
+    addName(row.display_name, row.player_id);
 
   const opponentsResult = await Query<{
     opponent_id: number;
@@ -100,7 +108,9 @@ const seedPlayersByName = async (
   names: { playerId: number; displayName: string }[],
 ): Promise<void> => {
   const fresh = names.filter(
-    (entry) => entry.displayName && !nameIndex.has(entry.displayName.trim().toLowerCase()),
+    (entry) =>
+      entry.displayName &&
+      !nameIndex.has(entry.displayName.trim().toLowerCase()),
   );
   if (fresh.length === 0) return;
 
@@ -137,8 +147,7 @@ const seedOpponents = async (points: EloHistoryPoint[]): Promise<void> => {
 
 const GRACE_MS = Config.eloshowdownGraceHours * 60 * 60 * 1000;
 const RECHECK_MS = Config.eloshowdownRecheckHours * 60 * 60 * 1000;
-const RECHECK_CUTOFF_MS =
-  Config.eloshowdownRecheckDays * 24 * 60 * 60 * 1000;
+const RECHECK_CUTOFF_MS = Config.eloshowdownRecheckDays * 24 * 60 * 60 * 1000;
 
 const getEligibleEvents = async (): Promise<UVSEventSummary[]> => {
   const events = await fetchEventsByStore(Config.ottawaStoreIds);
@@ -161,7 +170,9 @@ const getEligibleEvents = async (): Promise<UVSEventSummary[]> => {
   return events
     .filter((event) => {
       const finish = new Date(
-        event.end_datetime ?? event.heuristic_end_datetime ?? event.start_datetime,
+        event.end_datetime ??
+          event.heuristic_end_datetime ??
+          event.start_datetime,
       ).getTime();
       const finished = finish < now.getTime() - GRACE_MS;
       if (!finished) return false;
@@ -400,6 +411,18 @@ export interface RefreshElosResult {
   stoppedEarly: boolean;
 }
 
+export interface RegistrantToHydrate {
+  riftboundId: number;
+  username: string;
+}
+
+export interface HydrateRegistrantsResult {
+  refreshed: number;
+  unresolved: number;
+  requestsUsed: number;
+  stoppedEarly: boolean;
+}
+
 /**
  * Standalone refresh of stale tracked players' elo histories, for the
  * dedicated cron job. Runs independently of the events backfill, resetting
@@ -434,6 +457,71 @@ export async function refreshStalePlayerElos(): Promise<RefreshElosResult> {
   );
   return {
     refreshed,
+    requestsUsed: getRequestCount(),
+    stoppedEarly,
+  };
+}
+
+/**
+ * Looks up registrants that are missing cached elo data and stores their
+ * EloShowdown profiles and histories. A registrant remains unresolved when
+ * no matching profile or usable elo history is available.
+ */
+export async function hydrateRegistrants(
+  registrants: RegistrantToHydrate[],
+): Promise<HydrateRegistrantsResult> {
+  eloHistoryCache.clear();
+  resetRequestCount();
+  counters.playersMapped = 0;
+  counters.eloHistoriesFetched = 0;
+
+  await buildNameIndex();
+
+  const uniqueRegistrants = Array.from(
+    new Map(
+      registrants.map((registrant) => [registrant.riftboundId, registrant]),
+    ).values(),
+  );
+  let refreshed = 0;
+  let unresolved = 0;
+  let stoppedEarly = false;
+
+  for (const registrant of uniqueRegistrants) {
+    try {
+      const mapping = await ensurePlayer(
+        registrant.riftboundId,
+        registrant.username,
+      );
+      if (!mapping) {
+        unresolved++;
+        continue;
+      }
+
+      const history = await ensureEloHistory(mapping.playerId);
+      if (history.length > 0) {
+        refreshed++;
+      } else {
+        unresolved++;
+      }
+    } catch (error) {
+      if (
+        error instanceof BudgetExceededError ||
+        (error instanceof EloShowdownApiError && error.status === 429)
+      ) {
+        stoppedEarly = true;
+        break;
+      }
+      unresolved++;
+      logger.warn(
+        { error, riftboundId: registrant.riftboundId },
+        'Failed to hydrate event registrant elo',
+      );
+    }
+  }
+
+  return {
+    refreshed,
+    unresolved,
     requestsUsed: getRequestCount(),
     stoppedEarly,
   };
@@ -491,7 +579,8 @@ const ensureSquadPlayers = async (): Promise<void> => {
       await ensureEloHistory(member.eloShowdownId);
     } catch (error) {
       if (error instanceof BudgetExceededError) throw error;
-      if (error instanceof EloShowdownApiError && error.status === 429) throw error;
+      if (error instanceof EloShowdownApiError && error.status === 429)
+        throw error;
       logger.warn(
         { error, playerId: member.eloShowdownId },
         `Failed to sync squad member`,
@@ -580,24 +669,40 @@ const upsertEventPlayer = async (
 const processEvent = async (
   event: UVSEventSummary,
 ): Promise<ProcessEventResult> => {
-  const { event: eventData, participants } = await fetchEventParticipants(event.id);
+  const { event: eventData, participants } = await fetchEventParticipants(
+    event.id,
+  );
 
   if (participants.length === 0) {
     await upsertEvent(event, true);
     logger.warn(`Event ${event.id} (${event.name}) has no standings; recorded`);
-    return { completed: true, participants: 0, processedPlayers: 0, eloComplete: true };
+    return {
+      completed: true,
+      participants: 0,
+      processedPlayers: 0,
+      eloComplete: true,
+    };
   }
 
   const start = new Date(eventData.start_datetime);
   const end = new Date(
-    eventData.end_datetime ?? event.heuristic_end_datetime ?? eventData.start_datetime,
+    eventData.end_datetime ??
+      event.heuristic_end_datetime ??
+      eventData.start_datetime,
   );
 
-  const processed: { participant: EventParticipant; playerId: number; elo: EventElo }[] = [];
+  const processed: {
+    participant: EventParticipant;
+    playerId: number;
+    elo: EventElo;
+  }[] = [];
   for (const participant of participants) {
     if (participant.userId === 0) continue;
 
-    const mapping = await ensurePlayer(participant.userId, participant.username);
+    const mapping = await ensurePlayer(
+      participant.userId,
+      participant.username,
+    );
     if (!mapping) continue;
 
     const history = await ensureEloHistory(mapping.playerId, end);
@@ -650,7 +755,9 @@ export async function processOttawaEvents(
       error instanceof BudgetExceededError ||
       (error instanceof EloShowdownApiError && error.status === 429)
     ) {
-      logger.warn('EloShowdown budget/rate limit hit during squad sync; stopping run');
+      logger.warn(
+        'EloShowdown budget/rate limit hit during squad sync; stopping run',
+      );
       stoppedEarly = true;
     } else {
       throw error;
@@ -698,7 +805,9 @@ export async function processOttawaEvents(
         error instanceof BudgetExceededError ||
         (error instanceof EloShowdownApiError && error.status === 429)
       ) {
-        logger.info('EloShowdown budget/rate limit hit during stale elo refresh');
+        logger.info(
+          'EloShowdown budget/rate limit hit during stale elo refresh',
+        );
       } else {
         throw error;
       }
@@ -749,7 +858,9 @@ export async function processOttawaEventById(
       error instanceof BudgetExceededError ||
       (error instanceof EloShowdownApiError && error.status === 429)
     ) {
-      logger.warn('EloShowdown budget/rate limit hit while processing event; stopping');
+      logger.warn(
+        'EloShowdown budget/rate limit hit while processing event; stopping',
+      );
       return {
         eventName: summary.name,
         participants: 0,
