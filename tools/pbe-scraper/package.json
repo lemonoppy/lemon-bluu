@@ -5,6 +5,7 @@
   "scripts": {
     "scrape-all": "ts-node --project tsconfig.json src/scraper.ts",
     "update-all": "ts-node --project tsconfig.json src/scraper.ts --update",
+    "snapshot": "ts-node --project tsconfig.json src/snapshot.ts",
     "build": "tsc && tsc-alias",
     "lint": "eslint src --ext .ts",
     "format": "prettier --write src"
