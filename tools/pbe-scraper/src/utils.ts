@@ -6,7 +6,7 @@ import * as cheerio from 'cheerio';
 import { FieldingStatRow, PlayerData } from './types';
 
 export const delay = (ms: number): Promise<void> =>
-  new Promise(resolve => setTimeout(resolve, ms));
+  new Promise((resolve) => setTimeout(resolve, ms));
 
 export async function fetchPage(url: string): Promise<string | null> {
   try {
@@ -20,14 +20,11 @@ export async function fetchPage(url: string): Promise<string | null> {
 }
 
 /**
- * Extract Career Fielding Stats from a player page.
- * Pass a `filterPosition` string (e.g. "2B") to only include rows for that position.
- * Omit `filterPosition` (or pass undefined) to include all positions.
+ * Extract Career Fielding Stats from a player page, including all positions.
  */
 export function extractCareerFieldingStats(
   html: string,
   playerName: string,
-  filterPosition?: string,
 ): FieldingStatRow[] {
   const $ = cheerio.load(html);
   type CheerioResult = ReturnType<typeof $>;
@@ -93,17 +90,21 @@ export function extractCareerFieldingStats(
     });
 
     const firstValue = Object.values(rowData)[0];
-    if (firstValue && (firstValue.match(/\d{4}/) || firstValue.match(/Total|Career/i))) {
-      if (filterPosition === undefined || rowData['POS'] === filterPosition) {
-        stats.push(rowData);
-      }
+    if (
+      firstValue &&
+      (firstValue.match(/\d{4}/) || firstValue.match(/Total|Career/i))
+    ) {
+      stats.push(rowData);
     }
   });
 
   return stats;
 }
 
-export async function saveToJson(data: PlayerData[], filename: string): Promise<void> {
+export async function saveToJson(
+  data: PlayerData[],
+  filename: string,
+): Promise<void> {
   try {
     await fs.writeFile(filename, JSON.stringify(data, null, 2));
     console.log(`\n✓ Data saved to ${filename}`);
@@ -137,7 +138,10 @@ const TSV_HEADERS = [
   'RTO%',
 ];
 
-export async function saveToTsv(data: PlayerData[], filename: string): Promise<void> {
+export async function saveToTsv(
+  data: PlayerData[],
+  filename: string,
+): Promise<void> {
   try {
     const rows: string[] = [TSV_HEADERS.join('\t')];
 

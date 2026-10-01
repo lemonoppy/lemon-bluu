@@ -61,7 +61,7 @@ Discord bot for the ISFL sim league. Handles fantasy football, portal queries, s
 ## Tools
 
 ### `tools/pbe-scraper`
-CLI scrapers for career fielding stats from pbesim.com. Includes a year-by-year 2B scraper and an all-players alphabetical scraper.
+CLI scraper for career fielding stats from pbesim.com. Iterates alphabetical player pages and captures every position, with a `--update` mode that re-scrapes recently active players only.
 
 - **Stack:** TypeScript, cheerio, axios
 
