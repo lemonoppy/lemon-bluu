@@ -3,46 +3,72 @@ import fs from 'fs/promises';
 import * as cheerio from 'cheerio';
 
 import { PlayerData, PlayerLink } from './types';
-import { delay, extractCareerFieldingStats, fetchPage, saveToJson, saveToTsv } from './utils';
+import {
+  delay,
+  extractCareerFieldingStats,
+  fetchPage,
+  saveToJson,
+  saveToTsv,
+} from './utils';
 
 // Configuration
 const BASE_URL = 'http://www.pbesim.com';
-const START_YEAR = 2017;
-const END_YEAR = 2076;
+const CURRENT_SEASON = 2079; // Update this each season
+const ACTIVITY_THRESHOLD_YEARS = 3; // Only re-scrape players active within this many years
 
 /**
- * Extract Second Basemen player links from a fielding page
+ * Extract player links from an alphabetical player page
  */
-export function extractSecondBasemenLinks(html: string): PlayerLink[] {
+export function extractPlayerLinks(html: string): PlayerLink[] {
   const $ = cheerio.load(html);
   const players: PlayerLink[] = [];
 
-  $('td.boxtitle').each((_i, element) => {
-    const title = $(element).text().trim();
+  $('a').each((_i, link) => {
+    const href = $(link).attr('href');
+    const name = $(link).text().trim();
 
-    if (title === 'SECOND BASEMEN') {
-      const nextRow = $(element).closest('tr').next('tr');
-      const table = nextRow.find('table').first();
-
-      table.find('a').each((_j, link) => {
-        const href = $(link).attr('href');
-        const name = $(link).text().trim();
-
-        if (href && href.includes('../players/player_')) {
-          const cleanHref = href.replace('../', '/');
-          const fullUrl = `${BASE_URL}${cleanHref}`;
-          players.push({ name, url: fullUrl });
-        }
-      });
-
-      return false; // Break after finding Second Basemen
+    if (href && href.includes('../players/player_')) {
+      const cleanHref = href.replace('../', '/');
+      const fullUrl = `${BASE_URL}${cleanHref}`;
+      players.push({ name, url: fullUrl });
     }
   });
 
   return players;
 }
 
-async function loadExistingData(filename = 'second_basemen_stats.json'): Promise<PlayerData[]> {
+/**
+ * Calculate the last active season from fielding stats
+ */
+export function calculateLastActiveSeason(
+  fieldingStats: PlayerData['careerFieldingStats'],
+): number | null {
+  if (!fieldingStats || fieldingStats.length === 0) return null;
+
+  const years: number[] = [];
+  for (const stat of fieldingStats) {
+    const yearTeamLeague = stat['Year/Team/League'] ?? '';
+    const match = yearTeamLeague.match(/(\d{4})/);
+    if (match) {
+      years.push(parseInt(match[1]));
+    }
+  }
+
+  return years.length > 0 ? Math.max(...years) : null;
+}
+
+function shouldRescrapePlayer(
+  player: PlayerData,
+  currentSeason: number,
+  thresholdYears: number,
+): boolean {
+  if (!player.lastActiveSeason) return true;
+  return currentSeason - player.lastActiveSeason <= thresholdYears;
+}
+
+async function loadExistingData(
+  filename = 'all_players_fielding.json',
+): Promise<PlayerData[]> {
   try {
     const data = await fs.readFile(filename, 'utf8');
     const players = JSON.parse(data) as PlayerData[];
@@ -58,60 +84,96 @@ async function loadExistingData(filename = 'second_basemen_stats.json'): Promise
   }
 }
 
-async function scrapeSecondBasemenStats(existingData: PlayerData[] = []): Promise<PlayerData[]> {
+async function scrapeAllPlayers(
+  existingData: PlayerData[] = [],
+  isUpdate = false,
+): Promise<PlayerData[]> {
   const playerMap = new Map<string, PlayerData>();
 
   for (const player of existingData) {
     playerMap.set(player.url, player);
   }
 
-  if (existingData.length > 0) {
-    console.log(`Skipping ${existingData.length} already-scraped players\n`);
-  }
+  const letters = 'abcdefghijklmnopqrstuvwxyz'.split('');
+  let scrapedCount = 0;
+  let skippedCount = 0;
+  let updatedCount = 0;
+  let newCount = 0;
 
-  for (let year = END_YEAR; year >= START_YEAR; year--) {
-    console.log(`\n=== Processing year ${year} ===`);
+  for (const letter of letters) {
+    console.log(`\n=== Processing letter: ${letter.toUpperCase()} ===`);
 
-    const yearUrl = `${BASE_URL}/history/sl_fielders_100_0_${year}.html`;
-    const yearHtml = await fetchPage(yearUrl);
+    const letterUrl = `${BASE_URL}/history/league_100_players_by_letter_${letter}.html`;
+    const letterHtml = await fetchPage(letterUrl);
 
-    if (!yearHtml) {
-      console.log(`Skipping year ${year} - failed to fetch page`);
+    if (!letterHtml) {
+      console.log(`Skipping letter ${letter} - failed to fetch page`);
       await delay(1000);
       continue;
     }
 
-    const players = extractSecondBasemenLinks(yearHtml);
-    console.log(`Found ${players.length} second basemen for year ${year}`);
+    const players = extractPlayerLinks(letterHtml);
+    console.log(
+      `Found ${players.length} players starting with ${letter.toUpperCase()}`,
+    );
 
     for (const player of players) {
-      if (playerMap.has(player.url)) {
-        console.log(`  Skipping: ${player.name} (already scraped)`);
+      const existingPlayer = playerMap.get(player.url);
+
+      if (
+        isUpdate &&
+        existingPlayer &&
+        !shouldRescrapePlayer(
+          existingPlayer,
+          CURRENT_SEASON,
+          ACTIVITY_THRESHOLD_YEARS,
+        )
+      ) {
+        skippedCount++;
         continue;
       }
 
-      console.log(`  Processing: ${player.name}`);
+      const action = existingPlayer ? 'UPDATE' : 'NEW';
+      console.log(`  ${player.name} (${action})`);
 
       const playerHtml = await fetchPage(player.url);
       if (!playerHtml) {
-        console.log(`    Failed to fetch player page for ${player.name}`);
+        console.log(`    Failed to fetch player page`);
         await delay(1000);
         continue;
       }
 
-      const careerStats = extractCareerFieldingStats(playerHtml, player.name, '2B');
+      const careerStats = extractCareerFieldingStats(playerHtml, player.name);
 
       if (careerStats.length > 0) {
+        const lastActiveSeason = calculateLastActiveSeason(careerStats);
+
         const playerData: PlayerData = {
           name: player.name,
           url: player.url,
-          scrapedFromYear: year,
+          lastActiveSeason: lastActiveSeason ?? undefined,
+          scrapedDate: new Date().toISOString(),
           careerFieldingStats: careerStats,
         };
+
         playerMap.set(player.url, playerData);
-        console.log(`    Extracted ${careerStats.length} career stat rows`);
+        scrapedCount++;
+
+        if (existingPlayer) {
+          updatedCount++;
+        } else {
+          newCount++;
+        }
+
+        console.log(
+          `    → ${careerStats.length} stat rows, last active: ${lastActiveSeason}`,
+        );
       } else {
-        console.log(`    No career stats found for ${player.name}`);
+        if (!existingPlayer) {
+          console.log(`    → No fielding stats found`);
+        } else {
+          console.log(`    → No fielding stats found, keeping existing data`);
+        }
       }
 
       await delay(1000);
@@ -120,21 +182,38 @@ async function scrapeSecondBasemenStats(existingData: PlayerData[] = []): Promis
     await delay(2000);
   }
 
+  console.log(`\n=== Scraping Summary ===`);
+  console.log(`New players: ${newCount}`);
+  console.log(`Updated players: ${updatedCount}`);
+  console.log(`Skipped (inactive): ${skippedCount}`);
+  console.log(`Total players in dataset: ${playerMap.size}`);
+  // Suppress unused variable warning
+  void scrapedCount;
+
   return Array.from(playerMap.values());
 }
 
 async function main() {
-  console.log('Starting PBE Second Basemen Scraper...');
-  console.log(`Years: ${END_YEAR} - ${START_YEAR} (newest to oldest)`);
-  console.log('Position filter: 2B only\n');
+  const isUpdate = process.argv.includes('--update');
+
+  console.log('Starting PBE All Players Fielding Scraper...');
+  console.log(`Current season: ${CURRENT_SEASON}`);
+  console.log(`Activity threshold: ${ACTIVITY_THRESHOLD_YEARS} years`);
+  console.log(
+    `Mode: ${isUpdate ? 'UPDATE (skip inactive players)' : 'FULL SCRAPE'}\n`,
+  );
 
   const startTime = Date.now();
 
   try {
-    const existingData = await loadExistingData();
-    const data = await scrapeSecondBasemenStats(existingData);
-    await saveToJson(data, 'second_basemen_stats.json');
-    await saveToTsv(data, 'second_basemen_stats.tsv');
+    let existingData: PlayerData[] = [];
+    if (isUpdate) {
+      existingData = await loadExistingData();
+    }
+
+    const data = await scrapeAllPlayers(existingData, isUpdate);
+    await saveToJson(data, 'all_players_fielding.json');
+    await saveToTsv(data, 'all_players_fielding.tsv');
 
     const elapsed = ((Date.now() - startTime) / 1000 / 60).toFixed(2);
     console.log(`\nCompleted in ${elapsed} minutes`);

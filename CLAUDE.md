@@ -39,15 +39,10 @@ yarn jest path/to/test.ts
 
 ### PBE scrapers (run from tool directory)
 
-`tools/pbe-scraper/` — pbesim.com fielding stats (no credentials needed):
+`tools/pbe-scraper/` — pbesim.com fielding stats, all positions (no credentials needed):
 ```bash
-yarn start            # Full 2B scrape across all years
-yarn new-season       # Add one new season to the 2B dataset
 yarn scrape-all       # Full all-players scrape (alphabetical)
 yarn update-all       # Re-scrape recently active players only
-yarn test             # Test 2B scraper on 2 years
-yarn test-all         # Test all-players scraper on letter B
-yarn test-new-season  # Dry run: preview what yarn new-season would do
 yarn build            # Compile TypeScript
 ```
 
@@ -123,10 +118,8 @@ All tools extend `@lemon-bluu/eslint-config/bot-flat.js` with `no-console: 'off'
 
 **`tools/pbe-scraper/`** (`@lemon-bluu/pbe-scraper`):
 - `src/types.ts` — `PlayerLink`, `FieldingStatRow`, `PlayerData` interfaces
-- `src/utils.ts` — shared `fetchPage`, `delay`, `extractCareerFieldingStats(html, name, filterPosition?)`, `saveToJson`, `saveToTsv`
-- `src/scraper.ts` — iterates fielding pages by year (newest→oldest), extracts 2B players, saves `second_basemen_stats.{json,tsv}`
-- `src/scraper-all.ts` — iterates alphabetical player pages (a–z), captures all positions, tracks `lastActiveSeason`, saves `all_players_fielding.{json,tsv}`
-- `src/scrape-new-season.ts` — adds a single new season to the 2B dataset
+- `src/utils.ts` — shared `fetchPage`, `delay`, `extractCareerFieldingStats(html, name)`, `saveToJson`, `saveToTsv`
+- `src/scraper.ts` — iterates alphabetical player pages (a–z), captures all positions, tracks `lastActiveSeason`, saves `all_players_fielding.{json,tsv}`; `--update` re-scrapes recently active players only
 
 **`tools/pbe-portal-scraper/`** (`@lemon-bluu/pbe-portal-scraper`):
 - Uses the public consolidated Simflow players JSON API
