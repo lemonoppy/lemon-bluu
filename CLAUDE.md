@@ -43,6 +43,7 @@ yarn jest path/to/test.ts
 ```bash
 yarn scrape-all       # Full all-players scrape (alphabetical)
 yarn update-all       # Re-scrape recently active players only
+yarn snapshot [season] # Current-season fielding snapshot (TSV only)
 yarn build            # Compile TypeScript
 ```
 
@@ -120,6 +121,7 @@ All tools extend `@lemon-bluu/eslint-config/bot-flat.js` with `no-console: 'off'
 - `src/types.ts` — `PlayerLink`, `FieldingStatRow`, `PlayerData` interfaces
 - `src/utils.ts` — shared `fetchPage`, `delay`, `extractCareerFieldingStats(html, name)`, `saveToJson`, `saveToTsv`
 - `src/scraper.ts` — iterates alphabetical player pages (a–z), captures all positions, tracks `lastActiveSeason`, saves `all_players_fielding.{json,tsv}`; `--update` re-scrapes recently active players only
+- `src/snapshot.ts` — walks the current league player list, keeps target-season fielding rows for all positions, saves `current_season_fielding_{season}.tsv` without touching the complete store
 
 **`tools/pbe-portal-scraper/`** (`@lemon-bluu/pbe-portal-scraper`):
 - Uses the public consolidated Simflow players JSON API

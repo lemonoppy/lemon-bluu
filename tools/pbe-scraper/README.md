@@ -15,6 +15,7 @@ yarn install
 ```bash
 yarn scrape-all         # Full all-players scrape (alphabetical, a–z)
 yarn update-all         # Re-scrape recently active players only
+yarn snapshot [season]  # Current-season fielding snapshot (TSV only)
 yarn build              # Compile TypeScript to build/
 yarn lint               # ESLint
 yarn format             # Prettier
@@ -47,6 +48,24 @@ yarn update-all
 
 - `CURRENT_SEASON` — update each new season
 - `ACTIVITY_THRESHOLD_YEARS` — how many years back counts as "active" (default: 3)
+
+---
+
+## Current-Season Snapshot (`src/snapshot.ts`)
+
+Grabs an in-progress read of how the league is fielding **right now**. It walks the
+current league player list (`/leagues/league_100_players_*.html`, ~350 active
+players) and keeps only fielding rows from the target season for **all positions**.
+
+This is independent of the complete store — it never reads or writes
+`all_players_fielding.{json,tsv}`.
+
+```bash
+yarn snapshot           # Defaults to CURRENT_SEASON + 1 (e.g. 2080)
+yarn snapshot 2081      # Explicit season override
+```
+
+**Output file:** `current_season_fielding_{season}.tsv` (same columns as the complete store)
 
 ---
 
