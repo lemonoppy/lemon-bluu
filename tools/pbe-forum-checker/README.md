@@ -16,13 +16,14 @@ Install dependencies from the repository root:
 yarn install
 ```
 
-The scraper opens your installed Google Chrome and stores its cookies in a
-dedicated, gitignored `.chrome-profile/` directory. Complete the Cloudflare
-check in that window if prompted. Later runs reuse the same browser profile.
-Using regular Chrome instead of Puppeteer's bundled Chrome for Testing avoids
-the verification loop caused by its automation fingerprint.
+The scraper auto-detects an installed Chromium-based browser (Chrome, Chromium,
+Brave, Edge, or Vivaldi) and stores its cookies in a dedicated, gitignored
+`.chrome-profile/` directory. Complete the Cloudflare check in that window if
+prompted. Later runs reuse the same browser profile. Using an installed browser
+instead of Puppeteer's bundled Chrome for Testing avoids the verification loop
+caused by its automation fingerprint.
 
-If Chrome is installed somewhere unusual, set its executable explicitly:
+If your browser is installed somewhere unusual, set its executable explicitly:
 
 ```bash
 PBE_CHROME_EXECUTABLE="/path/to/Google Chrome" yarn scrape "<thread-url>"
