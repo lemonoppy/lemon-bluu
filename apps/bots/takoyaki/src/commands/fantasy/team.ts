@@ -3,17 +3,8 @@ import { FantasyClient } from 'src/db/fantasy/FantasyClient';
 import { users } from 'src/db/users';
 import { BaseEmbed } from 'src/lib/embed';
 import { withErrorHandling } from 'src/lib/helpers/command';
-import { getGroupDisplayName } from 'src/lib/helpers/fantasyHelpers';
 import { SlashCommand } from 'typings/command';
-import { FantasyRosteredPlayer } from 'typings/fantasy';
-
-export type FantasyUser = {
-  username: string;
-  group: number | string;
-  score: number;
-  rank: number;
-  overall: number;
-}
+import { FantasyRosteredPlayer, FantasyUser } from 'typings/fantasy';
 
 const execute = async (interaction: ChatInputCommandInteraction) => {
   await interaction.deferReply();
@@ -30,7 +21,9 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   }
 
   const rosteredPlayers: FantasyRosteredPlayer[] = await FantasyClient.getRosteredPlayers();
-  const roster = rosteredPlayers.filter((player) => player.username === name);
+  const roster = rosteredPlayers.filter(
+    (player) => player.username.toLowerCase() === name.toLowerCase(),
+  );
 
   const fantasyUser: FantasyUser[] = await FantasyClient.getUsers();
   const fantasyUserInfo = fantasyUser.find((u) => u.username.toLowerCase() === name.toLowerCase());
@@ -45,7 +38,7 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   const buildEmbedFields = (roster: FantasyRosteredPlayer[]) => {
     const embeds: any[] = [{
       name: `Total Points: ${fantasyUserInfo.score}`,
-      value: `${getGroupDisplayName(fantasyUserInfo.group)}: #${fantasyUserInfo.rank}, Overall: #${fantasyUserInfo.overall}`,
+      value: `${fantasyUserInfo.groupName}: #${fantasyUserInfo.rank}, Overall: #${fantasyUserInfo.overall}`,
       inline: false
     }];
 

@@ -5,7 +5,6 @@ import {
 import { FantasyClient } from 'src/db/fantasy/FantasyClient';
 import { BaseEmbed } from 'src/lib/embed';
 import { withErrorHandling } from 'src/lib/helpers/command';
-import { getGroupDisplayName } from 'src/lib/helpers/fantasyHelpers';
 import { SlashCommand } from 'typings/command';
 import { FantasyUser } from 'typings/fantasy';
 
@@ -21,7 +20,7 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
     for (let i = 0; i < 10; i++) {
       if (users[i]) {
         embeds.push({
-          name: `#${i + 1}. ${users[i].username} (${getGroupDisplayName(users[i].group)}) ${
+          name: `#${i + 1}. ${users[i].username} (${users[i].groupName}) ${
             i === 0 ? '🏆' : ''
           }`,
           value: `**Score: ${users[i].score}** | Group Rank: ${

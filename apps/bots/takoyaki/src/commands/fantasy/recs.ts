@@ -61,8 +61,8 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   }
 
   const rosteredPlayers: FantasyRosteredPlayer[] = await FantasyClient.getRosteredPlayers();
-  const groupRosteredPlayers = rosteredPlayers.filter((player) => player.group === user.group && !player.end);
-  const roster = groupRosteredPlayers.filter((player) => player.username.trim() === user.username.trim() && !player.end);
+  const groupRosteredPlayers = rosteredPlayers.filter((player) => player.group === user.group && player.end === undefined);
+  const roster = groupRosteredPlayers.filter((player) => player.username.trim() === user.username.trim() && player.end === undefined);
 
   if (!roster.length) {
     await interaction.editReply({

@@ -6,7 +6,7 @@ A Discord bot for managing ISFL/DSFL league operations, including TPE tracking, 
 
 - **Index Updates** - Automated TPE tracker and index syncing via Google Apps Script
 - **Portal Integration** - Player lookups and stats from the ISFL portal
-- **Fantasy** - Draft tracking and combine data from Google Sheets
+- **Fantasy** - Draft tracking and fantasy stats from the public fantasy API
 - **Admin Tools** - Schedule management and cache administration
 - **Store** - Community point tracking and rewards
 
@@ -61,7 +61,6 @@ Copy `.env.example` to `.env` and fill in the values:
 | `GOOGLE_SCRIPT_ID` | Google Apps Script deployment ID for TPE tracker |
 | `GOOGLE_SERVICE_ACCOUNT_CREDENTIALS` | Google service account JSON (stringified) |
 | `SHEET_ID` | Primary Google Sheet ID |
-| `FANTASY_SHEET_ID` | Google Sheet ID for fantasy league data |
 
 ## Project Structure
 
@@ -69,11 +68,12 @@ Copy `.env.example` to `.env` and fill in the values:
 src/
 ├── commands/
 │   ├── admin/    # Admin commands (schedule, cache)
-│   ├── fantasy/  # Draft and combine lookups
+│   ├── fantasy/  # Fantasy ADP, groups, rosters, and stats
 │   ├── index/    # TPE tracker and index update commands
 │   ├── misc/     # Utility commands
 │   └── portal/   # Portal player lookups
 ├── db/
+│   ├── fantasy/  # Public fantasy API client
 │   ├── portal/   # Portal API client
 │   └── sheets/   # Google Sheets client (SheetsClient.ts)
 ├── events/       # Discord event handlers

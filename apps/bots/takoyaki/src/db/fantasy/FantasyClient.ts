@@ -1,49 +1,30 @@
-import { DynamicConfig } from 'src/lib/config/dynamicConfig';
-import { loadGoogleSpreadsheet } from 'src/lib/googleSpreadsheetLoader';
+import { Config } from 'src/lib/config/config';
 import { logger } from 'src/lib/logger';
 import {
   FantasyAdpPlayer,
+  FantasyDraftPick,
+  FantasyGroup,
   FantasyPlayer,
+  FantasyPlayerPoints,
+  FantasyRosterEntry,
   FantasyRosteredPlayer,
+  FantasySeason,
+  FantasyTeam,
   FantasyUser,
 } from 'typings/fantasy';
 
-type sheetInfo = {
-  sheet: string;
-  range: string;
-  type: 'adp' | 'players' | 'users' | 'rostered-player';
-  sheetId?: string;
-};
+const CACHE_TTL_MS = 5 * 60 * 1000;
 
-const FANTASY_ADP_SHEET_ID = '1UjWlGattioFkZeVr7dZqxBX74MueMJCmUAt_1InAwFg';
+const round2 = (value: number) => Math.round(value * 100) / 100;
 
-const SHEET_RANGES: {
-  [key: string]: sheetInfo;
-} = {
-  ADP: {
-    sheet: 'FantasyADP',
-    range: 'O4:T',
-    type: 'adp',
-    sheetId: FANTASY_ADP_SHEET_ID,
-  },
-  PLAYERS: {
-    sheet: 'Player Scores',
-    range: 'A4:E',
-    type: 'players',
-  },
-  USERS: {
-    sheet: 'Users Scores',
-    range: 'A2:E',
-    type: 'users',
-  },
-  ROSTERED_PLAYERS: {
-    sheet: 'Rosters',
-    range: 'A2:I',
-    type: 'rostered-player',
-  },
-};
+type SeasonsResponse = { seasons: Array<FantasySeason> };
+type GroupsResponse = { groups: Array<FantasyGroup> };
+type TeamsResponse = { teams: Array<FantasyTeam> };
+type TeamResponse = { rosterHistory: Array<FantasyRosterEntry> };
+type DraftResponse = { picks: Array<FantasyDraftPick> };
+type PlayerPointsResponse = { players: Array<FantasyPlayerPoints> };
 
-class PortalApiClient {
+export class FantasyApiClient {
   #adpPlayers: Array<FantasyAdpPlayer> = [];
   #players: Array<FantasyPlayer> = [];
   #rosteredPlayers: Array<FantasyRosteredPlayer> = [];
@@ -51,167 +32,244 @@ class PortalApiClient {
 
   #loaded = false;
   #lastLoadTimestamp = 0;
+  #loading: Promise<void> | null = null;
 
-  async #getData<T>(
-    data: Array<T>,
-    reload: boolean = true,
-    sheetInfo: sheetInfo,
-  ): Promise<T[]> {
-    if (data.length > 0 && !reload) {
-      return data;
+  async #get<T>(path: string): Promise<T> {
+    const response = await fetch(`${Config.fantasyApiUrl}${path}`);
+    if (!response.ok) {
+      throw new Error(`Fantasy API ${path} returned ${response.status}`);
     }
-
-    const currentFantasySheetId =
-      sheetInfo.sheetId ?? DynamicConfig.fantasySheetId.get();
-    const { GoogleSpreadsheet } = await loadGoogleSpreadsheet();
-    const doc = new GoogleSpreadsheet(currentFantasySheetId, {
-      apiKey: process.env.GOOGLE_API_KEY ?? '',
-    });
-
-    const sheetResponseData: T[] = [];
-
-    try {
-      // Load document properties and worksheets
-      await doc.loadInfo();
-      const sheet = doc.sheetsByTitle[sheetInfo.sheet];
-      const rows = await sheet.getCellsInRange(sheetInfo.range);
-
-      // Process the data
-      rows.forEach((row: string[]) => {
-        if (row[0] && row[0].length > 0 && row[0] !== 'Player') {
-          switch (sheetInfo.type) {
-            case 'adp': {
-              const adp = parseFloat(row[3]?.replace(/,/g, ''));
-              const median = parseFloat(row[4]?.replace(/,/g, ''));
-              const count = parseInt(row[5]?.replace(/,/g, ''));
-
-              if (
-                !Number.isFinite(adp) ||
-                !Number.isFinite(median) ||
-                !Number.isFinite(count)
-              ) {
-                break;
-              }
-
-              const adpPlayer: FantasyAdpPlayer = {
-                player: row[0],
-                team: row[1],
-                position: row[2],
-                adp,
-                median,
-                count,
-              };
-              sheetResponseData.push(adpPlayer as T);
-              break;
-            }
-            case 'players': {
-              const fantasyPlayer: FantasyPlayer = {
-                name: row[0],
-                position: row[1],
-                team: row[2],
-                score: parseFloat(row[4].replace(/,/g, '')),
-              };
-              sheetResponseData.push(fantasyPlayer as T);
-              break;
-            }
-            case 'users': {
-              const groupValue = row[1];
-              const parsedGroup = parseInt(groupValue);
-              const fantasyUser: FantasyUser = {
-                username: row[0],
-                group: isNaN(parsedGroup) ? groupValue : parsedGroup,
-                score: parseFloat(row[2].replace(/,/g, '')),
-                rank: parseInt(row[3]),
-                overall: parseInt(row[4]),
-              };
-              sheetResponseData.push(fantasyUser as T);
-              break;
-            }
-            case 'rostered-player': {
-              const groupValue = row[1];
-              const parsedGroup = parseInt(groupValue);
-              const rosteredPlayer: FantasyRosteredPlayer = {
-                username: row[0],
-                group: isNaN(parsedGroup) ? groupValue : parsedGroup,
-                rosterPosition: row[2],
-                name: row[3],
-                position: row[4],
-                team: row[5],
-                start: parseInt(row[6]),
-                end: row[7] ? parseInt(row[7]) : undefined,
-                score: parseFloat(row[8].replace(/,/g, '')),
-              };
-              sheetResponseData.push(rosteredPlayer as T);
-              break;
-            }
-          }
-        }
-      });
-    } catch (error) {
-      logger.error(error);
-    }
-
-    return sheetResponseData;
+    return response.json() as Promise<T>;
   }
 
-  async getAdpPlayers(
-    reload: boolean = true,
-  ): Promise<Array<FantasyAdpPlayer>> {
-    this.#adpPlayers = await this.#getData(
-      this.#adpPlayers,
-      reload,
-      SHEET_RANGES.ADP,
+  async #load(): Promise<void> {
+    const { seasons } = await this.#get<SeasonsResponse>('/seasons');
+    const season = seasons.find((entry) => entry.isCurrent);
+    if (!season) {
+      throw new Error('Fantasy API returned no current season');
+    }
+
+    const { groups } = await this.#get<GroupsResponse>(
+      `/groups?season=${season.number}`,
     );
+
+    const teamsByGroup = await Promise.all(
+      groups.map((group) =>
+        this.#get<TeamsResponse>(`/groups/${group.id}/teams`),
+      ),
+    );
+    const teams = teamsByGroup.flatMap((response) => response.teams);
+
+    const [teamDetails, drafts, playerPoints] = await Promise.all([
+      Promise.all(
+        teams.map((team) => this.#get<TeamResponse>(`/teams/${team.id}`)),
+      ),
+      Promise.all(
+        groups.map((group) =>
+          this.#get<DraftResponse>(`/groups/${group.id}/draft`),
+        ),
+      ),
+      this.#get<PlayerPointsResponse>(
+        `/players/points?season=${season.number}`,
+      ),
+    ]);
+
+    const groupById = new Map(groups.map((group) => [group.id, group]));
+    const pointsByPlayerSeasonId = new Map(
+      playerPoints.players.map((player) => [player.playerSeasonId, player]),
+    );
+
+    const stintScore = (entry: FantasyRosterEntry) => {
+      const weekScores =
+        pointsByPlayerSeasonId.get(entry.playerSeasonId)?.weekScores ?? {};
+      return Object.entries(weekScores).reduce((total, [week, score]) => {
+        const weekNumber = Number(week);
+        const onRoster =
+          weekNumber >= entry.startWeek &&
+          (entry.endWeek === null || weekNumber <= entry.endWeek);
+        return onRoster ? total + score : total;
+      }, 0);
+    };
+
+    const teamSnapshots = teams.map((team, index) => {
+      const group = groupById.get(team.groupId);
+      if (!group) {
+        throw new Error(`Fantasy API team ${team.id} has no group`);
+      }
+      const history = teamDetails[index].rosterHistory;
+      return {
+        team,
+        group,
+        history,
+        total: round2(
+          history.reduce((sum, entry) => sum + stintScore(entry), 0),
+        ),
+      };
+    });
+
+    const byScore = (
+      a: (typeof teamSnapshots)[number],
+      b: (typeof teamSnapshots)[number],
+    ) => b.total - a.total || a.team.ownerName.localeCompare(b.team.ownerName);
+
+    const overallRanks = new Map<number, number>();
+    [...teamSnapshots]
+      .sort(byScore)
+      .forEach((snapshot, index) =>
+        overallRanks.set(snapshot.team.id, index + 1),
+      );
+
+    const teamsByGroupId = new Map<
+      number,
+      Array<(typeof teamSnapshots)[number]>
+    >();
+    for (const snapshot of teamSnapshots) {
+      const groupTeams = teamsByGroupId.get(snapshot.group.id) ?? [];
+      groupTeams.push(snapshot);
+      teamsByGroupId.set(snapshot.group.id, groupTeams);
+    }
+
+    const groupRanks = new Map<number, number>();
+    for (const groupTeams of teamsByGroupId.values()) {
+      [...groupTeams]
+        .sort(byScore)
+        .forEach((snapshot, index) =>
+          groupRanks.set(snapshot.team.id, index + 1),
+        );
+    }
+
+    const users: Array<FantasyUser> = teamSnapshots.map(
+      ({ team, group, total }) => ({
+        username: team.ownerName,
+        group: group.number,
+        groupName: group.name,
+        score: total,
+        rank: groupRanks.get(team.id) ?? 0,
+        overall: overallRanks.get(team.id) ?? 0,
+      }),
+    );
+
+    const rosteredPlayers: Array<FantasyRosteredPlayer> =
+      teamSnapshots.flatMap(({ team, group, history }) =>
+        history.map((entry) => ({
+          username: team.ownerName,
+          group: group.number,
+          rosterPosition: entry.rosterSlot,
+          name: entry.name,
+          position: entry.position,
+          team: entry.realTeam,
+          start: entry.startWeek,
+          end: entry.endWeek ?? undefined,
+          score: round2(stintScore(entry)),
+        })),
+      );
+
+    const players: Array<FantasyPlayer> = playerPoints.players.map(
+      (player) => ({
+        name: player.name,
+        position: player.position,
+        team: player.realTeam,
+        score: player.total,
+      }),
+    );
+
+    const adpBuckets = new Map<
+      string | number,
+      { player: string; team: string; position: string; picks: number[] }
+    >();
+    for (const draft of drafts) {
+      for (const pick of draft.picks) {
+        const key = pick.playerSeasonId ?? pick.playerName;
+        if (key === null || key === undefined) {
+          continue;
+        }
+        const bucket = adpBuckets.get(key) ?? {
+          player: pick.playerName ?? String(key),
+          team: pick.realTeam ?? '',
+          position: pick.position ?? '',
+          picks: [],
+        };
+        bucket.picks.push(pick.pick);
+        adpBuckets.set(key, bucket);
+      }
+    }
+
+    const adpPlayers: Array<FantasyAdpPlayer> = [...adpBuckets.values()].map(
+      ({ player, team, position, picks }) => {
+        const sorted = [...picks].sort((a, b) => a - b);
+        const middle = Math.floor(sorted.length / 2);
+        const median =
+          sorted.length % 2 === 0
+            ? (sorted[middle - 1] + sorted[middle]) / 2
+            : sorted[middle];
+        return {
+          player,
+          team,
+          position,
+          adp: picks.reduce((sum, pick) => sum + pick, 0) / picks.length,
+          median,
+          count: picks.length,
+        };
+      },
+    );
+
+    this.#adpPlayers = adpPlayers;
+    this.#players = players;
+    this.#rosteredPlayers = rosteredPlayers;
+    this.#users = users;
+  }
+
+  async #runLoad(): Promise<void> {
+    if (!this.#loading) {
+      this.#loading = this.#load().finally(() => {
+        this.#loading = null;
+      });
+    }
+    return this.#loading;
+  }
+
+  async #ensureLoaded(): Promise<void> {
+    if (this.#loaded && Date.now() - this.#lastLoadTimestamp < CACHE_TTL_MS) {
+      return;
+    }
+
+    try {
+      await this.#runLoad();
+      this.#loaded = true;
+      this.#lastLoadTimestamp = Date.now();
+    } catch (error) {
+      if (!this.#loaded) {
+        throw error;
+      }
+      logger.error('Fantasy API refresh failed; serving cached data', error);
+    }
+  }
+
+  async getAdpPlayers(): Promise<Array<FantasyAdpPlayer>> {
+    await this.#ensureLoaded();
     return this.#adpPlayers;
   }
 
-  async getPlayers(reload: boolean = true): Promise<Array<FantasyPlayer>> {
-    this.#players = await this.#getData(
-      this.#players,
-      reload,
-      SHEET_RANGES.PLAYERS,
-    );
+  async getPlayers(): Promise<Array<FantasyPlayer>> {
+    await this.#ensureLoaded();
     return this.#players;
   }
 
-  async getRosteredPlayers(
-    reload: boolean = true,
-  ): Promise<Array<FantasyRosteredPlayer>> {
-    this.#rosteredPlayers = await this.#getData(
-      this.#rosteredPlayers,
-      reload,
-      SHEET_RANGES.ROSTERED_PLAYERS,
-    );
+  async getRosteredPlayers(): Promise<Array<FantasyRosteredPlayer>> {
+    await this.#ensureLoaded();
     return this.#rosteredPlayers;
   }
 
-  async getUsers(reload: boolean = true): Promise<Array<FantasyUser>> {
-    this.#users = await this.#getData(this.#users, reload, SHEET_RANGES.USERS);
+  async getUsers(): Promise<Array<FantasyUser>> {
+    await this.#ensureLoaded();
     return this.#users;
   }
 
   async reload(): Promise<void> {
-    this.#loaded = false;
-
-    await Promise.all([
-      await this.getAdpPlayers(true),
-      await this.getPlayers(true),
-      await this.getUsers(true),
-      await this.getRosteredPlayers(true),
-    ]);
-
-    this.#lastLoadTimestamp = Date.now();
+    await this.#runLoad();
     this.#loaded = true;
-  }
-
-  async reloadIfError() {
-    if (
-      !this.#loaded ||
-      Date.now() - this.#lastLoadTimestamp >= 30 * 60 * 1000 // 12 hours in milliseconds
-    ) {
-      this.reload();
-    }
+    this.#lastLoadTimestamp = Date.now();
   }
 }
 
-export const FantasyClient = new PortalApiClient();
+export const FantasyClient = new FantasyApiClient();

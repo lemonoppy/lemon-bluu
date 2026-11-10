@@ -12,11 +12,6 @@ class DynamicConfigKeyv extends KeyvFile {
   }
 
   currentSeason = makeField<number, number>(this, 'currentSeason', 0);
-  fantasySheetId = makeField<string, string>(
-    this,
-    'fantasySheetId',
-    process.env.FANTASY_SHEET_ID ?? '',
-  );
   scheduleId = makeField<string, string>(
     this,
     'scheduleId',
