@@ -213,13 +213,57 @@ export type Award = {
   pid: number;
   team: string | null;
   type: string;
-  position?: string;
+  playerPosition?: string;
   firstName?: string;
   lastName?: string;
   uid?: number;
   username?: string;
   isFirstPlayer?: number;
   wfcRegion?: string | null;
+};
+
+export type HallOfFameAward = {
+  type: string;
+  count: number;
+  seasons: string[];
+};
+
+export type HallOfFameStat = {
+  key: string;
+  label: string;
+  value: number;
+  cohortAverage: number;
+};
+
+export type HallOfFameMember = {
+  pid: number;
+  name: string;
+  position: string;
+  positionCode: string;
+  inductionSeason: number;
+  inductionTeam: string | null;
+  careerStartSeason: number;
+  careerEndSeason: number;
+  awardCount: number;
+  careerAwards: HallOfFameAward[];
+  regularSeasonStats: HallOfFameStat[];
+};
+
+export type HallOfFameResponse = { members: HallOfFameMember[] };
+
+export type PlayerRanking = {
+  pid: number;
+  name: string;
+  value: number;
+  rank: number;
+};
+
+export type PlayerRankings = Record<string, PlayerRanking[]>;
+
+export type CareerLeader = {
+  name: string;
+  position: string;
+  value: number;
 };
 
 export type PlayerSeasonStat = {
