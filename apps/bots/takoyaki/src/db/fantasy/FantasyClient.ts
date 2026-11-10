@@ -14,8 +14,65 @@ import {
 } from 'typings/fantasy';
 
 const CACHE_TTL_MS = 5 * 60 * 1000;
+const FETCH_CONCURRENCY = 8;
+const FETCH_ATTEMPTS = 3;
+const RETRY_BASE_DELAY_MS = 250;
 
 const round2 = (value: number) => Math.round(value * 100) / 100;
+
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const TRANSIENT_ERROR_CODES = new Set([
+  'ECONNRESET',
+  'ECONNREFUSED',
+  'EHOSTUNREACH',
+  'ENETUNREACH',
+  'ETIMEDOUT',
+  'EAI_AGAIN',
+  'UND_ERR_CONNECT_TIMEOUT',
+  'UND_ERR_SOCKET',
+]);
+
+const isTransientNetworkError = (error: unknown): boolean => {
+  if (!(error instanceof Error)) {
+    return false;
+  }
+
+  if (error.name === 'TypeError' && error.message === 'fetch failed') {
+    return true;
+  }
+
+  const code =
+    (error as { code?: string }).code ??
+    (error.cause as { code?: string } | undefined)?.code;
+
+  return code !== undefined && TRANSIENT_ERROR_CODES.has(code);
+};
+
+// The fantasy API returns 160+ teams; firing every request at once causes
+// intermittent connection timeouts, so fan out through a small worker pool.
+const mapWithConcurrency = async <T, R>(
+  items: Array<T>,
+  limit: number,
+  mapper: (item: T) => Promise<R>,
+): Promise<Array<R>> => {
+  const results = new Array<R>(items.length);
+  let nextIndex = 0;
+
+  const worker = async () => {
+    while (nextIndex < items.length) {
+      const index = nextIndex;
+      nextIndex += 1;
+      results[index] = await mapper(items[index]);
+    }
+  };
+
+  await Promise.all(
+    Array.from({ length: Math.min(limit, items.length) }, () => worker()),
+  );
+
+  return results;
+};
 
 type SeasonsResponse = { seasons: Array<FantasySeason> };
 type GroupsResponse = { groups: Array<FantasyGroup> };
@@ -35,11 +92,25 @@ export class FantasyApiClient {
   #loading: Promise<void> | null = null;
 
   async #get<T>(path: string): Promise<T> {
-    const response = await fetch(`${Config.fantasyApiUrl}${path}`);
-    if (!response.ok) {
-      throw new Error(`Fantasy API ${path} returned ${response.status}`);
+    for (let attempt = 1; ; attempt += 1) {
+      try {
+        const response = await fetch(`${Config.fantasyApiUrl}${path}`);
+        if (!response.ok) {
+          throw new Error(`Fantasy API ${path} returned ${response.status}`);
+        }
+        return response.json() as Promise<T>;
+      } catch (error) {
+        if (attempt >= FETCH_ATTEMPTS || !isTransientNetworkError(error)) {
+          throw error;
+        }
+
+        logger.warn(
+          `Fantasy API ${path} request failed (attempt ${attempt}/${FETCH_ATTEMPTS}); retrying`,
+          error,
+        );
+        await sleep(RETRY_BASE_DELAY_MS * attempt);
+      }
     }
-    return response.json() as Promise<T>;
   }
 
   async #load(): Promise<void> {
@@ -53,21 +124,19 @@ export class FantasyApiClient {
       `/groups?season=${season.number}`,
     );
 
-    const teamsByGroup = await Promise.all(
-      groups.map((group) =>
-        this.#get<TeamsResponse>(`/groups/${group.id}/teams`),
-      ),
+    const teamsByGroup = await mapWithConcurrency(
+      groups,
+      FETCH_CONCURRENCY,
+      (group) => this.#get<TeamsResponse>(`/groups/${group.id}/teams`),
     );
     const teams = teamsByGroup.flatMap((response) => response.teams);
 
     const [teamDetails, drafts, playerPoints] = await Promise.all([
-      Promise.all(
-        teams.map((team) => this.#get<TeamResponse>(`/teams/${team.id}`)),
+      mapWithConcurrency(teams, FETCH_CONCURRENCY, (team) =>
+        this.#get<TeamResponse>(`/teams/${team.id}`),
       ),
-      Promise.all(
-        groups.map((group) =>
-          this.#get<DraftResponse>(`/groups/${group.id}/draft`),
-        ),
+      mapWithConcurrency(groups, FETCH_CONCURRENCY, (group) =>
+        this.#get<DraftResponse>(`/groups/${group.id}/draft`),
       ),
       this.#get<PlayerPointsResponse>(
         `/players/points?season=${season.number}`,
