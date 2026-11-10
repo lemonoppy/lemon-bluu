@@ -16,7 +16,7 @@ export type FantasyAdpPlayer = {
 
 export type FantasyRosteredPlayer = {
   username: string;
-  group: number | string;
+  group: number;
   rosterPosition: string;
   name: string;
   position: string;
@@ -28,8 +28,63 @@ export type FantasyRosteredPlayer = {
 
 export type FantasyUser = {
   username: string;
-  group: number | string;
+  group: number;
+  groupName: string;
   score: number;
   rank: number;
   overall: number;
+};
+
+export type FantasySeason = {
+  id: number;
+  leagueSeasonId: number;
+  number: number;
+  name: string;
+  isCurrent: boolean;
+};
+
+export type FantasyGroup = {
+  id: number;
+  number: number;
+  name: string;
+  leagueSeasonId: number;
+};
+
+export type FantasyTeam = {
+  id: number;
+  name: string;
+  abbreviation: string;
+  groupId: number;
+  leagueSeasonId: number;
+  draftPosition: number;
+  ownerName: string;
+};
+
+export type FantasyRosterEntry = {
+  membershipId: number;
+  playerSeasonId: number;
+  playerId: number;
+  name: string;
+  position: string;
+  realTeam: string;
+  rosterSlot: string;
+  startWeek: number;
+  endWeek: number | null;
+};
+
+export type FantasyDraftPick = {
+  pick: number;
+  playerSeasonId: number | null;
+  playerName: string | null;
+  position: string | null;
+  realTeam: string | null;
+};
+
+export type FantasyPlayerPoints = {
+  playerSeasonId: number;
+  name: string;
+  position: string;
+  realTeam: string;
+  weekScores: Record<string, number>;
+  total: number;
 };

@@ -11,7 +11,6 @@ const getTeamsByLeague = (leagueType: LeagueType) => {
 
 const excludedCommands = [
   'update-cache',
-  'update-config',
   'update-schedule',
   'ia-tracker',
   'debug-perms',

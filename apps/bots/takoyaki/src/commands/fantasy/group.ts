@@ -3,7 +3,6 @@ import { FantasyClient } from 'src/db/fantasy/FantasyClient';
 import { users } from 'src/db/users';
 import { BaseEmbed } from 'src/lib/embed';
 import { withErrorHandling } from 'src/lib/helpers/command';
-import { getGroupDisplayName, normalizeGroupSearchKey } from 'src/lib/helpers/fantasyHelpers';
 import { SlashCommand } from 'typings/command';
 import { FantasyUser } from 'typings/fantasy';
 
@@ -27,16 +26,7 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   let user: FantasyUser | undefined = undefined;
 
   if (typeof searchKey === 'number') {
-    // First try to find by the number itself
     user = fantasyUsers.find((user) => user.group === searchKey);
-
-    // If not found, try the special name mapping as a fallback (for charity reward groups)
-    if (!user) {
-      const normalizedKey = normalizeGroupSearchKey(searchKey);
-      if (normalizedKey !== searchKey) {
-        user = fantasyUsers.find((user) => user.group === normalizedKey);
-      }
-    }
   }
   if (typeof searchKey === 'string') {
     user = fantasyUsers.find(
@@ -87,7 +77,7 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
   await interaction.editReply({
     embeds: [
       BaseEmbed(interaction, {})
-        .setTitle(`Fantasy Football ${getGroupDisplayName(user.group)}`)
+        .setTitle(`Fantasy Football ${user.groupName}`)
         .addFields(buildEmbedFields(groupMates)),
     ],
   });

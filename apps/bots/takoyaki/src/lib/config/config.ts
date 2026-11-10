@@ -45,6 +45,7 @@ const TPE_WEBHOOK_TEAM_CODES = [
 
 export const Config = {
   portalApiUrl: `https://portal.sim-football.com/api/isfl/v1`,
+  fantasyApiUrl: `https://fantasy.sim-football.com/api/isfl/v1/public`,
   googleSheetUrl: (sheetId: string) =>
     `https://docs.google.com/spreadsheets/d/${sheetId}`,
   devTeamIds: (process.env.DEV_TEAM_IDS ?? '').split(',').filter(Boolean),

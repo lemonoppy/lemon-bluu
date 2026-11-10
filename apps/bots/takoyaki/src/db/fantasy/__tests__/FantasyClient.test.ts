@@ -1,21 +1,20 @@
-let GoogleSpreadsheet: jest.Mock;
-let loadGoogleSpreadsheetMock: jest.Mock;
+import type {
+  FantasyDraftPick,
+  FantasyGroup,
+  FantasyPlayerPoints,
+  FantasyRosterEntry,
+  FantasySeason,
+  FantasyTeam,
+} from 'typings/fantasy';
 
-// Mock the loader used by FantasyClient for google-spreadsheet
-jest.mock('src/lib/googleSpreadsheetLoader', () => ({
-  loadGoogleSpreadsheet: jest.fn(),
-}));
+global.fetch = jest.fn();
 
-// Mock DynamicConfig
-jest.mock('src/lib/config/dynamicConfig', () => ({
-  DynamicConfig: {
-    fantasySheetId: {
-      get: () => 'mock-sheet-id',
-    },
+jest.mock('src/lib/config/config', () => ({
+  Config: {
+    fantasyApiUrl: 'https://mock-fantasy.test',
   },
 }));
 
-// Mock logger
 jest.mock('src/lib/logger', () => ({
   logger: {
     debug: jest.fn(),
@@ -24,380 +23,282 @@ jest.mock('src/lib/logger', () => ({
   },
 }));
 
-// Import after mocks
-import { FantasyClient } from '../FantasyClient';
+import { FantasyApiClient } from '../FantasyClient';
 
-describe('FantasyClient', () => {
-  let mockLoadInfo: jest.Mock;
-  let mockGetCellsInRange: jest.Mock;
-  let mockSheetsByTitle: any;
+const season = (number: number, isCurrent: boolean): FantasySeason => ({
+  id: number,
+  leagueSeasonId: number,
+  number,
+  name: `Season ${number}`,
+  isCurrent,
+});
+
+const group = (id: number, number: number, name: string): FantasyGroup => ({
+  id,
+  number,
+  name,
+  leagueSeasonId: 2,
+});
+
+const team = (
+  id: number,
+  ownerName: string,
+  groupId: number,
+): FantasyTeam => ({
+  id,
+  name: `${ownerName}'s Team`,
+  abbreviation: ownerName,
+  groupId,
+  leagueSeasonId: 2,
+  draftPosition: 1,
+  ownerName,
+});
+
+const rosterEntry = (
+  membershipId: number,
+  playerSeasonId: number,
+  name: string,
+  position: string,
+  realTeam: string,
+  startWeek: number,
+  endWeek: number | null,
+): FantasyRosterEntry => ({
+  membershipId,
+  playerSeasonId,
+  playerId: playerSeasonId,
+  name,
+  position,
+  realTeam,
+  rosterSlot: position,
+  startWeek,
+  endWeek,
+});
+
+const points = (
+  playerSeasonId: number,
+  name: string,
+  position: string,
+  realTeam: string,
+  weekScores: Record<string, number>,
+): FantasyPlayerPoints => ({
+  playerSeasonId,
+  name,
+  position,
+  realTeam,
+  weekScores,
+  total: Object.values(weekScores).reduce((sum, score) => sum + score, 0),
+});
+
+const pick = (
+  pickNumber: number,
+  playerSeasonId: number | null,
+  playerName: string | null,
+  position: string | null,
+  realTeam: string | null,
+): FantasyDraftPick => ({
+  pick: pickNumber,
+  playerSeasonId,
+  playerName,
+  position,
+  realTeam,
+});
+
+const buildRoutes = (): Record<string, unknown> => ({
+  '/seasons': { seasons: [season(63, false), season(64, true)] },
+  '/groups?season=64': {
+    groups: [group(1, 1, 'Group 1'), group(2, 2, 'IceBear Stinks')],
+  },
+  '/groups/1/teams': { teams: [team(10, 'Alice', 1), team(11, 'Bob', 1)] },
+  '/groups/2/teams': { teams: [team(20, 'Cara', 2)] },
+  '/teams/10': {
+    rosterHistory: [
+      rosterEntry(1, 100, 'Player One', 'QB', 'AAA', 1, null),
+      rosterEntry(2, 101, 'Player Two', 'RB', 'BBB', 5, null),
+      rosterEntry(3, 102, 'Player Three', 'WR', 'CCC', 1, 4),
+    ],
+  },
+  '/teams/11': {
+    rosterHistory: [rosterEntry(4, 103, 'Player Four', 'K', 'DDD', 1, null)],
+  },
+  '/teams/20': {
+    rosterHistory: [rosterEntry(5, 104, 'Player Five', 'LB', 'EEE', 1, null)],
+  },
+  '/groups/1/draft': {
+    picks: [
+      pick(1, 100, 'Player One', 'QB', 'AAA'),
+      pick(2, 101, 'Player Two', 'RB', 'BBB'),
+      pick(3, null, 'Imported Guy', 'WR', 'CCC'),
+    ],
+  },
+  '/groups/2/draft': {
+    picks: [
+      pick(1, 100, 'Player One', 'QB', 'AAA'),
+      pick(4, 101, 'Player Two', 'RB', 'BBB'),
+      pick(5, null, null, null, null),
+    ],
+  },
+  '/players/points?season=64': {
+    players: [
+      points(100, 'Player One', 'QB', 'AAA', { '1': 10, '2': 5, '5': 7 }),
+      points(101, 'Player Two', 'RB', 'BBB', { '1': 100, '5': 3, '6': 4 }),
+      points(102, 'Player Three', 'WR', 'CCC', { '1': 2, '4': 8, '5': 50 }),
+      points(103, 'Player Four', 'K', 'DDD', { '1': 20 }),
+      points(104, 'Player Five', 'LB', 'EEE', { '1': 30 }),
+    ],
+  },
+});
+
+describe('FantasyApiClient', () => {
+  let client: FantasyApiClient;
 
   beforeEach(() => {
     jest.clearAllMocks();
-    const googleSpreadsheetModule = require('src/lib/googleSpreadsheetLoader');
-    loadGoogleSpreadsheetMock =
-      googleSpreadsheetModule.loadGoogleSpreadsheet as jest.Mock;
-    GoogleSpreadsheet = jest.fn();
-    loadGoogleSpreadsheetMock.mockResolvedValue({
-      GoogleSpreadsheet,
+    const routes = buildRoutes();
+    (global.fetch as jest.Mock).mockImplementation((url: string) => {
+      const path = url.replace('https://mock-fantasy.test', '');
+      return Promise.resolve({
+        ok: path in routes,
+        status: path in routes ? 200 : 404,
+        json: async () => routes[path],
+      });
     });
-
-    mockLoadInfo = jest.fn();
-    mockGetCellsInRange = jest.fn();
-
-    mockSheetsByTitle = {
-      FantasyADP: {
-        getCellsInRange: mockGetCellsInRange,
-      },
-      'Player Scores': {
-        getCellsInRange: mockGetCellsInRange,
-      },
-      'Users Scores': {
-        getCellsInRange: mockGetCellsInRange,
-      },
-      Rosters: {
-        getCellsInRange: mockGetCellsInRange,
-      },
-    };
-
-    (GoogleSpreadsheet as unknown as jest.Mock).mockImplementation(() => ({
-      loadInfo: mockLoadInfo,
-      sheetsByTitle: mockSheetsByTitle,
-    }));
-
-    // Set GOOGLE_API_KEY for tests
-    process.env.GOOGLE_API_KEY = 'test-api-key';
+    client = new FantasyApiClient();
   });
 
-  describe('getAdpPlayers', () => {
-    it('should fetch and parse ADP players successfully', async () => {
-      const mockSheetData = [
-        ['Player', 'Team', 'Position', 'ADP', 'Median', 'Count'],
-        ['Player One', 'Team A', 'RB', '1.25', '1', '1,234'],
-        ['Player Two', 'Team B', 'WR', '2.50', '2.5', '10'],
-      ];
+  it('loads the current season and its data', async () => {
+    await client.reload();
 
-      mockGetCellsInRange.mockResolvedValueOnce(mockSheetData);
+    expect(global.fetch).toHaveBeenCalledWith(
+      'https://mock-fantasy.test/seasons',
+    );
+    expect(global.fetch).toHaveBeenCalledWith(
+      'https://mock-fantasy.test/groups?season=64',
+    );
+    expect(global.fetch).toHaveBeenCalledWith(
+      'https://mock-fantasy.test/players/points?season=64',
+    );
+    expect(global.fetch).not.toHaveBeenCalledWith(
+      'https://mock-fantasy.test/groups?season=63',
+    );
+  });
 
-      const result = await FantasyClient.getAdpPlayers(true);
+  it('maps player season totals', async () => {
+    const players = await client.getPlayers();
 
-      expect(result).toEqual([
-        {
-          player: 'Player One',
-          team: 'Team A',
-          position: 'RB',
-          adp: 1.25,
-          median: 1,
-          count: 1234,
-        },
-        {
-          player: 'Player Two',
-          team: 'Team B',
-          position: 'WR',
-          adp: 2.5,
-          median: 2.5,
-          count: 10,
-        },
-      ]);
-      expect(mockGetCellsInRange).toHaveBeenCalledWith('O4:T');
-      expect(GoogleSpreadsheet).toHaveBeenCalledWith(
-        '1UjWlGattioFkZeVr7dZqxBX74MueMJCmUAt_1InAwFg',
-        { apiKey: 'test-api-key' },
-      );
-    });
-
-    it('should skip empty rows, the header, and invalid numeric data', async () => {
-      const mockSheetData = [
-        ['Player', 'Team', 'Position', 'ADP', 'Median', 'Count'],
-        ['', '', '', '', '', ''],
-        ['Invalid Player', 'Team A', 'RB', 'N/A', '1', '2'],
-        ['Valid Player', 'Team B', 'WR', '3', '3', '4'],
-      ];
-
-      mockGetCellsInRange.mockResolvedValueOnce(mockSheetData);
-
-      const result = await FantasyClient.getAdpPlayers(true);
-
-      expect(result).toHaveLength(1);
-      expect(result[0].player).toBe('Valid Player');
-    });
-
-    it('should use cached ADP data when reload is false', async () => {
-      mockGetCellsInRange.mockResolvedValueOnce([
-        ['Player One', 'Team A', 'RB', '1.25', '1', '5'],
-      ]);
-
-      const result1 = await FantasyClient.getAdpPlayers(true);
-      const result2 = await FantasyClient.getAdpPlayers(false);
-
-      expect(result1).toEqual(result2);
-      expect(mockLoadInfo).toHaveBeenCalledTimes(1);
-    });
-
-    it('should handle ADP sheet errors gracefully', async () => {
-      mockLoadInfo.mockRejectedValueOnce(new Error('Sheet access error'));
-
-      const result = await FantasyClient.getAdpPlayers(true);
-
-      expect(result).toEqual([]);
+    expect(players).toHaveLength(5);
+    expect(players.find((player) => player.name === 'Player One')).toEqual({
+      name: 'Player One',
+      position: 'QB',
+      team: 'AAA',
+      score: 22,
     });
   });
 
-  describe('getPlayers', () => {
-    it('should fetch and parse players successfully', async () => {
-      const mockSheetData = [
-        ['Player One', 'C', 'Team A', '', '100.5'],
-        ['Player Two', 'LW', 'Team B', '', '95.25'],
-      ];
+  it('counts only weeks each player spent on the team', async () => {
+    const users = await client.getUsers();
 
-      mockGetCellsInRange.mockResolvedValueOnce(mockSheetData);
-
-      const result = await FantasyClient.getPlayers(true);
-
-      expect(result).toHaveLength(2);
-      expect(result[0]).toEqual({
-        name: 'Player One',
-        position: 'C',
-        team: 'Team A',
-        score: 100.5,
-      });
-      expect(result[1]).toEqual({
-        name: 'Player Two',
-        position: 'LW',
-        team: 'Team B',
-        score: 95.25,
-      });
-      expect(mockLoadInfo).toHaveBeenCalledTimes(1);
-      expect(mockGetCellsInRange).toHaveBeenCalledWith('A4:E');
+    expect(users.find((user) => user.username === 'Alice')).toEqual({
+      username: 'Alice',
+      group: 1,
+      groupName: 'Group 1',
+      score: 39,
+      rank: 1,
+      overall: 1,
     });
-
-    it('should skip empty rows', async () => {
-      const mockSheetData = [
-        ['Player One', 'C', 'Team A', '', '100.5'],
-        ['', '', '', '', ''],
-        ['Player Two', 'LW', 'Team B', '', '95.25'],
-      ];
-
-      mockGetCellsInRange.mockResolvedValueOnce(mockSheetData);
-
-      const result = await FantasyClient.getPlayers(true);
-
-      expect(result).toHaveLength(2);
-      expect(result[0].name).toBe('Player One');
-      expect(result[1].name).toBe('Player Two');
+    expect(users.find((user) => user.username === 'Cara')).toMatchObject({
+      group: 2,
+      groupName: 'IceBear Stinks',
+      score: 30,
+      rank: 1,
+      overall: 2,
     });
-
-    it('should handle scores with commas', async () => {
-      const mockSheetData = [['Player One', 'C', 'Team A', '', '1,234.56']];
-
-      mockGetCellsInRange.mockResolvedValueOnce(mockSheetData);
-
-      const result = await FantasyClient.getPlayers(true);
-
-      expect(result[0].score).toBe(1234.56);
-    });
-
-    it('should use cached data when reload is false', async () => {
-      const mockSheetData = [['Player One', 'C', 'Team A', '', '100.5']];
-
-      mockGetCellsInRange.mockResolvedValueOnce(mockSheetData);
-
-      const result1 = await FantasyClient.getPlayers(true);
-      const result2 = await FantasyClient.getPlayers(false);
-
-      expect(result1).toEqual(result2);
-      expect(mockLoadInfo).toHaveBeenCalledTimes(1);
-    });
-
-    it('should handle errors gracefully', async () => {
-      mockLoadInfo.mockRejectedValueOnce(new Error('Sheet access error'));
-
-      const result = await FantasyClient.getPlayers(true);
-
-      expect(result).toEqual([]);
+    expect(users.find((user) => user.username === 'Bob')).toMatchObject({
+      score: 20,
+      rank: 2,
+      overall: 3,
     });
   });
 
-  describe('getUsers', () => {
-    it('should fetch and parse users successfully', async () => {
-      const mockSheetData = [
-        ['User1', '1', '500.25', '1', '5'],
-        ['User2', 'A', '450.50', '2', '10'],
-      ];
+  it('maps roster stints with weeks and stint scores', async () => {
+    const roster = await client.getRosteredPlayers();
 
-      mockGetCellsInRange.mockResolvedValueOnce(mockSheetData);
-
-      const result = await FantasyClient.getUsers(true);
-
-      expect(result).toHaveLength(2);
-      expect(result[0]).toEqual({
-        username: 'User1',
-        group: 1,
-        score: 500.25,
-        rank: 1,
-        overall: 5,
-      });
-      expect(result[1]).toEqual({
-        username: 'User2',
-        group: 'A',
-        score: 450.5,
-        rank: 2,
-        overall: 10,
-      });
+    expect(roster.find((player) => player.name === 'Player Two')).toEqual({
+      username: 'Alice',
+      group: 1,
+      rosterPosition: 'RB',
+      name: 'Player Two',
+      position: 'RB',
+      team: 'BBB',
+      start: 5,
+      end: undefined,
+      score: 7,
     });
-
-    it('should handle group as number or string', async () => {
-      const mockSheetData = [
-        ['User1', '5', '500', '1', '1'],
-        ['User2', 'Premier', '450', '2', '2'],
-      ];
-
-      mockGetCellsInRange.mockResolvedValueOnce(mockSheetData);
-
-      const result = await FantasyClient.getUsers(true);
-
-      expect(result[0].group).toBe(5);
-      expect(result[1].group).toBe('Premier');
-    });
-
-    it('should handle scores with commas', async () => {
-      const mockSheetData = [['User1', '1', '1,234.56', '1', '1']];
-
-      mockGetCellsInRange.mockResolvedValueOnce(mockSheetData);
-
-      const result = await FantasyClient.getUsers(true);
-
-      expect(result[0].score).toBe(1234.56);
-    });
+    expect(roster.find((player) => player.name === 'Player Three')).toMatchObject(
+      { start: 1, end: 4, score: 10 },
+    );
   });
 
-  describe('getRosteredPlayers', () => {
-    it('should fetch and parse rostered players successfully', async () => {
-      const mockSheetData = [
-        ['User1', '1', 'C1', 'Player One', 'C', 'Team A', '1', '10', '150.5'],
-        ['User2', '2', 'LW1', 'Player Two', 'LW', 'Team B', '5', '', '100.25'],
-      ];
+  it('aggregates ADP across every group draft', async () => {
+    const adp = await client.getAdpPlayers();
 
-      mockGetCellsInRange.mockResolvedValueOnce(mockSheetData);
-
-      const result = await FantasyClient.getRosteredPlayers(true);
-
-      expect(result).toHaveLength(2);
-      expect(result[0]).toEqual({
-        username: 'User1',
-        group: 1,
-        rosterPosition: 'C1',
-        name: 'Player One',
-        position: 'C',
-        team: 'Team A',
-        start: 1,
-        end: 10,
-        score: 150.5,
-      });
-      expect(result[1]).toEqual({
-        username: 'User2',
-        group: 2,
-        rosterPosition: 'LW1',
-        name: 'Player Two',
-        position: 'LW',
-        team: 'Team B',
-        start: 5,
-        end: undefined,
-        score: 100.25,
-      });
+    expect(adp.find((player) => player.player === 'Player One')).toEqual({
+      player: 'Player One',
+      team: 'AAA',
+      position: 'QB',
+      adp: 1,
+      median: 1,
+      count: 2,
     });
-
-    it('should handle group as string', async () => {
-      const mockSheetData = [
-        [
-          'User1',
-          'Premier',
-          'C1',
-          'Player One',
-          'C',
-          'Team A',
-          '1',
-          '10',
-          '150.5',
-        ],
-      ];
-
-      mockGetCellsInRange.mockResolvedValueOnce(mockSheetData);
-
-      const result = await FantasyClient.getRosteredPlayers(true);
-
-      expect(result[0].group).toBe('Premier');
+    expect(adp.find((player) => player.player === 'Player Two')).toEqual({
+      player: 'Player Two',
+      team: 'BBB',
+      position: 'RB',
+      adp: 3,
+      median: 3,
+      count: 2,
     });
-
-    it('should handle end date as undefined when empty', async () => {
-      const mockSheetData = [
-        ['User1', '1', 'C1', 'Player One', 'C', 'Team A', '1', '', '150.5'],
-      ];
-
-      mockGetCellsInRange.mockResolvedValueOnce(mockSheetData);
-
-      const result = await FantasyClient.getRosteredPlayers(true);
-
-      expect(result[0].end).toBeUndefined();
-    });
-
-    it('should handle scores with commas', async () => {
-      const mockSheetData = [
-        [
-          'User1',
-          '1',
-          'C1',
-          'Player One',
-          'C',
-          'Team A',
-          '1',
-          '10',
-          '1,500.75',
-        ],
-      ];
-
-      mockGetCellsInRange.mockResolvedValueOnce(mockSheetData);
-
-      const result = await FantasyClient.getRosteredPlayers(true);
-
-      expect(result[0].score).toBe(1500.75);
-    });
+    expect(adp.find((player) => player.player === 'Imported Guy')).toMatchObject(
+      { adp: 3, median: 3, count: 1 },
+    );
+    expect(adp).toHaveLength(3);
   });
 
-  describe('reload', () => {
-    it('should reload all data sources', async () => {
-      const mockAdpData = [['Player', 'Team', 'RB', '1', '1', '1']];
-      const mockPlayersData = [['Player', 'C', 'Team', '', '100']];
-      const mockUsersData = [['User', '1', '500', '1', '1']];
-      const mockRosteredData = [
-        ['User', '1', 'C1', 'Player', 'C', 'Team', '1', '10', '100'],
-      ];
+  it('shares one in-flight load between concurrent getters', async () => {
+    await Promise.all([client.getUsers(), client.getPlayers()]);
 
-      mockGetCellsInRange
-        .mockResolvedValueOnce(mockAdpData)
-        .mockResolvedValueOnce(mockPlayersData)
-        .mockResolvedValueOnce(mockUsersData)
-        .mockResolvedValueOnce(mockRosteredData);
-
-      await FantasyClient.reload();
-
-      expect(mockLoadInfo).toHaveBeenCalledTimes(4);
-      expect(mockGetCellsInRange).toHaveBeenCalledTimes(4);
-    });
+    const seasonCalls = (global.fetch as jest.Mock).mock.calls.filter(
+      ([url]) => url === 'https://mock-fantasy.test/seasons',
+    );
+    expect(seasonCalls).toHaveLength(1);
   });
 
-  describe('Google Spreadsheet initialization', () => {
-    it('should initialize with correct sheet ID and API key', async () => {
-      process.env.GOOGLE_API_KEY = 'test-key-456';
+  it('reuses the snapshot between getter calls', async () => {
+    await client.getUsers();
+    const fetchCalls = (global.fetch as jest.Mock).mock.calls.length;
 
-      const mockSheetData = [['Player', 'C', 'Team', '', '100']];
-      mockGetCellsInRange.mockResolvedValueOnce(mockSheetData);
+    await client.getPlayers();
 
-      await FantasyClient.getPlayers(true);
+    expect((global.fetch as jest.Mock).mock.calls.length).toBe(fetchCalls);
+  });
 
-      expect(GoogleSpreadsheet).toHaveBeenCalledWith('mock-sheet-id', {
-        apiKey: 'test-key-456',
-      });
-    });
+  it('serves the cached snapshot when a refresh fails', async () => {
+    const now = jest.spyOn(Date, 'now').mockReturnValue(0);
+    await client.getUsers();
+
+    now.mockReturnValue(6 * 60 * 1000);
+    (global.fetch as jest.Mock).mockRejectedValue(new Error('network down'));
+
+    await expect(client.getUsers()).resolves.toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ username: 'Alice', score: 39 }),
+      ]),
+    );
+    now.mockRestore();
+  });
+
+  it('throws when the first load fails', async () => {
+    (global.fetch as jest.Mock).mockRejectedValue(new Error('network down'));
+
+    await expect(client.getPlayers()).rejects.toThrow('network down');
   });
 });
