@@ -1,9 +1,53 @@
 import { PortalClient } from 'src/db/portal/PortalClient';
 import Query from 'src/lib/db';
+import { suffix } from 'src/lib/format';
 import { logger } from 'src/lib/logger';
-import { Award, GMRecord, PlayerSeasonStat, StandingsResponse, TeamHistoryRecord } from 'typings/portal';
+import { Award, CareerLeader, GMRecord, HallOfFameMember, PlayerSeasonStat, StandingsResponse, TeamHistoryRecord } from 'typings/portal';
 
 const DSFL_TEAMS = new Set(['KCC', 'LON', 'MIN', 'DAL', 'POR', 'BBB', 'NOR', 'TIJ']);
+
+const POSITION_ORDER = ['QB', 'RB', 'WR', 'TE', 'OL', 'DE', 'DT', 'LB', 'CB', 'S', 'K', 'Fullback'];
+
+const POSITION_KEY_STATS: Record<string, string[]> = {
+  QB: ['passYds', 'passTD'],
+  RB: ['rushYds', 'rushTD', 'recYds'],
+  WR: ['recRec', 'recYds', 'recTD'],
+  TE: ['recRec', 'recYds', 'recTD'],
+  OL: ['otherPancakes'],
+  DE: ['defSack', 'defTck'],
+  DT: ['defSack', 'defTck'],
+  LB: ['defTck', 'defSack', 'defInt'],
+  CB: ['defInt', 'defPD', 'defTck'],
+  S: ['defInt', 'defPD', 'defTck'],
+  K: ['kFGM', 'kFGPct'],
+  Fullback: ['otherPancakes'],
+};
+
+const RANKING_STATS: Record<string, Array<[string, string]>> = {
+  QB: [['passYds', 'pass yds'], ['passTD', 'pass TDs'], ['passCmp', 'completions'], ['passRat', 'passer rating']],
+  RB: [['rushYds', 'rush yds'], ['rushTD', 'rush TDs'], ['recYds', 'rec yds'], ['scrimmageYds', 'scrimmage yds']],
+  WR: [['recRec', 'receptions'], ['recYds', 'rec yds'], ['recTD', 'rec TDs']],
+  TE: [['recRec', 'receptions'], ['recYds', 'rec yds'], ['recTD', 'rec TDs']],
+  OL: [['otherPancakes', 'pancakes']],
+  DE: [['defSack', 'sacks'], ['defTck', 'tackles'], ['defTFL', 'TFL'], ['defFF', 'forced fumbles']],
+  DT: [['defSack', 'sacks'], ['defTck', 'tackles'], ['defTFL', 'TFL'], ['defFF', 'forced fumbles']],
+  LB: [['defTck', 'tackles'], ['defSack', 'sacks'], ['defInt', 'INTs'], ['defFF', 'forced fumbles']],
+  CB: [['defInt', 'INTs'], ['defPD', 'passes defended'], ['defTck', 'tackles']],
+  S: [['defInt', 'INTs'], ['defPD', 'passes defended'], ['defTck', 'tackles']],
+  K: [['kFGM', 'FG made'], ['kFGPct', 'FG%'], ['kXPM', 'XP made']],
+};
+
+const CAREER_LEADER_GROUPS = [
+  { label: 'QB passing yards', positions: ['QB'], category: 'passing', sortBy: 'passYds' },
+  { label: 'RB rushing yards', positions: ['RB', 'FB'], category: 'rushing', sortBy: 'rushYds' },
+  { label: 'WR receiving yards', positions: ['WR'], category: 'receiving', sortBy: 'recYds' },
+  { label: 'TE receiving yards', positions: ['TE'], category: 'receiving', sortBy: 'recYds' },
+  { label: 'OL pancakes', positions: ['C', 'G', 'T'], category: 'blocking', sortBy: 'otherPancakes' },
+  { label: 'DL sacks', positions: ['DE', 'DT'], category: 'defense', sortBy: 'defSack' },
+  { label: 'LB tackles', positions: ['LB'], category: 'defense', sortBy: 'defTck' },
+  { label: 'DB interceptions', positions: ['CB', 'S'], category: 'defense', sortBy: 'defInt' },
+  { label: 'K field goals made', positions: ['K'], category: 'kicking', sortBy: 'fieldGoalsMade' },
+];
 
 type PlayerStatsRow = {
   pid: number;
@@ -36,19 +80,23 @@ class StatsApiClient {
   #teamHistoryContext: string = '';
   #gmHistoryContext: string = '';
   #awardsContext: string = '';
+  #hallOfFameContext: string = '';
+  #allTimeLeadersContext: string = '';
   #seasonContext: string = '';
   #currentSeason: number = 0;
   #playerContextByFullName: Map<string, string> = new Map();
   #playerContextByLastName: Map<string, string> = new Map();
   #playerContextByFirstName: Map<string, string> = new Map();
   #playerPidByFullName: Map<string, number> = new Map();
+  #positionByPid: Map<number, string> = new Map();
+  #hallOfFameByPid: Map<number, HallOfFameMember> = new Map();
 
   async reload(): Promise<void> {
     try {
       const season = await PortalClient.getCurrentSeason();
 
       // Fetch all data in parallel; supplemental sources fail independently
-      const [activePlayers, result, standings, teamHistory, gmHistory, rawAwards] = await Promise.all([
+      const [activePlayers, result, standings, teamHistory, gmHistory, rawAwards, hallOfFame, leaderGroups] = await Promise.all([
         PortalClient.getActivePlayers(),
         Query<PlayerStatsRow>(
           `
@@ -68,6 +116,17 @@ class StatsApiClient {
         PortalClient.getTeamHistory().catch(() => null),
         PortalClient.getGMHistory().catch(() => [] as GMRecord[]),
         PortalClient.getAwards().catch(() => [] as Award[]),
+        PortalClient.getHallOfFame().catch(() => [] as HallOfFameMember[]),
+        Promise.all(
+          CAREER_LEADER_GROUPS.map(async (group) => ({
+            label: group.label,
+            leaders: await PortalClient.getCareerLeaders(
+              group.positions,
+              group.category,
+              group.sortBy,
+            ).catch(() => [] as CareerLeader[]),
+          })),
+        ),
       ]);
 
       // Filter DSFL team awards
@@ -82,6 +141,11 @@ class StatsApiClient {
         awardsByNameKey.get(key)!.push(award);
       }
 
+      this.#hallOfFameByPid = new Map(hallOfFame.map((member) => [member.pid, member]));
+      this.#positionByPid = new Map(
+        hallOfFame.map((member) => [member.pid, member.positionCode]),
+      );
+
       // Build pidToPlayer map (active ISFL players only)
       const pidToPlayer = new Map<number, { fullName: string; team: string; position: string; firstName: string; lastName: string }>();
       for (const p of activePlayers) {
@@ -93,6 +157,7 @@ class StatsApiClient {
             firstName: p.firstName.toLowerCase(),
             lastName: p.lastName.toLowerCase(),
           });
+          this.#positionByPid.set(p.pid, abbreviatePosition(p.position));
         }
       }
 
@@ -127,8 +192,12 @@ class StatsApiClient {
         if (byFullName.has(nameKey)) continue;
 
         const latest = [...playerAwards].sort((a, b) => b.season - a.season)[0];
-        const retiredLine = `${latest.firstName} ${latest.lastName} (${latest.team ?? 'Unknown'}, ${latest.position ?? 'Unknown'}, retired)`;
+        const retiredLine = `${latest.firstName} ${latest.lastName} (${latest.team ?? 'Unknown'}, ${latest.playerPosition ? abbreviatePosition(latest.playerPosition) : 'Unknown'}, retired)`;
         byFullName.set(nameKey, `${retiredLine}\n${formatPlayerAwards(playerAwards)}`);
+        byPid.set(nameKey, latest.pid);
+        if (latest.playerPosition && !this.#positionByPid.has(latest.pid)) {
+          this.#positionByPid.set(latest.pid, abbreviatePosition(latest.playerPosition));
+        }
 
         const parts = nameKey.split(' ');
         const ln = parts[parts.length - 1];
@@ -159,7 +228,7 @@ class StatsApiClient {
           .filter((r) => (r.stats[key] as number) > 0)
           .sort((a, b) => (b.stats[key] as number) - (a.stats[key] as number))
           .slice(0, 5)
-          .map((r) => `${r.fullName} (${r.team}) ${(r.stats[key] as number).toLocaleString('en-US')}`)
+          .map((r) => `${r.fullName} (${r.team}, ${r.position}) ${(r.stats[key] as number).toLocaleString('en-US')}`)
           .join(' | ');
 
       this.#leaderContext = [
@@ -183,6 +252,8 @@ class StatsApiClient {
       this.#teamHistoryContext = teamHistory ? buildTeamHistoryContext(teamHistory.records) : '';
       this.#gmHistoryContext = gmHistory.length ? buildGMContext(gmHistory) : '';
       this.#awardsContext = awards.length ? buildAwardsContext(awards, season) : '';
+      this.#hallOfFameContext = hallOfFame.length ? buildHallOfFameContext(hallOfFame) : '';
+      this.#allTimeLeadersContext = buildAllTimeLeadersContext(leaderGroups);
 
       logger.info(`StatsClient: Loaded ${enriched.length} active + ${byFullName.size - enriched.length} retired players (season ${season})`);
     } catch (error) {
@@ -192,11 +263,15 @@ class StatsApiClient {
       this.#teamHistoryContext = '';
       this.#gmHistoryContext = '';
       this.#awardsContext = '';
+      this.#hallOfFameContext = '';
+      this.#allTimeLeadersContext = '';
       this.#seasonContext = '';
       this.#playerContextByFullName = new Map();
       this.#playerContextByLastName = new Map();
       this.#playerContextByFirstName = new Map();
       this.#playerPidByFullName = new Map();
+      this.#positionByPid = new Map();
+      this.#hallOfFameByPid = new Map();
     }
   }
 
@@ -226,6 +301,52 @@ class StatsApiClient {
 
   getAwardsContext(): string {
     return this.#awardsContext;
+  }
+
+  getHallOfFameContext(): string {
+    return this.#hallOfFameContext;
+  }
+
+  getAllTimeLeadersContext(): string {
+    return this.#allTimeLeadersContext;
+  }
+
+  getHallOfFameContextFor(pid: number): string {
+    const member = this.#hallOfFameByPid.get(pid);
+    if (!member) return '';
+
+    const awards = member.careerAwards
+      .map((award) => `${award.count}x ${award.type} (${award.seasons.join(', ')})`)
+      .join('; ');
+    const stats = member.regularSeasonStats
+      .filter((stat) => POSITION_KEY_STATS[member.positionCode]?.includes(stat.key))
+      .map((stat) => `${formatNumber(stat.value)} ${stat.label.toLowerCase()} (position cohort avg ${formatNumber(stat.cohortAverage)})`)
+      .join(', ');
+
+    return [
+      `Hall of Fame: inducted S${member.inductionSeason}, career S${member.careerStartSeason}-S${member.careerEndSeason}.`,
+      awards ? `Career awards: ${awards}.` : '',
+      stats ? `Career stats: ${stats}.` : '',
+    ].filter(Boolean).join(' ');
+  }
+
+  async getPlayerRankingsContext(pid: number): Promise<string> {
+    const position = this.#positionByPid.get(pid);
+    const stats = position ? RANKING_STATS[position] : undefined;
+    if (!position || !stats) return '';
+
+    const rankings = await PortalClient.getPlayerRankings(pid, position).catch(() => null);
+    if (!rankings) return '';
+
+    const parts = stats.flatMap(([key, label]) => {
+      const entry = rankings[key]?.[0];
+      return entry
+        ? [`${label} ${formatNumber(entry.value)} (${suffix(entry.rank)} among ${position}s)`]
+        : [];
+    });
+    return parts.length
+      ? `Career ranks (regular season, same-era ${position}s): ${parts.join(', ')}`
+      : '';
   }
 
   /**
@@ -304,6 +425,59 @@ function abbreviatePosition(position: string): string {
   return map[position] ?? position;
 }
 
+function formatNumber(value: number): string {
+  return Number.isInteger(value)
+    ? value.toLocaleString('en-US')
+    : value.toFixed(1);
+}
+
+export function buildHallOfFameContext(members: HallOfFameMember[]): string {
+  const byPosition = new Map<string, HallOfFameMember[]>();
+  for (const member of members) {
+    if (!byPosition.has(member.positionCode)) byPosition.set(member.positionCode, []);
+    byPosition.get(member.positionCode)!.push(member);
+  }
+
+  const lines = ['Hall of Fame (regular-season career totals):'];
+  for (const position of POSITION_ORDER) {
+    const group = byPosition.get(position);
+    if (!group) continue;
+
+    const entries = [...group]
+      .sort((a, b) => b.inductionSeason - a.inductionSeason)
+      .map((member) => {
+        const awards = member.careerAwards
+          .slice(0, 3)
+          .map((award) => `${award.count}x ${award.type}`)
+          .join(', ');
+        const stats = member.regularSeasonStats
+          .filter((stat) => POSITION_KEY_STATS[position]?.includes(stat.key))
+          .map((stat) => `${formatNumber(stat.value)} ${stat.label.toLowerCase()}`)
+          .join(', ');
+        const details = [awards, stats].filter(Boolean).join('; ');
+        return `${member.name} (HoF S${member.inductionSeason}, S${member.careerStartSeason}-S${member.careerEndSeason})${details ? `: ${details}` : ''}`;
+      });
+
+    lines.push(`${position}: ${entries.join(' | ')}`);
+  }
+  return lines.join('\n');
+}
+
+export function buildAllTimeLeadersContext(
+  groups: Array<{ label: string; leaders: CareerLeader[] }>,
+): string {
+  const lines = ['All-Time Career Leaders (regular season):'];
+  for (const { label, leaders } of groups) {
+    if (!leaders.length) continue;
+    lines.push(
+      `${label}: ${leaders
+        .map((leader) => `${leader.name} (${abbreviatePosition(leader.position)}) ${formatNumber(leader.value)}`)
+        .join(', ')}`,
+    );
+  }
+  return lines.length > 1 ? lines.join('\n') : '';
+}
+
 function formatStatLine(
   fullName: string,
   team: string,
@@ -359,6 +533,28 @@ export function formatPrevStatLine(stat: PlayerSeasonStat): string | null {
   return parts.length ? parts.join('; ') : null;
 }
 
+export function formatCareerSummary(stats: PlayerSeasonStat[]): string | null {
+  const regular = stats.filter((s) => s.seasonState === 'RegularSeason');
+  if (!regular.length) return null;
+
+  const sum = (key: keyof PlayerSeasonStat) =>
+    regular.reduce((total, s) => total + (s[key] as number), 0);
+
+  const parts: string[] = [];
+  if (sum('passYds') > 0)
+    parts.push(`${sum('passYds').toLocaleString('en-US')} pass yds, ${sum('passTD')} pass TDs, ${sum('passInt')} INTs`);
+  if (sum('rushYds') > 0)
+    parts.push(`${sum('rushYds').toLocaleString('en-US')} rush yds, ${sum('rushTD')} rush TDs`);
+  if (sum('recYds') > 0)
+    parts.push(`${sum('recYds').toLocaleString('en-US')} rec yds (${sum('recRec')} rec), ${sum('recTD')} rec TDs`);
+  if (sum('defTck') > 0)
+    parts.push(`${sum('defTck')} tackles, ${sum('defSack')} sacks, ${sum('defInt')} INTs`);
+  if (!parts.length) return null;
+
+  const seasons = regular.map((s) => s.season);
+  return `Career (S${Math.min(...seasons)}-S${Math.max(...seasons)}, ${regular.length} regular seasons): ${parts.join('; ')}`;
+}
+
 export const StatsClient = new StatsApiClient();
 
 
@@ -407,19 +603,29 @@ function buildAwardsContext(awards: Award[], currentSeason: number): string {
   const minSeason = currentSeason - 14;
   const recent = awards.filter((a) => a.season >= minSeason);
 
-  const byType = new Map<string, Array<{ season: number; name: string; team: string | null }>>();
+  const byType = new Map<string, Array<{ season: number; name: string; team: string | null; position: string | null }>>();
   for (const a of recent) {
     if (!byType.has(a.type)) byType.set(a.type, []);
     const name =
       a.firstName && a.lastName ? `${a.firstName} ${a.lastName}` : (a.username ?? 'Unknown');
-    byType.get(a.type)!.push({ season: a.season, name, team: a.team });
+    byType.get(a.type)!.push({
+      season: a.season,
+      name,
+      team: a.team,
+      position: a.playerPosition ? abbreviatePosition(a.playerPosition) : null,
+    });
   }
 
   const lines = [`Award History (Seasons ${minSeason}-${currentSeason}):`];
   for (const [type, winners] of [...byType.entries()].sort(([a], [b]) => a.localeCompare(b))) {
     const sorted = [...winners].sort((a, b) => b.season - a.season).slice(0, 8);
     lines.push(
-      `${type}: ${sorted.map((w) => `${w.name}${w.team ? ` (${w.team})` : ''} S${w.season}`).join(', ')}`,
+      `${type}: ${sorted
+        .map((w) => {
+          const tag = [w.team, w.position].filter(Boolean).join(', ');
+          return `${w.name}${tag ? ` (${tag})` : ''} S${w.season}`;
+        })
+        .join(', ')}`,
     );
   }
   return lines.join('\n');

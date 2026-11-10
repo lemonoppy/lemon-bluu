@@ -3,7 +3,7 @@ import { SlashCommandBuilder } from 'discord.js';
 
 import _ from 'lodash';
 import { PortalClient } from 'src/db/portal/PortalClient';
-import { StatsClient, formatPrevStatLine } from 'src/db/stats/StatsClient';
+import { StatsClient, formatCareerSummary, formatPrevStatLine } from 'src/db/stats/StatsClient';
 import { SlashCommand } from 'typings/command';
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
@@ -35,23 +35,32 @@ export const command = {
       const teamHistoryContext = StatsClient.getTeamHistoryContext();
       const gmHistoryContext = StatsClient.getGMHistoryContext();
       const awardsContext = StatsClient.getAwardsContext();
+      const allTimeLeadersContext = StatsClient.getAllTimeLeadersContext();
+      const hallOfFameContext = StatsClient.getHallOfFameContext();
       const seasonContext = StatsClient.getSeasonContext();
       const currentSeason = StatsClient.getCurrentSeason();
       const playerMatches = StatsClient.findPlayersInText(question);
 
-      // Fetch previous season stats for each mentioned player in parallel
+      // Enrich each mentioned player with career, rankings, and HoF context
       const playerContexts = await Promise.all(
         playerMatches.map(async ({ context, pid }) => {
           if (!pid) return context;
           try {
-            const careerStats = await PortalClient.getPlayerCareerStats(pid);
+            const [careerStats, rankingsContext] = await Promise.all([
+              PortalClient.getPlayerCareerStats(pid),
+              StatsClient.getPlayerRankingsContext(pid),
+            ]);
             const prevStat = careerStats.find(
               (s) => s.season === currentSeason - 1 && s.seasonState === 'RegularSeason',
             );
             const prevLine = prevStat ? formatPrevStatLine(prevStat) : null;
-            return prevLine
-              ? `${context}\nSeason ${currentSeason - 1}: ${prevLine}`
-              : context;
+            return [
+              context,
+              prevLine ? `Season ${currentSeason - 1}: ${prevLine}` : '',
+              formatCareerSummary(careerStats) ?? '',
+              rankingsContext,
+              StatsClient.getHallOfFameContextFor(pid),
+            ].filter(Boolean).join('\n');
           } catch {
             return context;
           }
@@ -63,6 +72,8 @@ export const command = {
         leaderContext,
         standingsContext,
         awardsContext,
+        allTimeLeadersContext,
+        hallOfFameContext,
         teamHistoryContext,
         gmHistoryContext,
         playerContexts.length
@@ -87,6 +98,7 @@ export const command = {
         'Player performance analysis:',
         'When analyzing a player, always cite specific stats from the context — never describe performance in vague terms when numbers are available.',
         'Use the stat leaders in the context as the benchmark for elite performance at each position.',
+        'For all-time, "greatest", or "top N in history" questions, use the Hall of Fame and All-Time Career Leaders sections — rank players by career totals and awards, not just recent seasons.',
         'When a player is mentioned, use both their current season stats AND their career awards history to form a complete picture.',
         'Acknowledge both strengths and weaknesses in a player\'s game rather than giving a one-sided take.',
         'Compare current season output to the award history to judge whether this is a career year, a decline, or a consistent performance.',
@@ -99,6 +111,7 @@ export const command = {
         'DSFL South: Tijuana Luchadores, Norfolk Seawolves, Bondi Beach Buccaneers, Dallas Birddogs.',
         'ISFL regular season = 16 games. DSFL regular season = 14 games.',
         'When discussing awards like All-Pro or Pro Bowl, only compare players to others at the same position.',
+        'Position groups: DL = Defensive End + Defensive Tackle; DB = Cornerback + Safety.',
         'Hall of Fame caliber requires multiple First Team All-Pro selections, at least a couple Second Team All-Pro selections, and many Pro Bowl appearances — though 3 or more First Team All-Pros is enough on its own to waive the Second Team requirement. A single great season or a handful of Pro Bowls alone does not make someone a Hall of Famer.',
         'When evaluating GMs, consider both their overall win-loss record and championship count — a GM with a strong winning percentage across many seasons is impressive even without a title, and championships alone without context can be misleading, although championships are greatly important.',
         'If a player\'s stats show 16 GP (ISFL) or 14 GP (DSFL), their regular season is complete — do not speculate about them finishing the season strong or playing future regular season games.',

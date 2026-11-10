@@ -3,7 +3,7 @@ import { Config } from 'src/lib/config/config';
 import { DynamicConfig } from 'src/lib/config/dynamicConfig';
 import { logger } from 'src/lib/logger';
 import { findTeamByName } from 'src/lib/teams';
-import { Award, BankAccountHeaderData, BasicUserInfo, GMRecord, IATracker, ManagerInfo, PTTask, PendingTask, Player, PlayerSeasonStat, PortalPasses, PredictionTask, Season, StandingsResponse, TaskListTask, TeamHistoryResponse } from 'typings/portal';
+import { Award, BankAccountHeaderData, BasicUserInfo, CareerLeader, GMRecord, HallOfFameMember, HallOfFameResponse, IATracker, ManagerInfo, PTTask, PendingTask, Player, PlayerRankings, PlayerSeasonStat, PortalPasses, PredictionTask, Season, StandingsResponse, TaskListTask, TeamHistoryResponse } from 'typings/portal';
 
 class PortalApiClient {
   #userInfo: Array<BasicUserInfo> = [];
@@ -17,6 +17,7 @@ class PortalApiClient {
   #teamHistory: TeamHistoryResponse | null = null;
   #gmHistory: Array<GMRecord> = [];
   #awards: Array<Award> = [];
+  #hallOfFame: HallOfFameResponse | null = null;
   // #latestBankBalance: Array<BankAccountHeaderData> = [];
   #loaded = false;
   #lastLoadTimestamp = 0;
@@ -160,6 +161,53 @@ class PortalApiClient {
   async getAwards(reload: boolean = false): Promise<Array<Award>> {
     this.#awards = await this.#getData(this.#awards, reload, ['awards']);
     return this.#awards;
+  }
+
+  async getHallOfFame(reload: boolean = false): Promise<Array<HallOfFameMember>> {
+    this.#hallOfFame = await this.#getData(this.#hallOfFame, reload, ['hall-of-fame']);
+    return this.#hallOfFame.members;
+  }
+
+  async getPlayerRankings(pid: number, position: string): Promise<PlayerRankings | null> {
+    const params = new URLSearchParams({
+      pid: String(pid),
+      position,
+      seasonType: 'RegularSeason',
+    });
+    const response = await fetch(`${Config.portalApiUrl}/player/rankings?${params}`);
+    if (!response.ok) {
+      logger.error(`PortalClient: Failed to fetch rankings for pid ${pid}: ${response.statusText}`);
+      return null;
+    }
+    return response.json();
+  }
+
+  async getCareerLeaders(
+    positions: string[],
+    category: string,
+    sortBy: string,
+    limit: number = 5,
+  ): Promise<Array<CareerLeader>> {
+    const params = new URLSearchParams({
+      category,
+      groupBy: 'career',
+      sortBy,
+      sortDirection: 'desc',
+      seasonState: 'RegularSeason',
+      limit: String(limit),
+    });
+    positions.forEach((position) => params.append('position', position));
+    const response = await fetch(`${Config.portalApiUrl}/player/stats-search?${params}`);
+    if (!response.ok) {
+      logger.error(`PortalClient: Failed to fetch career leaders (${category}/${sortBy}): ${response.statusText}`);
+      return [];
+    }
+    const body = await response.json() as { data: Array<Record<string, unknown>> };
+    return body.data.map((row) => ({
+      name: `${row.firstName} ${row.lastName}`,
+      position: String(row.position ?? ''),
+      value: Number(row[sortBy] ?? 0),
+    }));
   }
 
   getCurrentSeasonInfo(): Season | null {
@@ -312,6 +360,7 @@ class PortalApiClient {
       this.getTeamHistory(true),
       this.getGMHistory(true),
       this.getAwards(true),
+      this.getHallOfFame(true).catch(() => null),
     ]);
 
     this.#lastLoadTimestamp = Date.now();
