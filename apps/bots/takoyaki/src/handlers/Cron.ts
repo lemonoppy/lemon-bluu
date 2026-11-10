@@ -52,11 +52,24 @@ module.exports = async (client: Client) => {
   }
   (globalThis as any)[CRON_STARTUP_FLAG] = true;
 
-  await Promise.all([
-    PortalClient.reload(),
-    FantasyClient.reload(),
-  ]);
-  await StatsClient.reload();
+  const startupLoads: Array<[string, () => Promise<void>]> = [
+    ['Portal data', () => PortalClient.reload()],
+    ['Fantasy data', () => FantasyClient.reload()],
+    ['Stats data', () => StatsClient.reload()],
+  ];
+
+  const startupResults = await Promise.allSettled(
+    startupLoads.map(([, load]) => load()),
+  );
+
+  startupResults.forEach((result, index) => {
+    if (result.status === 'rejected') {
+      logger.error(
+        `Failed to load ${startupLoads[index][0]} at startup; continuing`,
+        result.reason,
+      );
+    }
+  });
 
   const isProduction = process.env.NODE_ENV === 'production';
   const cronJobs: CronJob[] = [];
