@@ -4,9 +4,46 @@ import { SlashCommandBuilder } from 'discord.js';
 import _ from 'lodash';
 import { PortalClient } from 'src/db/portal/PortalClient';
 import { StatsClient, formatCareerSummary, formatPrevStatLine } from 'src/db/stats/StatsClient';
+import { logger } from 'src/lib/logger';
 import { SlashCommand } from 'typings/command';
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+
+const ASK_MODEL = 'gemini-3.1-flash-lite';
+const ASK_ATTEMPTS = 3;
+
+const isOverloadedError = (error: any): boolean =>
+  error?.status === 503 ||
+  error?.message?.includes('overloaded') ||
+  error?.message?.includes('UNAVAILABLE');
+
+const generateResponse = async (
+  question: string,
+  persona: string,
+): Promise<string | undefined> => {
+  for (let attempt = 1; ; attempt += 1) {
+    try {
+      const response = await ai.models.generateContent({
+        model: ASK_MODEL,
+        contents: question,
+        config: {
+          systemInstruction: persona,
+        },
+      });
+      return response.text;
+    } catch (error: any) {
+      if (attempt >= ASK_ATTEMPTS || !isOverloadedError(error)) {
+        throw error;
+      }
+
+      logger.warn(
+        `Gemini request failed (attempt ${attempt}/${ASK_ATTEMPTS}); retrying`,
+        error,
+      );
+      await new Promise((resolve) => setTimeout(resolve, 500 * attempt));
+    }
+  }
+};
 
 export const command = {
   command: new SlashCommandBuilder()
@@ -119,14 +156,7 @@ export const command = {
         statsSection,
       ].join('\n');
 
-      const response = await ai.models.generateContent({
-        model: 'gemini-3.1-flash-lite-preview',
-        contents: question,
-        config: {
-          systemInstruction: persona,
-        },
-      });
-      const responseText = response.text;
+      const responseText = await generateResponse(question, persona);
 
       if (typeof responseText !== 'string') {
         await interaction.editReply({ content: "There was an error generating a response. Please try again later." });
