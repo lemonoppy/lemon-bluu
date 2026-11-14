@@ -1,6 +1,6 @@
 # pakka-tracker
 
-Discord bot for tracking UVS (Riftbound) tournament events and EloShowdown elo. Built with Discord.js v14 and TypeScript, based on the lemon-bluu bot architecture.
+Discord bot for tracking Riftbound (PlayRiftbound) tournament events and EloShowdown elo. Built with Discord.js v14 and TypeScript, based on the lemon-bluu bot architecture.
 
 ## What's included
 
@@ -11,7 +11,8 @@ Discord bot for tracking UVS (Riftbound) tournament events and EloShowdown elo. 
 - Centralized command error handling in `interactionCreate`
 - `@lemon-bluu/discord` logger
 - Dev/prod token switching via `NODE_ENV`
-- UVS event scraper (`src/lib/uvs/`) backed by the official UVS API
+- Riftbound event scraper (`src/lib/uvs/`) backed by Riot's PlayRiftbound site
+- Match-history sync into Postgres (`src/lib/uvs/sync.ts`) with downtime backfill
 - EloShowdown connector (`src/lib/eloshowdown/`) with a Postgres store
 
 ## Setup
@@ -40,15 +41,30 @@ yarn start:dev
 
 | Command | Description |
 |---|---|
-| `/scrape <event_id>` | Scrape a UVS event and show the tracked squad's standings and cut status |
+| `/scrape <event_id>` | Live snapshot of a Riftbound event's tracked squad standings and cut status |
+| `/scout <event_id>` | Live list of an event's enrolled players by elo |
+| `/track <event_id>` | Live ingest of an event (id or URL) into the match history + elo snapshot |
 | `/squad` | Show Do Some Work squad elos and their change over the last 5 Ottawa events |
-| `/ottawa [limit]` | Ottawa-area players by elo (bold = squad), with # Ottawa events and last played |
+| `/ottawa [limit]` | Ottawa-area players by elo, with squad members marked |
 
-The squad (tracked users) is configured in `src/lib/uvs/squad.ts`. Ottawa-area stores are configured in `src/lib/config/config.ts` (`ottawaStoreIds`).
+The squad (tracked users) is configured in `src/lib/uvs/squad.ts`. The Ottawa search area is configured in `src/lib/config/config.ts` (`ottawaCoords`, `ottawaSearchRadiusMeters`).
+
+## Match history
+
+A 6-hour cron (and `yarn sync`) discovers every PlayRiftbound event within the configured radius of Ottawa and ingests started events into the `rb_*` tables:
+
+- `rb_stores` — organizers/stores
+- `rb_events` — event summaries, status, raw tournament JSON, sync/elo state
+- `rb_event_participants` — per-event players, final results, EloShowdown elo
+- `rb_rounds`, `rb_matches`, `rb_games`, `rb_standings` — full match history
+
+Discovery always starts at `Config.riftboundHistoryStartDate` (Oct 1 2026) with no cursor, so events missed while the bot was down are picked up automatically. `yarn sync [n]` runs the same pipeline manually and processes up to `n` events (default `riftboundSyncMaxEventsPerRun`). Events whose pages render without tournament data are marked `UNAVAILABLE`; casual Nexus Night/Pre-Rift events often have no pairings and therefore no match rows.
+
+The old `ottawa_events` / `event_players` tables are legacy and no longer read or written.
 
 ## EloShowdown event tracking
 
-The bot builds its own Ottawa community by storing results from UVS events at Ottawa-area stores (the site's community tags are unreliable). A daily cron job (and `yarn job`) queries the UVS events API for those stores, pairs participants to EloShowdown players by their Riftbound user id, and records per-event elo deltas in Postgres.
+The bot builds its own Ottawa community from the stored match history (the site's community tags are unreliable). The elo cron (and `yarn job`) reads completed local events from `rb_events` / `rb_event_participants`, pairs participants to EloShowdown players (new platform UUIDs, falling back to display-name matching for legacy numeric ids), and writes per-participant elo deltas back to Postgres.
 
 `/squad` and `/ottawa` read from the stored data. Because EloShowdown's anonymous tier is rate-limited (~60 requests/hour), the job processes a bounded number of events per run (see `eloshowdownMaxRequestsPerRun`) and resumes on later runs — backfill by running `yarn job <n>` repeatedly.
 
@@ -72,7 +88,7 @@ src/
 ├── handlers/
 │   ├── Command.ts             # Auto-loads commands, registers with Discord API
 │   ├── Event.ts               # Auto-loads event files
-│   └── Cron.ts                # Daily Ottawa events job
+│   └── Cron.ts                # Riftbound sync + elo jobs
 ├── lib/
 │   ├── config/
 │   │   └── config.ts          # Config object
@@ -87,14 +103,16 @@ src/
 │   │   ├── format.ts          # Elo display formatting
 │   │   └── service.ts         # Ottawa events job (processOttawaEvents)
 │   └── uvs/
-│       ├── types.ts           # UVS API response interfaces
-│       ├── client.ts          # API client (fetch with timeout)
-│       ├── scraper.ts         # scrapePlayerData + fetchEventParticipants
+│       ├── types.ts           # Riftbound event interfaces
+│       ├── client.ts          # PlayRiftbound search + event-page parser
+│       ├── sync.ts            # Discovery + match-history ingest pipeline
+│       ├── scraper.ts         # scrapePlayerData (live /scrape dashboard)
 │       ├── cut-finder.ts      # Swiss cut-line Monte Carlo simulation
 │       ├── squad.ts           # Tracked users + squad status evaluation
 │       └── format.ts          # Status labels + squad status formatting
 ├── scripts/
-│   └── job.ts                 # Manual Ottawa events job (yarn job)
+│   ├── job.ts                 # Manual elo event job (yarn job)
+│   └── sync.ts                # Manual match-history sync (yarn sync)
 └── index.ts                   # Entry point
 typings/
 ├── command.d.ts               # SlashCommand interface
@@ -134,5 +152,6 @@ Errors thrown from `execute` are caught and reported uniformly by the `interacti
 | `yarn build` | Compile TypeScript |
 | `yarn start:built` | Run compiled output |
 | `yarn db:migrate` | Create/update the Postgres schema |
-| `yarn job [n]` | Run the Ottawa events job (process up to `n` events) |
+| `yarn sync [n]` | Discover/ingest PlayRiftbound events (up to `n` this run) |
+| `yarn job [n]` | Run the elo event job (process up to `n` events) |
 | `yarn lint` | Run ESLint |

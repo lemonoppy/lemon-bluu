@@ -5,38 +5,35 @@ export const Config = {
   clientId: isDevelopment ? process.env.DEV_CLIENT_ID : process.env.CLIENT_ID,
   isDevelopment,
 
-  uvsApiBaseUrl:
-    'https://api.cloudflare.riftbound.uvsgames.com/hydraproxy/api/v2',
+  // Riot's Riftbound events site (replaced the UVS store platform). Event
+  // pages are server-rendered; the event list is a persisted-query GraphQL
+  // endpoint that rejects freeform queries.
+  riftboundBaseUrl: 'https://playriftbound.com',
+  riftboundGqlUrl: 'https://playriftbound.com/api/gql',
+
+  // The site sends this persisted query ID for its event search. It changes
+  // when Riot ships a new search operation.
+  // shortcut: hardcoded hash, re-capture it from the events page network tab
+  // when event discovery starts returning PERSISTED_QUERY_NOT_IN_LIST.
+  riftboundSearchHash:
+    '868030f676276bec926c740aada7129713d4097f6e2dd7c3a0451c4fb43852eb',
+
+  // Ottawa + Gatineau, Kanata and Carleton Place all fall within 50 km.
+  ottawaCoords: { latitude: 45.413, longitude: -75.7011 },
+  ottawaSearchRadiusMeters: 50_000,
+
+  // PlayRiftbound's event history starts around Oct 1 2026. Discovery always
+  // starts here so events missed while the bot was down are backfilled.
+  riftboundHistoryStartDate: '2026-10-01T00:00:00.000Z',
+  riftboundSyncCron: '0 */6 * * *',
+  // Bounds each sync run; the rest are picked up next run.
+  riftboundSyncMaxEventsPerRun: 50,
+  riftboundSyncRecheckMinutes: 30,
+  riftboundCompletedRecheckHours: 24,
+  riftboundSyncDelayMs: 400,
+
   eloshowdownApiBaseUrl: 'https://eloshowdown.com/api/v1',
   eloshowdownApiKey: process.env.ELOSHOWDOWN_API_KEY,
-
-  // Ottawa-area stores on the UVS/Riftbound platform that we consider part of
-  // the community (Ottawa + Gatineau, Kanata, Carleton Place).
-  ottawaStoreIds: [
-    5131, // Trinity Hobby (Ottawa)
-    735, // Carta Magica (Ottawa)
-    1077, // Danireon Cards & Games (Ottawa)
-    13898, // Hobbiesville Boutique (Ottawa)
-    16413, // Nefarious Comics (Ottawa)
-    18371, // Game Breakers Sports Cards (Ottawa)
-    19387, // EB Games 1791 (Ottawa)
-    13795, // Empire Trading (Ottawa)
-    2570, // Imaginaire Ottawa
-    3739, // Out of the Box Cards (Nepean)
-    3530, // Nabema Collectibles (Orleans/Ottawa)
-    4074, // Red Dragon CCG (Ottawa)
-    64280, // Hobbiesville Blackwell (Ottawa)
-    34222, // Vulcan Collectibles (Ottawa)
-    5373, // Wizard's Tower (Ottawa)
-    13901, // Multizone Comics and Games (Gatineau)
-    15860, // Boutique FDB (Gatineau)
-    40164, // EB Games 1865 (Gatineau)
-    3268, // Mana Confluence Games (Gatineau)
-    18460, // Toys on Fire (Kanata)
-    52543, // GT Games Kanata
-    2325, // GTgames.ca (Carleton Place)
-    15683, // Treasures 'N' More (Carleton Place)
-  ],
 
   // A player counts as "recently played in Ottawa" if their last Ottawa event
   // was within this many days. Non-squad members must meet this to appear on
@@ -48,8 +45,9 @@ export const Config = {
   // always appear regardless.
   ottawaCommunityMinEvents: 3,
 
-  // Number of finished Ottawa events to process per job run.
-  ottawaMaxEventsPerRun: 1,
+  // Number of completed Ottawa events to enrich with elo per job run.
+  // The EloShowdown request budget is the real limiter.
+  ottawaMaxEventsPerRun: 2,
 
   // Delay between EloShowdown API requests to stay within the rate limit.
   eloshowdownRequestDelayMs: 300,
@@ -69,7 +67,10 @@ export const Config = {
   eloshowdownStaleRefreshHours: 12,
 
   // Cron schedule for the dedicated stale elo history refresh (production only).
-  eloshowdownRefreshCron: '0 */6 * * *',
+  eloshowdownRefreshCron: '45 */6 * * *',
+
+  // Cron schedule for the elo event backfill (production only).
+  eloshowdownEventCron: '15 */6 * * *',
 
   // Events are only processed once they've been finished this long, giving
   // EloShowdown time to ingest the results.

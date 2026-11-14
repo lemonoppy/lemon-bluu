@@ -1,13 +1,8 @@
 import { Config } from 'src/lib/config/config';
 import Query from 'src/lib/db';
 import { logger } from 'src/lib/logger';
-import {
-  UVSEventSummary,
-  fetchEventSummary,
-  fetchEventsByStore,
-} from 'src/lib/uvs/client';
-import { EventParticipant, fetchEventParticipants } from 'src/lib/uvs/scraper';
 import { squadMemberByPlayerId, squadMembers } from 'src/lib/uvs/squad';
+import { SyncedEvent, ingestEventById } from 'src/lib/uvs/sync';
 
 import {
   BudgetExceededError,
@@ -18,7 +13,7 @@ import {
   lookupPlayer,
   resetRequestCount,
 } from './client';
-import { EventElo, computeEventElo, parseRecord } from './elo';
+import { EventElo, computeEventElo } from './elo';
 import { EloHistoryPoint } from './types';
 
 export interface ProcessOttawaEventsOptions {
@@ -145,60 +140,40 @@ const seedOpponents = async (points: EloHistoryPoint[]): Promise<void> => {
   );
 };
 
-const GRACE_MS = Config.eloshowdownGraceHours * 60 * 60 * 1000;
-const RECHECK_MS = Config.eloshowdownRecheckHours * 60 * 60 * 1000;
-const RECHECK_CUTOFF_MS = Config.eloshowdownRecheckDays * 24 * 60 * 60 * 1000;
-
-const getEligibleEvents = async (): Promise<UVSEventSummary[]> => {
-  const events = await fetchEventsByStore(Config.ottawaStoreIds);
-  const now = new Date();
-
-  const processedResult = await Query<{
-    uvs_event_id: number;
-    end_datetime: Date | null;
-    processed_at: Date;
-    elo_complete: boolean;
-  }>(
-    `SELECT uvs_event_id, end_datetime, processed_at, elo_complete
-     FROM ottawa_events`,
+const getEligibleEvents = async (): Promise<SyncedEvent[]> => {
+  const result = await Query<SyncedEvent>(
+    `SELECT e.id, e.name, e.starts_at, e.ends_at
+     FROM rb_events e
+     WHERE e.is_local
+       AND e.status = 'COMPLETED'
+       AND e.last_fetched_at IS NOT NULL
+       AND e.starts_at < now() - ($1::int * interval '1 hour')
+       AND EXISTS (
+         SELECT 1 FROM rb_event_participants p
+         WHERE p.event_id = e.id AND p.final_rank IS NOT NULL
+       )
+       AND e.elo_complete = false
+       AND (
+         e.elo_processed_at IS NULL
+         OR (
+           e.elo_processed_at < now() - ($2::int * interval '1 hour')
+           AND COALESCE(e.ends_at, e.starts_at) >
+               now() - ($3::int * interval '1 day')
+         )
+       )
+     ORDER BY e.starts_at DESC`,
+    [
+      Config.eloshowdownGraceHours,
+      Config.eloshowdownRecheckHours,
+      Config.eloshowdownRecheckDays,
+    ],
   );
-  if (processedResult.isErr()) throw processedResult.error;
-  const processed = new Map(
-    processedResult.value.rows.map((row) => [row.uvs_event_id, row]),
-  );
-
-  return events
-    .filter((event) => {
-      const finish = new Date(
-        event.end_datetime ??
-          event.heuristic_end_datetime ??
-          event.start_datetime,
-      ).getTime();
-      const finished = finish < now.getTime() - GRACE_MS;
-      if (!finished) return false;
-
-      const recorded = processed.get(event.id);
-      if (!recorded) return true;
-
-      // Already recorded: only re-check incomplete events (missing elo) that
-      // are recent enough, after the recheck window has elapsed.
-      const eventEnd = new Date(
-        recorded.end_datetime ?? event.end_datetime ?? event.start_datetime,
-      ).getTime();
-      const recentEnough = eventEnd > now.getTime() - RECHECK_CUTOFF_MS;
-      const dueRecheck =
-        new Date(recorded.processed_at).getTime() < now.getTime() - RECHECK_MS;
-      return !recorded.elo_complete && recentEnough && dueRecheck;
-    })
-    .sort(
-      (a, b) =>
-        new Date(b.start_datetime).getTime() -
-        new Date(a.start_datetime).getTime(),
-    );
+  if (result.isErr()) throw result.error;
+  return result.value.rows;
 };
 
 const ensurePlayer = async (
-  riftboundId: number,
+  riftboundId: string,
   username: string,
 ): Promise<PlayerMapping | null> => {
   const existing = await Query<{ player_id: number }>(
@@ -377,10 +352,11 @@ const refreshStaleElos = async (): Promise<number> => {
   const result = await Query<{ player_id: number }>(
     `SELECT q.player_id
      FROM (
-       SELECT ep.player_id, MAX(e.start_datetime) AS last_event_start
-       FROM event_players ep
-       JOIN ottawa_events e ON e.id = ep.event_id
-       GROUP BY ep.player_id
+       SELECT ep.eloshowdown_player_id AS player_id, MAX(e.starts_at) AS last_event_start
+       FROM rb_event_participants ep
+       JOIN rb_events e ON e.id = ep.event_id
+       WHERE e.is_local AND ep.eloshowdown_player_id IS NOT NULL
+       GROUP BY ep.eloshowdown_player_id
      ) q
      JOIN eloshowdown_players p ON p.player_id = q.player_id
      WHERE p.elo_updated_at IS NULL
@@ -412,7 +388,7 @@ export interface RefreshElosResult {
 }
 
 export interface RegistrantToHydrate {
-  riftboundId: number;
+  riftboundId: string;
   username: string;
 }
 
@@ -589,92 +565,78 @@ const ensureSquadPlayers = async (): Promise<void> => {
   }
 };
 
-const upsertEvent = async (
-  event: UVSEventSummary,
+const updateEventElo = async (
+  eventId: string,
   eloComplete: boolean,
-): Promise<number> => {
-  const result = await Query<{ id: number }>(
-    `INSERT INTO ottawa_events (uvs_event_id, name, store_id, start_datetime, end_datetime, elo_complete)
-     VALUES ($1, $2, $3, $4, $5, $6)
-     ON CONFLICT (uvs_event_id) DO UPDATE SET
-       name = EXCLUDED.name,
-       end_datetime = EXCLUDED.end_datetime,
-       elo_complete = EXCLUDED.elo_complete,
-       processed_at = now()
-     RETURNING id`,
-    [
-      event.id,
-      event.name,
-      event.store?.id ?? 0,
-      event.start_datetime,
-      event.end_datetime,
-      eloComplete,
-    ],
+): Promise<void> => {
+  const result = await Query(
+    `UPDATE rb_events
+     SET elo_complete = $2, elo_processed_at = now(), updated_at = now()
+     WHERE id = $1`,
+    [eventId, eloComplete],
   );
   if (result.isErr()) throw result.error;
-  return result.value.rows[0].id;
 };
 
-const upsertEventPlayer = async (
-  eventId: number,
-  participant: EventParticipant,
-  playerId: number,
-  elo: EventElo,
-) => {
-  const { wins, losses, draws } = parseRecord(participant.record);
-  const eloChange =
-    elo.eloBefore != null && elo.eloAfter != null
-      ? elo.eloAfter - elo.eloBefore
-      : null;
-
+const updateParticipantElos = async (
+  eventId: string,
+  rows: { teamId: string; playerId: number; elo: EventElo }[],
+): Promise<void> => {
+  if (rows.length === 0) return;
   const result = await Query(
-    `INSERT INTO event_players
-       (event_id, player_id, uvs_username, rank, record, points, matches_played,
-        wins, losses, draws, elo_before, elo_after, elo_change)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
-     ON CONFLICT (event_id, player_id) DO UPDATE SET
-       rank = EXCLUDED.rank,
-       record = EXCLUDED.record,
-       points = EXCLUDED.points,
-       matches_played = EXCLUDED.matches_played,
-       wins = EXCLUDED.wins,
-       losses = EXCLUDED.losses,
-       draws = EXCLUDED.draws,
-       elo_before = EXCLUDED.elo_before,
-       elo_after = EXCLUDED.elo_after,
-       elo_change = EXCLUDED.elo_change`,
+    `UPDATE rb_event_participants AS ep
+     SET eloshowdown_player_id = v.player_id,
+         elo_before = v.elo_before,
+         elo_after = v.elo_after,
+         elo_change = v.elo_change
+     FROM (
+       SELECT unnest($2::text[]) AS team_id,
+              unnest($3::int[]) AS player_id,
+              unnest($4::int[]) AS elo_before,
+              unnest($5::int[]) AS elo_after,
+              unnest($6::int[]) AS elo_change
+     ) v
+     WHERE ep.event_id = $1 AND ep.esports_team_id = v.team_id`,
     [
       eventId,
-      playerId,
-      participant.username,
-      participant.rank,
-      participant.record,
-      participant.points,
-      wins + losses + draws,
-      wins,
-      losses,
-      draws,
-      elo.eloBefore,
-      elo.eloAfter,
-      eloChange,
+      rows.map((row) => row.teamId),
+      rows.map((row) => row.playerId),
+      rows.map((row) => row.elo.eloBefore),
+      rows.map((row) => row.elo.eloAfter),
+      rows.map((row) =>
+        row.elo.eloBefore != null && row.elo.eloAfter != null
+          ? row.elo.eloAfter - row.elo.eloBefore
+          : null,
+      ),
     ],
   );
   if (result.isErr()) throw result.error;
 };
 
+const EVENT_WINDOW_CAP_MS = 12 * 60 * 60 * 1000;
+
 /**
- * Processes a single event. If the run's EloShowdown request budget is hit
- * mid-event, nothing is recorded so the event is retried on the next run.
+ * Processes a single synced event. If the run's EloShowdown request budget is
+ * hit mid-event, the event stays incomplete and is retried on a later run.
  */
 const processEvent = async (
-  event: UVSEventSummary,
+  event: SyncedEvent,
 ): Promise<ProcessEventResult> => {
-  const { event: eventData, participants } = await fetchEventParticipants(
-    event.id,
+  const participantsResult = await Query<{
+    esports_team_id: string;
+    player_id: string;
+    display_name: string;
+  }>(
+    `SELECT esports_team_id, player_id, display_name
+     FROM rb_event_participants
+     WHERE event_id = $1 AND final_rank IS NOT NULL`,
+    [event.id],
   );
+  if (participantsResult.isErr()) throw participantsResult.error;
+  const participants = participantsResult.value.rows;
 
   if (participants.length === 0) {
-    await upsertEvent(event, true);
+    await updateEventElo(event.id, true);
     logger.warn(`Event ${event.id} (${event.name}) has no standings; recorded`);
     return {
       completed: true,
@@ -684,30 +646,29 @@ const processEvent = async (
     };
   }
 
-  const start = new Date(eventData.start_datetime);
+  const start = new Date(event.starts_at);
+  const rawEnd = event.ends_at ? new Date(event.ends_at) : start;
   const end = new Date(
-    eventData.end_datetime ??
-      event.heuristic_end_datetime ??
-      eventData.start_datetime,
+    Math.min(rawEnd.getTime(), start.getTime() + EVENT_WINDOW_CAP_MS),
   );
 
   const processed: {
-    participant: EventParticipant;
+    teamId: string;
     playerId: number;
     elo: EventElo;
   }[] = [];
   for (const participant of participants) {
-    if (participant.userId === 0) continue;
+    if (!participant.player_id) continue;
 
     const mapping = await ensurePlayer(
-      participant.userId,
-      participant.username,
+      participant.player_id,
+      participant.display_name,
     );
     if (!mapping) continue;
 
     const history = await ensureEloHistory(mapping.playerId, end);
     processed.push({
-      participant,
+      teamId: participant.esports_team_id,
       playerId: mapping.playerId,
       elo: computeEventElo(history, start, end),
     });
@@ -716,10 +677,8 @@ const processEvent = async (
   const eloComplete =
     processed.length > 0 && processed.every((row) => row.elo.eloAfter != null);
 
-  const eventId = await upsertEvent(event, eloComplete);
-  for (const row of processed) {
-    await upsertEventPlayer(eventId, row.participant, row.playerId, row.elo);
-  }
+  await updateEventElo(event.id, eloComplete);
+  await updateParticipantElos(event.id, processed);
 
   logger.info(
     `Processed event ${event.id} (${event.name}) with ${processed.length}/${participants.length} participants${eloComplete ? '' : ' (elo incomplete)'}`,
@@ -833,15 +792,15 @@ export async function processOttawaEvents(
 }
 
 /**
- * Processes a single event by id and records it for elo tracking. Intended for
- * events held at stores outside Config.ottawaStoreIds (e.g. large regional
- * events that come to Ottawa) that the daily backfill never sees. Skips the
- * squad sync so the request budget is reserved for the event's players.
+ * Ingests a live snapshot of one event by id (page fetch + DB write) and
+ * records its elo. Works for any event, including ones outside the Ottawa
+ * search radius. Skips the squad sync so the request budget is reserved for
+ * the event's players.
  */
 export async function processOttawaEventById(
-  eventId: number,
+  eventId: string,
 ): Promise<ProcessSingleEventResult> {
-  const summary = await fetchEventSummary(eventId);
+  const event = await ingestEventById(eventId);
 
   eloHistoryCache.clear();
   resetRequestCount();
@@ -852,7 +811,7 @@ export async function processOttawaEventById(
 
   let result: ProcessEventResult;
   try {
-    result = await processEvent(summary);
+    result = await processEvent(event);
   } catch (error) {
     if (
       error instanceof BudgetExceededError ||
@@ -862,7 +821,7 @@ export async function processOttawaEventById(
         'EloShowdown budget/rate limit hit while processing event; stopping',
       );
       return {
-        eventName: summary.name,
+        eventName: event.name,
         participants: 0,
         processedPlayers: 0,
         eloComplete: false,
@@ -874,12 +833,12 @@ export async function processOttawaEventById(
   }
 
   logger.info(
-    `Single event processed: ${summary.name} with ${result.processedPlayers}/${result.participants} participants` +
+    `Single event processed: ${event.name} with ${result.processedPlayers}/${result.participants} participants` +
       `${result.eloComplete ? '' : ' (elo incomplete)'}${result.completed ? '' : ' (stopped early)'}`,
   );
 
   return {
-    eventName: summary.name,
+    eventName: event.name,
     participants: result.participants,
     processedPlayers: result.processedPlayers,
     eloComplete: result.eloComplete,

@@ -7,6 +7,7 @@
     "build": "tsc && tsc-alias",
     "db:migrate": "ts-node -r tsconfig-paths/register --files src/db/migrate.ts",
     "job": "ts-node -r tsconfig-paths/register --files src/scripts/job.ts",
+    "sync": "ts-node -r tsconfig-paths/register --files src/scripts/sync.ts",
     "start:dev": "NODE_ENV=development nodemon -r tsconfig-paths/register --files src/index.ts | pino-pretty -i pid,hostname -t 'yyyy-mm-dd HH:MM:ss'",
     "start:prod": "ts-node -r tsconfig-paths/register --files src/index.ts",
     "start:built": "node build/index.js",

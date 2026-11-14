@@ -10,7 +10,11 @@ import {
   HydrateRegistrantsResult,
   hydrateRegistrants,
 } from 'src/lib/eloshowdown/service';
-import { fetchEventDetails, fetchEventRegistrations } from 'src/lib/uvs/client';
+import {
+  extractEventId,
+  fetchEventDetails,
+  fetchEventRegistrations,
+} from 'src/lib/uvs/client';
 import { squadMemberByUsername } from 'src/lib/uvs/squad';
 import { SlashCommand } from 'typings/command';
 
@@ -41,10 +45,19 @@ const loadElos = async (
 };
 
 const execute = async (interaction: ChatInputCommandInteraction) => {
-  const eventId = interaction.options.getInteger('event_id', true);
+  const eventId = extractEventId(
+    interaction.options.getString('event_id', true),
+  );
   const limit = interaction.options.getInteger('limit') ?? DEFAULT_LIMIT;
 
   await interaction.deferReply();
+
+  if (!eventId) {
+    await interaction.editReply({
+      content: 'Provide a Riftbound event ID or playriftbound.com event URL.',
+    });
+    return;
+  }
 
   const [eventData, registrations] = await Promise.all([
     fetchEventDetails(eventId),
@@ -124,12 +137,11 @@ export const command = {
   command: new SlashCommandBuilder()
     .setName('scout')
     .setDescription("List an event's enrolled players by elo")
-    .addIntegerOption((option) =>
+    .addStringOption((option) =>
       option
         .setName('event_id')
-        .setDescription('The UVS event ID to scout')
-        .setRequired(true)
-        .setMinValue(1),
+        .setDescription('Riftbound event ID or playriftbound.com event URL')
+        .setRequired(true),
     )
     .addIntegerOption((option) =>
       option

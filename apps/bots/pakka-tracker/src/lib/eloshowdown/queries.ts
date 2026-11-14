@@ -40,11 +40,13 @@ export const getPlayerRecentEvents = (
   limit = 5,
 ): ResultAsync<PlayerRecentEventRow[], DatabaseError> =>
   Query<PlayerRecentEventRow>(
-    `SELECT e.start_datetime, e.name, ep.elo_after, ep.elo_change
-     FROM event_players ep
-     JOIN ottawa_events e ON e.id = ep.event_id
-     WHERE ep.player_id = $1 AND ep.elo_change IS NOT NULL
-     ORDER BY e.start_datetime DESC
+    `SELECT e.starts_at AS start_datetime, e.name, ep.elo_after, ep.elo_change
+     FROM rb_event_participants ep
+     JOIN rb_events e ON e.id = ep.event_id
+     WHERE ep.eloshowdown_player_id = $1
+       AND ep.elo_change IS NOT NULL
+       AND e.status = 'COMPLETED'
+     ORDER BY e.starts_at DESC
      LIMIT $2`,
     [playerId, limit],
   ).map((result) => result.rows);
@@ -63,15 +65,18 @@ export const getOttawaLeaderboard = (
             p.display_name,
             p.current_elo,
             COUNT(ep.event_id)::int AS ottawa_events,
-            MAX(COALESCE(e.end_datetime, e.start_datetime)) AS last_event
-     FROM event_players ep
-     JOIN eloshowdown_players p ON p.player_id = ep.player_id
-     JOIN ottawa_events e ON e.id = ep.event_id
+            MAX(COALESCE(e.ends_at, e.starts_at)) AS last_event
+     FROM rb_event_participants ep
+     JOIN eloshowdown_players p ON p.player_id = ep.eloshowdown_player_id
+     JOIN rb_events e ON e.id = ep.event_id
+     WHERE e.is_local
+       AND e.status = 'COMPLETED'
+       AND ep.final_rank IS NOT NULL
      GROUP BY p.player_id, p.display_name, p.current_elo, p.is_squad
      HAVING p.is_squad
          OR (
            COUNT(ep.event_id) >= $1
-           AND MAX(COALESCE(e.end_datetime, e.start_datetime)) >=
+           AND MAX(COALESCE(e.ends_at, e.starts_at)) >=
                now() - make_interval(days => $2::int)
          )
      ORDER BY p.current_elo DESC NULLS LAST
@@ -87,11 +92,16 @@ export const getOttawaLeaderboardForPlayers = (
     `SELECT p.player_id,
             p.display_name,
             p.current_elo,
-            COUNT(ep.event_id)::int AS ottawa_events,
-            MAX(e.start_datetime) AS last_event
+            COUNT(e.id)::int AS ottawa_events,
+            MAX(e.starts_at) AS last_event
      FROM eloshowdown_players p
-     LEFT JOIN event_players ep ON ep.player_id = p.player_id
-     LEFT JOIN ottawa_events e ON e.id = ep.event_id
+     LEFT JOIN rb_event_participants ep
+       ON ep.eloshowdown_player_id = p.player_id
+      AND ep.final_rank IS NOT NULL
+     LEFT JOIN rb_events e
+       ON e.id = ep.event_id
+      AND e.is_local
+      AND e.status = 'COMPLETED'
      WHERE p.player_id = ANY($1::int[])
      GROUP BY p.player_id, p.display_name, p.current_elo`,
     [playerIds],

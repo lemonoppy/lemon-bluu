@@ -1,9 +1,8 @@
 import { logger } from 'src/lib/logger';
 
-import { fetchAllStandings, fetchEventDetails } from './client';
+import { fetchEventDetails } from './client';
 import {
   ScrapeResult,
-  UVSEventData,
   UVSRoundResultItem,
   UVSTournamentPhase,
   UVSTournamentRound,
@@ -30,7 +29,7 @@ const findActivePhase = (
   return { activePhase: phases[0], generatedRounds: [] };
 };
 
-export async function scrapePlayerData(eventId: number): Promise<ScrapeResult> {
+export async function scrapePlayerData(eventId: string): Promise<ScrapeResult> {
   logger.info(`Starting scraper for event ${eventId}...`);
   const eventData = await fetchEventDetails(eventId);
   logger.info(`Event loaded: "${eventData.name}"`);
@@ -99,7 +98,7 @@ export async function scrapePlayerData(eventId: number): Promise<ScrapeResult> {
   const latestRound = generatedRounds[generatedRounds.length - 1];
   logger.info(`Fetching standings for Round ${latestRound.round_number} (${phaseName})`);
 
-  const rawResults = await fetchAllStandings(latestRound.id);
+  const rawResults = latestRound.standings;
 
   const players = rawResults.map((item: UVSRoundResultItem) => ({
     rank: String(item.rank),
@@ -198,43 +197,4 @@ export function timerStatusLabel(data: ScrapeResult): string {
     return 'Round timer: ROUND COMPLETE (Waiting for next round)';
   }
   return 'Round timer: NOT RUNNING';
-}
-
-export interface EventParticipant {
-  userId: number;
-  username: string;
-  rank: number;
-  record: string;
-  points: number;
-  status: string;
-}
-
-export async function fetchEventParticipants(
-  eventId: number,
-): Promise<{ event: UVSEventData; participants: EventParticipant[] }> {
-  const eventData = await fetchEventDetails(eventId);
-  const sortedPhases = [...eventData.tournament_phases].sort(
-    (a, b) => a.order_in_phases - b.order_in_phases,
-  );
-  const { generatedRounds } = findActivePhase(sortedPhases);
-  if (generatedRounds.length === 0) {
-    return { event: eventData, participants: [] };
-  }
-
-  const latestRound = generatedRounds[generatedRounds.length - 1];
-  const rawResults = await fetchAllStandings(latestRound.id);
-
-  const participants = rawResults.map((item: UVSRoundResultItem) => ({
-    userId: item.user_event_status?.user?.id ?? 0,
-    username:
-      item.user_event_status?.best_identifier ??
-      item.player?.best_identifier ??
-      'Unknown',
-    rank: item.rank,
-    record: item.record ?? '',
-    points: item.points ?? item.match_points ?? 0,
-    status: item.user_event_status?.registration_status ?? 'ACTIVE',
-  }));
-
-  return { event: eventData, participants };
 }

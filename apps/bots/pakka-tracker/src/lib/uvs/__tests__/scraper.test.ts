@@ -4,7 +4,7 @@ import { ScrapeResult } from '../types';
 const makeResult = (overrides: Partial<ScrapeResult> = {}): ScrapeResult => ({
   players: [],
   event: {
-    id: 1,
+    id: '1',
     start_datetime: '',
     end_datetime: '',
     timer_is_running: false,

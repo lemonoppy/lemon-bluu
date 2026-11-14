@@ -90,8 +90,8 @@ describe('hydrateRegistrants', () => {
     });
 
     const result = await hydrateRegistrants([
-      { riftboundId: 456, username: 'New Player' },
-      { riftboundId: 456, username: 'New Player' },
+      { riftboundId: '456', username: 'New Player' },
+      { riftboundId: '456', username: 'New Player' },
     ]);
 
     expect(result).toEqual({
@@ -114,7 +114,7 @@ describe('hydrateRegistrants', () => {
     });
 
     const result = await hydrateRegistrants([
-      { riftboundId: 456, username: 'New Player' },
+      { riftboundId: '456', username: 'New Player' },
     ]);
 
     expect(result.unresolved).toBe(1);
@@ -128,7 +128,7 @@ describe('hydrateRegistrants', () => {
     );
 
     const result = await hydrateRegistrants([
-      { riftboundId: 456, username: 'New Player' },
+      { riftboundId: '456', username: 'New Player' },
     ]);
 
     expect(result.stoppedEarly).toBe(true);

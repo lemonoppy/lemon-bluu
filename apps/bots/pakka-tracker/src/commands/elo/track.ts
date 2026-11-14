@@ -6,14 +6,24 @@ import {
 } from 'discord.js';
 
 import { processOttawaEventById } from 'src/lib/eloshowdown/service';
+import { extractEventId } from 'src/lib/uvs/client';
 import { SlashCommand } from 'typings/command';
 
 const UVS_COLOR = '#7b5df5';
 
 const execute = async (interaction: ChatInputCommandInteraction) => {
-  const eventId = interaction.options.getInteger('event_id', true);
+  const eventId = extractEventId(
+    interaction.options.getString('event_id', true),
+  );
 
   await interaction.deferReply();
+
+  if (!eventId) {
+    await interaction.editReply({
+      content: 'Provide a Riftbound event ID or playriftbound.com event URL.',
+    });
+    return;
+  }
 
   const result = await processOttawaEventById(eventId);
 
@@ -41,13 +51,14 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
 export const command = {
   command: new SlashCommandBuilder()
     .setName('track')
-    .setDescription('Track a single UVS event for elo (works for any store)')
-    .addIntegerOption((option) =>
+    .setDescription(
+      'Track a single Riftbound event for elo (works for any store)',
+    )
+    .addStringOption((option) =>
       option
         .setName('event_id')
-        .setDescription('The UVS event ID to record')
-        .setRequired(true)
-        .setMinValue(1),
+        .setDescription('Riftbound event ID or playriftbound.com event URL')
+        .setRequired(true),
     ),
   execute,
 } satisfies SlashCommand;

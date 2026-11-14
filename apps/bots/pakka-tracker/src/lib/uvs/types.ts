@@ -5,7 +5,7 @@ export interface UVSDeckDefiningCard {
 }
 
 export interface UVSUser {
-  id: number;
+  id: string;
   pronouns: string | null;
   country_code: string | null;
 }
@@ -61,6 +61,9 @@ export interface UVSTournamentRound {
   standings_status: 'GENERATED' | 'NOT_GENERATED';
   round_type: string;
   status: 'COMPLETE' | 'IN_PROGRESS' | 'UPCOMING';
+  // Populated from the new site's per-round endOfRoundStandings; the old UVS
+  // API exposed these through a separate standings request.
+  standings: UVSRoundResultItem[];
 }
 
 export interface UVSTournamentPhase {
@@ -75,9 +78,9 @@ export interface UVSTournamentPhase {
 }
 
 export interface UVSEventData {
-  id: number;
+  id: string;
   start_datetime: string;
-  end_datetime: string;
+  end_datetime: string | null;
   timer_is_running: boolean;
   timer_end_datetime: string;
   name: string;

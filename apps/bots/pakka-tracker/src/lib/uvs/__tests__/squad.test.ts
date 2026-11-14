@@ -35,7 +35,7 @@ const makeResult = (overrides: Partial<ScrapeResult> = {}): ScrapeResult => {
   return {
     players: [makePlayer()],
     event: {
-      id: 1,
+      id: '1',
       start_datetime: '',
       end_datetime: '',
       timer_is_running: false,

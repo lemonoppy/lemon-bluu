@@ -5,6 +5,7 @@ import {
   SlashCommandBuilder,
 } from 'discord.js';
 
+import { extractEventId } from 'src/lib/uvs/client';
 import { formatSquadStatusLines } from 'src/lib/uvs/format';
 import { scrapePlayerData, timerStatusLabel } from 'src/lib/uvs/scraper';
 import { evaluateSquadStatus } from 'src/lib/uvs/squad';
@@ -13,9 +14,18 @@ import { SlashCommand } from 'typings/command';
 const UVS_COLOR = '#7b5df5';
 
 const execute = async (interaction: ChatInputCommandInteraction) => {
-  const eventId = interaction.options.getInteger('event_id', true);
+  const eventId = extractEventId(
+    interaction.options.getString('event_id', true),
+  );
 
   await interaction.deferReply();
+
+  if (!eventId) {
+    await interaction.editReply({
+      content: 'Provide a Riftbound event ID or playriftbound.com event URL.',
+    });
+    return;
+  }
 
   const result = await scrapePlayerData(eventId);
 
@@ -86,13 +96,12 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
 export const command = {
   command: new SlashCommandBuilder()
     .setName('scrape')
-    .setDescription('Scrape a UVS event and post standings')
-    .addIntegerOption((option) =>
+    .setDescription('Scrape a Riftbound event and post standings')
+    .addStringOption((option) =>
       option
         .setName('event_id')
-        .setDescription('The UVS event ID to scrape')
-        .setRequired(true)
-        .setMinValue(1),
+        .setDescription('Riftbound event ID or playriftbound.com event URL')
+        .setRequired(true),
     ),
   execute,
 } satisfies SlashCommand;

@@ -13,7 +13,8 @@ yarn build           # Compile: tsc + tsc-alias (resolves path aliases)
 yarn test            # Jest
 yarn lint            # ESLint
 yarn db:migrate      # Create/update the Postgres schema
-yarn job [n]         # Run the Ottawa events job (process up to n events)
+yarn sync [n]        # Discover/ingest PlayRiftbound events (up to n this run)
+yarn job [n]         # Run the Ottawa events elo job (process up to n events)
 ```
 
 To run a single test file:
@@ -23,34 +24,37 @@ yarn jest path/to/test.ts
 
 ## Architecture
 
-Discord bot for tracking UVS (Riftbound) tournament events and EloShowdown elo, built on the shared lemon-bluu bot pattern:
+Discord bot for tracking Riftbound (PlayRiftbound) tournament events and EloShowdown elo, built on the shared lemon-bluu bot pattern:
 
 - **Entry**: `src/index.ts` creates a Discord.js `Client`, dynamically loads all handlers from `src/handlers/` via `readdirSync`
-- **Handlers**: `Command.ts` (auto-discovers `.ts` files under `src/commands/` and registers them with the Discord API), `Event.ts` (loads `src/events/`), `Cron.ts` (daily Ottawa events job + periodic stale elo history refresh, production-only)
+- **Handlers**: `Command.ts` (auto-discovers `.ts` files under `src/commands/` and registers them with the Discord API), `Event.ts` (loads `src/events/`), `Cron.ts` (6-hour Riftbound sync + elo event backfill + periodic stale elo refresh, production-only)
 - **Commands**: Each command exports a default object with `command` (SlashCommandBuilder) and `execute`; organized into subdirectories by domain
 - **Error handling**: Centralized in `src/events/interactionCreate.ts` — commands throw, the event handler logs and replies a standardized ephemeral error. Do not wrap `execute` in per-command try/catch.
 - **Intents**: Only `GatewayIntentBits.Guilds` (slash commands only; no message content)
 - **Token switching**: `NODE_ENV=development` uses `DEV_TOKEN`/`DEV_CLIENT_ID`; production uses `TOKEN`/`CLIENT_ID`
 - **TypeScript paths**: `src/*` alias resolved at runtime via `tsconfig-paths`; resolved post-build via `tsc-alias`
 - **Logger**: Pino via `@lemon-bluu/discord` (`src/lib/logger.ts`)
-- **Database**: Postgres via `pg` + `neverthrow` (`src/lib/db.ts`, `DATABASE_URL` env). The pool is created lazily on first query, so the bot boots without the DB for UVS-only commands.
+- **Database**: Postgres via `pg` + `neverthrow` (`src/lib/db.ts`, `DATABASE_URL` env). The pool is created lazily on first query, so live-only `/scrape` and `/scout` still work without the DB.
 
-## UVS scraper (`src/lib/uvs/`)
+## Riftbound scraper (`src/lib/uvs/`)
 
-- `client.ts` — `fetchEventDetails`, `fetchAllStandings`, `fetchEventsByStore` against the UVS API (`Config.uvsApiBaseUrl`)
-- `scraper.ts` — `scrapePlayerData(eventId)` core logic + `fetchEventParticipants(eventId)` (returns players with their UVS user id = EloShowdown `riftbound_id`). The top cut is derived from the event's first phase with `rank_required_to_enter_phase` (e.g. `RANKED_SINGLE_ELIMINATION`), falling back to a player-count heuristic. `displayRound` is phase-relative (round numbers are event-wide).
+The bot reads Riot's PlayRiftbound site (`playriftbound.com`), which replaced the old UVS store platform. Match history is stored in the `rb_*` tables; the legacy `ottawa_events` / `event_players` tables are no longer read or written.
+
+- `client.ts` — two data sources. `fetchEventSummariesSince(startDate)` calls the site's persisted-query GraphQL search (`Config.riftboundGqlUrl`, hash in `Config.riftboundSearchHash`) for events within `Config.ottawaSearchRadiusMeters` of Ottawa. `fetchParsedEvent` fetches the server-rendered event page and parses the tournament JSON out of the Next.js RSC flight payload. Some events render a reduced page with no tournament data; those throw `TournamentUnavailableError` and are marked `UNAVAILABLE`. Event ids are strings (they exceed JS safe-integer range and accept a full playriftbound.com URL via `extractEventId`).
+- `sync.ts` — the history pipeline. `syncRiftboundEvents()` discovers from `Config.riftboundHistoryStartDate` on every run (so downtime auto-backfills), upserts `rb_stores`/`rb_events`, then ingests started events (newest structured events first) into `rb_event_participants`, `rb_rounds`, `rb_matches`, `rb_games`, `rb_standings`, storing the raw tournament JSON. Recheck policy: in-progress → next run, first completed fetch → +24h correction pass, then final. `rb_sync_state` holds the overlap lock and run stats. `ingestEventById` is the live path used by `/track`.
+- `scraper.ts` — `scrapePlayerData(eventId)` live dashboard logic for `/scrape` + `timerStatusLabel`. Standings come from each round's `endOfRoundStandings`. The top cut is `config.finalBracketStage.participantCount`; the bracket stage is synthesized until the site creates it, and ungenerated Swiss rounds are filled from `config.roundCount` so cut math has the full schedule. `displayRound` is phase-relative (round numbers are event-wide).
 - `cut-finder.ts` — `simulateSwissWithDraws` Monte Carlo for the estimated cut line
 - `squad.ts` — tracked users (`squadMembers` with `eloShowdownId`) + `evaluateSquadStatus` (returns structured statuses, no console output)
 - `format.ts` — status labels parameterized by cut size + squad status formatting
 
 ## EloShowdown connector (`src/lib/eloshowdown/`)
 
-The bot defines its own Ottawa community because EloShowdown's community tags are unreliable. It stores per-event results from UVS events at `Config.ottawaStoreIds` (Ottawa + Gatineau/Kanata/Carleton Place) and derives the community from players who appear in those events.
+The bot defines its own Ottawa community because EloShowdown's community tags are unreliable. It reads the stored `rb_*` history for events within the Ottawa radius (Ottawa + Gatineau/Kanata/Carleton Place) and derives the community from players who appear in those events.
 
 - `client.ts` — EloShowdown API client (`lookupPlayer`, `fetchPlayer`, `fetchEloHistory`). Anonymous tier is ~60 requests/hour, so it enforces a per-run budget (`Config.eloshowdownMaxRequestsPerRun`) and backs off on 429s.
 - `elo.ts` — `computeEventElo(history, start, end)` matches a player's elo-history entries inside an event time window.
-- `service.ts` — `processOttawaEvents({ maxEvents })`: syncs squad players, then for each finished unprocessed Ottawa event fetches standings, maps UVS user id → EloShowdown player (cached in `eloshowdown_players`), computes per-event elo deltas, and writes `ottawa_events` + `event_players`. Events are only recorded once fully processed, so rate-limited runs resume cleanly.
-- `queries.ts` — DB queries backing `/squad` and `/ottawa`.
+- `service.ts` — `processOttawaEvents({ maxEvents })`: syncs squad players, then for each completed local event with stored participants reads `rb_event_participants`, maps the PlayRiftbound player UUID → EloShowdown player (cached in `eloshowdown_players`, falling back to exact display-name matching for players still keyed by legacy numeric ids), computes per-event elo deltas, and writes them back to the participant row. `processOttawaEventById` (used by `/track`) ingests a live snapshot first. Rate-limited events stay `elo_complete = false` and are retried.
+- `queries.ts` — DB queries backing `/squad` and `/ottawa` against `rb_event_participants` / `rb_events`.
 
 Squad members are seeded from config (`squadMembers` in `src/lib/uvs/squad.ts`) on every job run.
 

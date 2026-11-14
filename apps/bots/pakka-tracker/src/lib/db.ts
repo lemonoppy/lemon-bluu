@@ -1,5 +1,5 @@
 import { ResultAsync } from 'neverthrow';
-import { Pool, QueryResult, QueryResultRow } from 'pg';
+import { Pool, PoolClient, QueryResult, QueryResultRow } from 'pg';
 
 import { logger } from 'src/lib/logger';
 
@@ -36,3 +36,30 @@ export default function Query<T extends QueryResultRow>(
     },
   );
 }
+
+// Runs a set of statements atomically on a dedicated client. Used by the
+// Riftbound sync so one event's rows can't be partially written.
+export const withTransaction = <T>(
+  fn: (client: PoolClient) => Promise<T>,
+): ResultAsync<T, DatabaseError> =>
+  ResultAsync.fromPromise(
+    (async () => {
+      const client = await getPool().connect();
+      try {
+        await client.query('BEGIN');
+        const result = await fn(client);
+        await client.query('COMMIT');
+        return result;
+      } catch (error) {
+        await client.query('ROLLBACK').catch(() => {});
+        throw error;
+      } finally {
+        client.release();
+      }
+    })(),
+    (error) => {
+      const message = error instanceof Error ? error.message : String(error);
+      logger.error({ error: message }, 'Database transaction failed');
+      return dbError('Database transaction failed', message);
+    },
+  );
