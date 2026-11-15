@@ -58,6 +58,10 @@ The bot defines its own Ottawa community because EloShowdown's community tags ar
 
 Squad members are seeded from config (`squadMembers` in `src/lib/uvs/squad.ts`) on every job run.
 
+## Store Clash (`src/lib/store-clash/`, `src/commands/storeclash/`)
+
+Seasons are managed with direct SQL (`store_clash_seasons`, `store_clash_stores`, `store_clash_player_stores`; seed example in `src/db/store-clash-radiance.sql`). The scoring rules live in the `store_clash_standings(slug)` SQL function in `src/db/store-clash.ts`, so the bot and the website share one implementation. The `/storeclash` command exposes `standings` (all stores or one store) and `seasons`; store autocomplete is wired through `src/events/interactionCreate.ts`.
+
 ## Testing
 
 Tests live alongside source (`__tests__/` subdirectories or `*.test.ts`) and use ts-jest. `src/__tests__/setup.ts` loads dotenv. Unit tests avoid importing `src/lib/db.ts` (no DATABASE_URL needed).

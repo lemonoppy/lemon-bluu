@@ -42,6 +42,14 @@ const projects = [
 		available: true,
 	},
 	{
+		title: 'Ottawa Riftbound',
+		description:
+			'Elo leaderboard, Store Clash standings, event results, head-to-head matchups, and match history for the Ottawa/Gatineau Riftbound community.',
+		href: '/riftbound',
+		tags: ['riftbound', 'elo', 'community'],
+		available: true,
+	},
+	{
 		title: 'Build a Set',
 		description:
 			'Build and manage your very own Magic: The Gathering set. Track your card inventory, calculate copy requirements for drafts, analyse distributions, and browse official sets for reference and templating.',

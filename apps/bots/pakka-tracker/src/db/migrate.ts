@@ -1,5 +1,6 @@
 import 'dotenv/config';
 
+import { storeClashStatements } from 'src/db/store-clash';
 import Query from 'src/lib/db';
 import { logger } from 'src/lib/logger';
 
@@ -183,6 +184,7 @@ const statements: string[] = [
     last_fetched integer,
     last_failed integer
   )`,
+  ...storeClashStatements,
 ];
 
 async function main() {

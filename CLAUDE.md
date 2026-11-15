@@ -100,7 +100,7 @@ tools/
 - **Database**: Neon serverless Postgres via `@neondatabase/serverless`; `lib/db.ts` wraps queries with `neverthrow` `ResultAsync` for typed error handling
 - **Styling**: Tailwind CSS v4 with CSS custom properties for theming (`--foreground`, `--accent-color`, `--border`, etc.)
 - **UI components**: Radix UI primitives + `shadcn/ui` pattern (`components/ui/`); shared `cn` helper from `@lemon-bluu/ui`
-- **Key feature areas**: MTG set cube builder/simulator (`lib/set-cube/`, `pages/set/`), image pixelation (`pages/pixel/`), Spotify now-playing widget
+- **Key feature areas**: MTG set cube builder/simulator (`lib/set-cube/`, `pages/set/`), image pixelation (`pages/pixel/`), Spotify now-playing widget, Ottawa Riftbound explorer and Store Clash standings (`pages/riftbound/`, `pages/api/riftbound/`, `lib/riftbound.ts`)
 
 ### Discord Bots — Shared Pattern
 

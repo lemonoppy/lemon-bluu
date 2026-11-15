@@ -7,6 +7,7 @@ Personal Next.js site with various tools and widgets.
 - **Spotify now-playing** — Shows currently playing track via Spotify API
 - **MTG set cube simulator** — Build and simulate MTG set cubes with Scryfall data
 - **Tessellation visualizer** — Geometric pattern playground
+- **Ottawa Riftbound** — Elo leaderboard, Store Clash standings, events, player/matchup stats, and match history (`/riftbound`)
 
 ## Stack
 

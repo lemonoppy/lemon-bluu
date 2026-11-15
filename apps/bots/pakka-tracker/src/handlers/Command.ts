@@ -7,14 +7,18 @@ import {
   Routes,
   SlashCommandBuilder,
   SlashCommandOptionsOnlyBuilder,
+  SlashCommandSubcommandsOnlyBuilder,
 } from 'discord.js';
 import { Config } from 'src/lib/config/config';
 import { logger } from 'src/lib/logger';
 import { SlashCommand } from 'typings/command';
 
 module.exports = (client: Client) => {
-  const slashCommands: (SlashCommandBuilder | SlashCommandOptionsOnlyBuilder)[] =
-    [];
+  const slashCommands: (
+    | SlashCommandBuilder
+    | SlashCommandOptionsOnlyBuilder
+    | SlashCommandSubcommandsOnlyBuilder
+  )[] = [];
 
   const baseCommandsDir = join(__dirname, '../commands');
 

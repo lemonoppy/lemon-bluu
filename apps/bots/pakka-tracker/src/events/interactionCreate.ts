@@ -11,6 +11,20 @@ const ERROR_RESPONSE = {
 export const event = {
   name: Events.InteractionCreate,
   execute: async (interaction: Interaction) => {
+    if (interaction.isAutocomplete()) {
+      const command = interaction.client.commands.get(interaction.commandName);
+      if (!command?.autocomplete) return;
+      try {
+        await command.autocomplete(interaction);
+      } catch (error) {
+        logger.error(
+          error,
+          `Error handling autocomplete for /${interaction.commandName}`,
+        );
+      }
+      return;
+    }
+
     if (!interaction.isChatInputCommand()) return;
 
     const command = interaction.client.commands.get(interaction.commandName);

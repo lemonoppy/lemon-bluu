@@ -45,9 +45,9 @@ export const Config = {
   // always appear regardless.
   ottawaCommunityMinEvents: 3,
 
-  // Number of completed Ottawa events to enrich with elo per job run.
-  // The EloShowdown request budget is the real limiter.
-  ottawaMaxEventsPerRun: 2,
+  // Max completed Ottawa events to enrich with elo per job run. The
+  // EloShowdown request budget stops the run earlier when needed.
+  ottawaMaxEventsPerRun: 50,
 
   // Delay between EloShowdown API requests to stay within the rate limit.
   eloshowdownRequestDelayMs: 300,

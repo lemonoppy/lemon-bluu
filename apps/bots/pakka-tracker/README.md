@@ -46,6 +46,8 @@ yarn start:dev
 | `/track <event_id>` | Live ingest of an event (id or URL) into the match history + elo snapshot |
 | `/squad` | Show Do Some Work squad elos and their change over the last 5 Ottawa events |
 | `/ottawa [limit]` | Ottawa-area players by elo, with squad members marked |
+| `/storeclash standings [season] [store]` | Store Clash standings by participating store (top 4 qualify) |
+| `/storeclash seasons` | List Store Clash seasons |
 
 The squad (tracked users) is configured in `src/lib/uvs/squad.ts`. The Ottawa search area is configured in `src/lib/config/config.ts` (`ottawaCoords`, `ottawaSearchRadiusMeters`).
 
@@ -61,6 +63,17 @@ A 6-hour cron (and `yarn sync`) discovers every PlayRiftbound event within the c
 Discovery always starts at `Config.riftboundHistoryStartDate` (Oct 1 2026) with no cursor, so events missed while the bot was down are picked up automatically. `yarn sync [n]` runs the same pipeline manually and processes up to `n` events (default `riftboundSyncMaxEventsPerRun`). Events whose pages render without tournament data are marked `UNAVAILABLE`; casual Nexus Night/Pre-Rift events often have no pairings and therefore no match rows.
 
 The old `ottawa_events` / `event_players` tables are legacy and no longer read or written.
+
+## Store Clash
+
+Store Clash seasons live in `store_clash_seasons` / `store_clash_stores`; `store_clash_player_stores` holds manual store-affiliation overrides. Scoring rules live in the `store_clash_standings(slug)` SQL function, shared by the bot command and the website.
+
+- Qualifying events are completed `NEXUS_NIGHT` events at the season's participating stores.
+- Points are match points (win 3, draw 1) from `rb_event_participants.points`; each player's best `best_weeks` of `weeks` scores count.
+- A player represents the store where they played the most qualifying weeks (ties: total points, best week); manual overrides win. Overrides should point to a store where the player actually played, since weekly points stay tied to the store that hosted the event.
+- Top 4 per store qualify.
+
+`src/db/store-clash-radiance.sql` seeds the Radiance season (week 1 Oct 24–30, 2026; finals Jan 9, 2027). Run `yarn db:migrate` then apply that file with `psql`. Future seasons use the same two inserts with a new slug/start/weeks/stores.
 
 ## EloShowdown event tracking
 
@@ -78,10 +91,14 @@ src/
 │   │   └── ottawa.ts          # /ottawa command
 │   ├── misc/
 │   │   └── ping.ts            # Example command
+│   ├── storeclash/
+│   │   └── standings.ts       # /storeclash command
 │   └── uvs/
 │       └── scrape.ts          # /scrape command
 ├── db/
-│   └── migrate.ts             # Schema migration (yarn db:migrate)
+│   ├── migrate.ts             # Schema migration (yarn db:migrate)
+│   ├── store-clash.ts         # Store Clash tables + standings SQL function
+│   └── store-clash-radiance.sql # Radiance season seed
 ├── events/
 │   ├── ready.ts               # Logs when bot is online
 │   └── interactionCreate.ts   # Routes slash commands + cooldowns
@@ -102,6 +119,8 @@ src/
 │   │   ├── queries.ts         # DB queries for the commands
 │   │   ├── format.ts          # Elo display formatting
 │   │   └── service.ts         # Ottawa events job (processOttawaEvents)
+│   ├── store-clash/
+│   │   └── standings.ts       # Season + standings query helpers
 │   └── uvs/
 │       ├── types.ts           # Riftbound event interfaces
 │       ├── client.ts          # PlayRiftbound search + event-page parser

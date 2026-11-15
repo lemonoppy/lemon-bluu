@@ -35,6 +35,10 @@ const links: Array<NavLink> = [
     label: 'Draft Analysis',
   },
   {
+    href: '/riftbound',
+    label: 'Riftbound',
+  },
+  {
     href: '/dropdown-builder',
     label: 'Dropdown Builder',
   },
@@ -102,7 +106,7 @@ export function MainNav() {
                 </DropdownMenuContent>
               </DropdownMenu>
             </nav>
-            <nav className="hidden md:flex mx-10 items-center space-x-6">
+            <nav className="hidden md:flex mx-6 items-center space-x-5">
               {links.map((link) => (
                 <Link
                   key={`${link.label}-${link.href}`}
