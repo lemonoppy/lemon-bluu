@@ -28,21 +28,22 @@ export const event = {
         return;
       }
 
-      if (command.cooldown && cooldown) {
-        if (Date.now() < cooldown) {
-          const remainingSeconds = Math.floor(
-            Math.abs(Date.now() - cooldown) / 1000,
-          );
-          interaction.reply(
-            `You have to wait ${remainingSeconds} ${pluralize(
-              remainingSeconds,
-              'second',
-            )} to use this command again.`,
-          );
-          setTimeout(() => interaction.deleteReply(), 5000);
-          return;
-        }
-      } else if (command.cooldown && !cooldown) {
+      if (command.cooldown && cooldown && Date.now() < cooldown) {
+        const remainingSeconds = Math.floor(
+          Math.abs(Date.now() - cooldown) / 1000,
+        );
+        interaction.reply(
+          `You have to wait ${remainingSeconds} ${pluralize(
+            remainingSeconds,
+            'second',
+          )} to use this command again.`,
+        );
+        setTimeout(() => interaction.deleteReply(), 5000);
+        return;
+      }
+
+      // Re-arm on every accepted use; otherwise the cooldown stays expired forever.
+      if (command.cooldown) {
         interaction.client.cooldowns.set(
           cooldownKey,
           Date.now() + command.cooldown * 1000,
