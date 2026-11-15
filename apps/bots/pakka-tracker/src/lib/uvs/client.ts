@@ -285,8 +285,12 @@ export const extractFlightPayload = (html: string): string => {
   return flight;
 };
 
-const extractJsonObject = <T>(text: string, marker: string): T | null => {
-  const start = text.indexOf(marker);
+const extractJson = <T>(
+  text: string,
+  start: number,
+  open: string,
+  close: string,
+): T | null => {
   if (start < 0) return null;
 
   let depth = 0;
@@ -301,8 +305,8 @@ const extractJsonObject = <T>(text: string, marker: string): T | null => {
       continue;
     }
     if (char === '"') inString = true;
-    else if (char === '{') depth++;
-    else if (char === '}' && --depth === 0) {
+    else if (char === open) depth++;
+    else if (char === close && --depth === 0) {
       try {
         return JSON.parse(text.slice(start, i + 1)) as T;
       } catch {
@@ -312,6 +316,9 @@ const extractJsonObject = <T>(text: string, marker: string): T | null => {
   }
   return null;
 };
+
+const extractJsonObject = <T>(text: string, marker: string): T | null =>
+  extractJson<T>(text, text.indexOf(marker), '{', '}');
 
 export const parseEventPage = (html: string): ParsedEventPage => {
   const flight = extractFlightPayload(html);
@@ -332,6 +339,47 @@ export const parseEventPage = (html: string): ParsedEventPage => {
     '{"__typename":"OrganizerSummary"',
   );
   return { tournament, organizer };
+};
+
+export interface RiftboundRegistrant {
+  status: string;
+  waitlistPosition?: number | null;
+  player: { id: string; displayName: string; tagLine: string };
+}
+
+// Upcoming events don't render tournament data, but they do render the
+// registrant list, which is enough to scout them before the first round.
+export const parseEventRegistrants = (html: string): RiftboundRegistrant[] => {
+  const flight = extractFlightPayload(html);
+  const marker = flight.indexOf(
+    '"players":[{"__typename":"TournamentRegistrant"',
+  );
+  if (marker < 0) return [];
+  const start = flight.indexOf('[', marker);
+  return extractJson<RiftboundRegistrant[]>(flight, start, '[', ']') ?? [];
+};
+
+export const parseEventName = (html: string): string | null => {
+  const flight = extractFlightPayload(html);
+  const marker = '["$","h1",null,';
+  // The flight payload also carries Next.js's 404 template, whose h1 has a
+  // numeric child. The event header is the first h1 with a text child.
+  for (
+    let at = flight.indexOf(marker);
+    at >= 0;
+    at = flight.indexOf(marker, at + 1)
+  ) {
+    const header = extractJson<{ children?: unknown }>(
+      flight,
+      flight.indexOf('{', at),
+      '{',
+      '}',
+    );
+    if (typeof header?.children === 'string' && header.children) {
+      return header.children;
+    }
+  }
+  return null;
 };
 
 const mapRoundStatus = (status: string): UVSTournamentRound['status'] => {
@@ -528,9 +576,7 @@ export const buildEventData = ({
   };
 };
 
-export const fetchParsedEvent = async (
-  eventId: string,
-): Promise<ParsedEventPage> => {
+const fetchEventPage = async (eventId: string): Promise<string> => {
   const response = await fetchWithTimeout(
     `${Config.riftboundBaseUrl}/en-US/events/${eventId}`,
     {
@@ -544,7 +590,13 @@ export const fetchParsedEvent = async (
   if (!response.ok) {
     throw new Error(`Failed to fetch event ${eventId}: ${response.statusText}`);
   }
-  const parsed = parseEventPage(await response.text());
+  return response.text();
+};
+
+export const fetchParsedEvent = async (
+  eventId: string,
+): Promise<ParsedEventPage> => {
+  const parsed = parseEventPage(await fetchEventPage(eventId));
   logger.info(
     `Loaded Riftbound event "${parsed.tournament.name}" (${eventId})`,
   );
@@ -554,7 +606,23 @@ export const fetchParsedEvent = async (
 export async function fetchEventDetails(
   eventId: string,
 ): Promise<UVSEventData> {
-  return buildEventData(await fetchParsedEvent(eventId));
+  const html = await fetchEventPage(eventId);
+  try {
+    return buildEventData(parseEventPage(html));
+  } catch (error) {
+    if (!(error instanceof TournamentUnavailableError)) throw error;
+    // Not started yet: the reduced page only carries the event name.
+    return {
+      id: eventId,
+      start_datetime: '',
+      end_datetime: null,
+      timer_is_running: false,
+      timer_end_datetime: '',
+      name: parseEventName(html) ?? `Event ${eventId}`,
+      store: { id: 0, name: '' },
+      tournament_phases: [],
+    };
+  }
 }
 
 export interface UVSEventRegistration {
@@ -575,28 +643,54 @@ export interface UVSEventRegistration {
   final_place_in_standings: number | null;
 }
 
+const toRegistration = (
+  index: number,
+  player: { id: string; displayName: string },
+  registrationStatus: string,
+): UVSEventRegistration => ({
+  id: index,
+  user: {
+    id: player.id,
+    best_identifier: player.displayName,
+    pronouns: null,
+    country_code: null,
+  },
+  registration_status: registrationStatus,
+  best_identifier: player.displayName,
+  is_guest: false,
+  matches_won: 0,
+  matches_lost: 0,
+  matches_drawn: 0,
+  total_match_points: 0,
+  final_place_in_standings: null,
+});
+
 // The event page lists every participant, including drops; the scout command
 // only cares about the players who are still active.
 export async function fetchEventRegistrations(
   eventId: string,
 ): Promise<UVSEventRegistration[]> {
-  const { tournament } = await fetchParsedEvent(eventId);
-  return tournament.tournamentParticipants.map((participant, index) => ({
-    id: index,
-    user: {
-      id: participant.player.id,
-      best_identifier: participant.player.displayName,
-      pronouns: null,
-      country_code: null,
-    },
-    registration_status:
-      participant.status === 'ACTIVE' ? 'COMPLETE' : participant.status,
-    best_identifier: participant.player.displayName,
-    is_guest: false,
-    matches_won: 0,
-    matches_lost: 0,
-    matches_drawn: 0,
-    total_match_points: 0,
-    final_place_in_standings: null,
-  }));
+  const html = await fetchEventPage(eventId);
+  try {
+    const { tournament } = parseEventPage(html);
+    return tournament.tournamentParticipants.map((participant, index) =>
+      toRegistration(
+        index,
+        participant.player,
+        participant.status === 'ACTIVE' ? 'COMPLETE' : participant.status,
+      ),
+    );
+  } catch (error) {
+    if (!(error instanceof TournamentUnavailableError)) throw error;
+    return parseEventRegistrants(html).map((registrant, index) =>
+      toRegistration(
+        index,
+        registrant.player,
+        ['REGISTERED', 'CHECKED_IN'].includes(registrant.status) &&
+          registrant.waitlistPosition == null
+          ? 'COMPLETE'
+          : registrant.status,
+      ),
+    );
+  }
 }

@@ -59,16 +59,13 @@ const counters = { playersMapped: 0, eloHistoriesFetched: 0 };
 let nameIndex = new Map<string, number>();
 
 const buildNameIndex = async (): Promise<void> => {
-  const counts = new Map<string, { playerId: number; count: number }>();
+  const idsByName = new Map<string, Set<number>>();
   const addName = (name: string, playerId: number) => {
     const key = name.trim().toLowerCase();
     if (!key) return;
-    const entry = counts.get(key);
-    if (entry) {
-      entry.count++;
-    } else {
-      counts.set(key, { playerId, count: 1 });
-    }
+    const ids = idsByName.get(key);
+    if (ids) ids.add(playerId);
+    else idsByName.set(key, new Set([playerId]));
   };
 
   const playersResult = await Query<{
@@ -94,8 +91,8 @@ const buildNameIndex = async (): Promise<void> => {
   }
 
   nameIndex = new Map<string, number>();
-  for (const [key, { playerId, count }] of counts) {
-    if (count === 1) nameIndex.set(key, playerId);
+  for (const [key, ids] of idsByName) {
+    if (ids.size === 1) nameIndex.set(key, ids.values().next().value!);
   }
 };
 

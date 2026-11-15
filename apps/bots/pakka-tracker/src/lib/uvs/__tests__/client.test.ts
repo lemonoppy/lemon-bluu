@@ -2,7 +2,9 @@ import {
   buildEventData,
   extractEventId,
   extractFlightPayload,
+  parseEventName,
   parseEventPage,
+  parseEventRegistrants,
 } from '../client';
 
 const TOURNAMENT = {
@@ -78,6 +80,29 @@ const makePage = (): string => {
   return `<script>self.__next_f.push([1,${JSON.stringify(flight)}])</script>`;
 };
 
+const makeUpcomingPage = (): string => {
+  const flight = `${JSON.stringify([
+    ['$', 'h1', null, { className: 'next-error-h1', children: 404 }],
+  ])}${JSON.stringify([
+    ['$', 'h1', null, { className: 'title', children: 'Upcoming Skirmish' }],
+  ])}${JSON.stringify({
+    config: { __typename: 'RiftboundTournamentConfig' },
+    players: [
+      {
+        __typename: 'TournamentRegistrant',
+        status: 'REGISTERED',
+        player: { id: 'player1', displayName: 'Alice', tagLine: 'NA1' },
+      },
+      {
+        __typename: 'TournamentRegistrant',
+        status: 'DROPPED',
+        player: { id: 'player2', displayName: 'Bob', tagLine: 'NA1' },
+      },
+    ],
+  })}`;
+  return `<script>self.__next_f.push([1,${JSON.stringify(flight)}])</script>`;
+};
+
 describe('extractEventId', () => {
   it('accepts a bare event id', () => {
     expect(extractEventId('117163491565579920')).toBe('117163491565579920');
@@ -107,6 +132,37 @@ describe('parseEventPage', () => {
   it('returns an empty flight payload for unrelated HTML', () => {
     expect(extractFlightPayload('<html></html>')).toBe('');
     expect(() => parseEventPage('<html></html>')).toThrow();
+  });
+});
+
+describe('parseEventRegistrants', () => {
+  it('extracts registrants from a not-yet-started event page', () => {
+    expect(parseEventRegistrants(makeUpcomingPage())).toEqual([
+      {
+        __typename: 'TournamentRegistrant',
+        status: 'REGISTERED',
+        player: { id: 'player1', displayName: 'Alice', tagLine: 'NA1' },
+      },
+      {
+        __typename: 'TournamentRegistrant',
+        status: 'DROPPED',
+        player: { id: 'player2', displayName: 'Bob', tagLine: 'NA1' },
+      },
+    ]);
+  });
+
+  it('returns no registrants for a started event page', () => {
+    expect(parseEventRegistrants(makePage())).toEqual([]);
+  });
+});
+
+describe('parseEventName', () => {
+  it('reads the event name from the page header', () => {
+    expect(parseEventName(makeUpcomingPage())).toBe('Upcoming Skirmish');
+  });
+
+  it('returns null when there is no header', () => {
+    expect(parseEventName('<html></html>')).toBeNull();
   });
 });
 

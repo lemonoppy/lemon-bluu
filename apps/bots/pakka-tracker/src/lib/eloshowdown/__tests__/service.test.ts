@@ -122,6 +122,47 @@ describe('hydrateRegistrants', () => {
     expect(result.stoppedEarly).toBe(false);
   });
 
+  it('links by display name when the player also appears as an opponent', async () => {
+    queryMock.mockImplementation((sql: string) => {
+      if (sql.includes('WHERE display_name IS NOT NULL')) {
+        return okAsync({
+          rows: [{ display_name: 'New Player', player_id: 123 }],
+          rowCount: 1,
+        } as never);
+      }
+      if (sql.includes('FROM elo_history')) {
+        return okAsync({
+          rows: [{ opponent_id: 123, opponent_name: 'New Player' }],
+          rowCount: 1,
+        } as never);
+      }
+      return okAsync({ rows: [], rowCount: 0 } as never);
+    });
+    fetchEloHistoryMock.mockResolvedValue({
+      season_slug: 'all',
+      points: [
+        {
+          date: '2026-09-01T00:00:00Z',
+          elo_before: 1000,
+          elo_after: 1018,
+          elo_change: 18,
+          match_id: 1,
+          opponent_id: 789,
+          opponent_name: 'Opponent',
+          result: 'win',
+        },
+      ],
+    });
+
+    const result = await hydrateRegistrants([
+      { riftboundId: 'new-uuid', username: 'New Player' },
+    ]);
+
+    expect(lookupPlayerMock).not.toHaveBeenCalled();
+    expect(fetchEloHistoryMock).toHaveBeenCalledWith(123);
+    expect(result).toMatchObject({ refreshed: 1, unresolved: 0 });
+  });
+
   it('stops cleanly when EloShowdown rate limits the lookup', async () => {
     lookupPlayerMock.mockRejectedValue(
       new EloShowdownApiError('Rate limited', 429),
