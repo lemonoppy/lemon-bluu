@@ -9,4 +9,4 @@ export const event = {
   execute: (client: Client) => {
     logger.info(`🚀 Ready! Logged in as ${client.user?.tag}`);
   },
-} satisfies BotEvent;
+} satisfies BotEvent<Events.ClientReady>;

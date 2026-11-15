@@ -1,15 +1,22 @@
 const isDevelopment = process.env.NODE_ENV === 'development';
 
+const idList = (value: string | undefined) =>
+  (value ?? '').split(',').filter(Boolean);
+
 export const Config = {
+  token: isDevelopment ? process.env.DEV_TOKEN : process.env.TOKEN,
+  clientId: isDevelopment ? process.env.DEV_CLIENT_ID : process.env.CLIENT_ID,
+  isDevelopment,
+
   // Development vs production server/channel IDs
   testServerId: isDevelopment ? process.env.TEST_SERVER_ID : undefined,
   testChannelId: isDevelopment ? process.env.TEST_CHANNEL_ID : undefined,
   errorChannelId: process.env.ERROR_CHANNEL_ID,
 
-  // Role membership lists — populate from env or hardcode
-  devTeamIds: [] as string[],
-  modTeamIds: [] as string[],
-  adminTeamIds: [] as string[],
+  // Role membership lists — comma-separated Discord user IDs
+  devTeamIds: idList(process.env.DEV_TEAM_IDS),
+  modTeamIds: idList(process.env.MOD_TEAM_IDS),
+  adminTeamIds: idList(process.env.ADMIN_TEAM_IDS),
 
   // Add your bot-specific config below, e.g.:
   // mainServerId: process.env.MAIN_SERVER_ID,

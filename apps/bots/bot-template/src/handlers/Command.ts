@@ -7,12 +7,18 @@ import {
   Routes,
   SlashCommandBuilder,
   SlashCommandOptionsOnlyBuilder,
+  SlashCommandSubcommandsOnlyBuilder,
 } from 'discord.js';
+import { Config } from 'src/lib/config/config';
 import { logger } from 'src/lib/logger';
 import { SlashCommand } from 'typings/command';
 
 module.exports = (client: Client) => {
-  const slashCommands: (SlashCommandBuilder | SlashCommandOptionsOnlyBuilder)[] = [];
+  const slashCommands: (
+    | SlashCommandBuilder
+    | SlashCommandOptionsOnlyBuilder
+    | SlashCommandSubcommandsOnlyBuilder
+  )[] = [];
 
   const baseCommandsDir = join(__dirname, '../commands');
 
@@ -22,6 +28,7 @@ module.exports = (client: Client) => {
     .filter((file) => {
       const isDirectory = statSync(file).isDirectory();
       if (!isDirectory) {
+        if (!file.endsWith('.js') && !file.endsWith('.ts')) return false;
         const loaded = require(file);
         const command: SlashCommand = loaded.default ?? loaded.command ?? loaded;
         slashCommands.push(command.command);
@@ -40,14 +47,10 @@ module.exports = (client: Client) => {
     });
   });
 
-  const isDevelopment = process.env.NODE_ENV === 'development';
-  const token = isDevelopment ? process.env.DEV_TOKEN : process.env.TOKEN;
-  const clientID = isDevelopment ? process.env.DEV_CLIENT_ID : process.env.CLIENT_ID;
-
-  const rest = new REST({ version: '10' }).setToken(token!);
+  const rest = new REST({ version: '10' }).setToken(Config.token!);
 
   rest
-    .put(Routes.applicationCommands(clientID!), {
+    .put(Routes.applicationCommands(Config.clientId!), {
       body: slashCommands.map((command) => command.toJSON()),
     })
     .then((data) => {

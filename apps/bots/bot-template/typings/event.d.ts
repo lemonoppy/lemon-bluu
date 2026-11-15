@@ -1,5 +1,7 @@
-export interface BotEvent {
-  name: string;
+import { ClientEvents } from 'discord.js';
+
+export interface BotEvent<K extends keyof ClientEvents = keyof ClientEvents> {
+  name: K;
   once?: boolean;
-  execute: (...args: unknown[]) => void;
+  execute: (...args: ClientEvents[K]) => void;
 }

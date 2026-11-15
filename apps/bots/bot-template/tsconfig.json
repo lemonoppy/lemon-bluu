@@ -21,7 +21,7 @@
       "./typings"
     ],
     "isolatedModules": true,
-    "types": ["node"],
+    "types": ["node", "jest"],
     "sourceMap": false,
     "ignoreDeprecations": "6.0",
     "baseUrl": ".",
