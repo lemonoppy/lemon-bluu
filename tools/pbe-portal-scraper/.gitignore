@@ -6,3 +6,4 @@ drafted-players-*.tsv
 *.log
 .DS_Store
 .env
+.chrome-profile/

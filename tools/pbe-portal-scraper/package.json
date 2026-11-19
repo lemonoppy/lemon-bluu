@@ -8,6 +8,9 @@
     "lint": "eslint src --ext .ts",
     "format": "prettier --write src"
   },
+  "dependencies": {
+    "puppeteer": "^24.39.1"
+  },
   "devDependencies": {
     "@lemon-bluu/eslint-config": "*",
     "@types/node": "^20.10.2",
