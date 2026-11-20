@@ -37,28 +37,18 @@ To run a single test file:
 yarn jest path/to/test.ts
 ```
 
-### PBE scrapers (run from tool directory)
+### PBE tools (run from repo root)
 
-`tools/pbe-scraper/` — pbesim.com fielding stats, all positions (no credentials needed):
+`tools/pbe/` — one package (`@lemon-bluu/pbe`) for all PBE tooling; output goes to gitignored `tools/pbe/data/<tool>/`:
 ```bash
-yarn scrape-all       # Full all-players scrape (alphabetical)
-yarn update-all       # Re-scrape recently active players only
-yarn snapshot [season] # Current-season fielding snapshot (TSV only)
-yarn build            # Compile TypeScript
-```
-
-`tools/pbe-portal-scraper/` — consolidated Simflow player draft classes:
-```bash
-yarn scrape 64        # Scrape every player drafted in S64
-yarn build            # Compile TypeScript
-```
-
-`tools/pbe-forum-checker/` — qualifying usernames from a PBE forum thread:
-```bash
-yarn scrape "https://forum.pbesim.com/showthread.php?tid=44287"
-yarn scrape "<thread-url>" --ai  # Add Gemini AI-authorship review flags
-yarn test
-yarn build
+yarn pbe:scrape-all       # Fielding: full all-players scrape (alphabetical)
+yarn pbe:update-all       # Fielding: re-scrape recently active players only
+yarn pbe:snapshot [season] # Fielding: current-season snapshot (TSV only)
+yarn pbe:portal 64        # Portal: scrape every player drafted in S64
+yarn pbe:forum "https://forum.pbesim.com/showthread.php?tid=44287"
+yarn pbe:forum "<thread-url>" --ai  # Add Gemini AI-authorship review flags
+yarn pbe:test             # Forum parser tests
+yarn workspace @lemon-bluu/pbe build
 ```
 
 `tools/mtg-glicko/` — Glicko-2 ratings for MTG cube drafts:
@@ -88,9 +78,7 @@ packages/
   eslint-config/       # Shared ESLint configs (bot-flat.js for bots, index.js for web)
   tsconfig/            # Shared tsconfig bases (base.json, node.json, nextjs.json)
 tools/
-  pbe-scraper/         # CLI scrapers for pbesim.com fielding stats (TypeScript, cheerio/axios)
-  pbe-portal-scraper/  # CLI scraper for consolidated Simflow draft classes (TypeScript)
-  pbe-forum-checker/   # Browser-based forum reply qualification checker
+  pbe/                 # PBE CLI tools: fielding stats, portal draft classes, forum checker
   mtg-glicko/          # Glicko-2 rating calculator for MTG cube draft results
 ```
 
@@ -117,20 +105,20 @@ All three bots share the same architecture (also documented in per-bot CLAUDE.md
 
 All tools extend `@lemon-bluu/eslint-config/bot-flat.js` with `no-console: 'off'` (CLI tools need console output). None use `tsconfig-paths`; no path aliases.
 
-**`tools/pbe-scraper/`** (`@lemon-bluu/pbe-scraper`):
-- `src/types.ts` — `PlayerLink`, `FieldingStatRow`, `PlayerData` interfaces
-- `src/utils.ts` — shared `fetchPage`, `delay`, `extractCareerFieldingStats(html, name)`, `saveToJson`, `saveToTsv`
-- `src/scraper.ts` — iterates alphabetical player pages (a–z), captures all positions, tracks `lastActiveSeason`, saves `all_players_fielding.{json,tsv}`; `--update` re-scrapes recently active players only
-- `src/snapshot.ts` — walks the current league player list, keeps target-season fielding rows for all positions, saves `current_season_fielding_{season}.tsv` without touching the complete store
-
-**`tools/pbe-portal-scraper/`** (`@lemon-bluu/pbe-portal-scraper`):
-- Uses the public consolidated Simflow players JSON API
-- `src/scraper.ts` — accepts a season argument, selects exact `drafted` matches, maps pid/username/name/position/archetype/tpe/bankAccount/team, and saves `drafted-players-s{season}.{json,tsv}`
-
-**`tools/pbe-forum-checker/`** (`@lemon-bluu/pbe-forum-checker`):
-- Uses a persistent headed Puppeteer profile so Cloudflare can be completed manually
-- Excludes the opening post and quoted content, then qualifies replies over 150 words or containing a link
-- Saves a unique username list and JSON audit report; `--ai` adds non-binding Gemini authorship flags
+**`tools/pbe/`** (`@lemon-bluu/pbe`) — single package with one folder per tool under `src/`:
+- `src/shared/paths.ts` — `PACKAGE_ROOT` and `dataDirectory(tool)`, which returns (and creates) `data/<tool>/`
+- `src/shared/browser.ts` — `launchBrowser(profileName)`: headed installed Chrome with a persistent profile at `.chrome-profile/<profileName>/` so Cloudflare clearance and logins survive between runs (`PBE_CHROME_EXECUTABLE` overrides the binary)
+- `src/fielding/` — pbesim.com fielding stats, no credentials needed
+  - `types.ts` — `PlayerLink`, `FieldingStatRow`, `PlayerData` interfaces
+  - `utils.ts` — `fetchPage`, `delay`, `extractCareerFieldingStats(html, name)`, `saveToJson`, `saveToTsv`
+  - `scraper.ts` — iterates alphabetical player pages (a–z), captures all positions, tracks `lastActiveSeason`, saves `data/fielding/all_players_fielding.{json,tsv}`; `--update` re-scrapes recently active players only
+  - `snapshot.ts` — walks the current league player list, keeps target-season fielding rows for all positions, saves `data/fielding/current_season_fielding_{season}.tsv` without touching the complete store
+- `src/portal/` — Simflow draft classes
+  - `browser.ts` — opens a logged-in portal session (`.chrome-profile/portal/`) and runs `fetch` inside the page
+  - `scraper.ts` — accepts a season argument, pages through the player list AJAX endpoint with the `class` filter, maps pid/username/name/position/archetype/tpe/bankAccount/team, and saves `data/portal/drafted-players-s{season}.{json,tsv}`
+- `src/forum/` — forum reply qualification checker (`.chrome-profile/forum/`)
+  - Excludes the opening post and quoted content, then qualifies replies over 150 words or containing a link
+  - Saves a unique username list and JSON audit report to `data/forum/`; `--ai` adds non-binding Gemini authorship flags
 
 **`tools/mtg-glicko/`** (`@lemon-bluu/mtg-glicko`):
 - `src/data.ts` — `MatchRecord[]` with all historical cube draft results

@@ -18,9 +18,7 @@ lemon-bluu/
 │   ├── tsconfig/               # Shared TypeScript configs
 │   └── ui/                     # Shared UI utilities (cn helper)
 ├── tools/
-│   ├── pbe-scraper/            # pbesim.com fielding stats scraper
-│   ├── pbe-portal-scraper/     # pbe.simflow.io draft class scraper
-│   ├── pbe-forum-checker/      # PBE forum reply qualification checker
+│   ├── pbe/                    # PBE tools: fielding stats, draft classes, forum checker
 │   └── mtg-glicko/             # Glicko-2 ratings for MTG cube drafts
 ├── package.json                # Root workspace config
 └── turbo.json                  # Turborepo pipeline
@@ -60,24 +58,14 @@ Discord bot for the ISFL sim league. Handles fantasy football, portal queries, s
 
 ## Tools
 
-### `tools/pbe-scraper`
-CLI scraper for career fielding stats from pbesim.com. Iterates alphabetical player pages and captures every position, with a `--update` mode that re-scrapes recently active players only.
+### `tools/pbe`
+CLI tools for the PBE baseball sim league, in one package. Output goes to the gitignored `tools/pbe/data/` directory.
 
-- **Stack:** TypeScript, cheerio, axios
+- **Fielding** (`yarn pbe:scrape-all`, `yarn pbe:update-all`, `yarn pbe:snapshot`): career and current-season fielding stats for every position from pbesim.com.
+- **Portal** (`yarn pbe:portal 64`): every player drafted in a season from the Simflow portal, including their current bank balance.
+- **Forum** (`yarn pbe:forum "<thread-url>"`): unique usernames whose replies exceed 150 words or contain a link, with an optional Gemini AI-authorship review flag.
 
-### `tools/pbe-portal-scraper`
-JSON scraper for PBE draft class data from the public consolidated Simflow API.
-Pass a season to select every matching `drafted` player (for example,
-`yarn scrape 64`), including their current bank balance.
-
-- **Stack:** TypeScript
-
-### `tools/pbe-forum-checker`
-Browser-based PBE forum thread checker. It exports unique usernames whose
-replies exceed 150 words or contain a link, with an optional Gemini
-AI-authorship review flag.
-
-- **Stack:** TypeScript, Puppeteer, cheerio, Gemini
+- **Stack:** TypeScript, Puppeteer, cheerio, axios, Gemini
 
 ### `tools/mtg-glicko`
 Glicko-2 rating calculator for MTG cube draft history. Match data lives in `src/data.ts`; run `yarn start` to recalculate.

@@ -1,38 +1,11 @@
-import fs from 'fs';
-import os from 'os';
-import path from 'path';
+import { Browser, Page } from 'puppeteer';
 
-import puppeteer, { Browser, Page } from 'puppeteer';
+import { launchBrowser } from '../shared/browser';
 
 import { getThreadPageUrls } from './parser';
 
 const THREAD_SELECTOR = '[id^="post_"] .post_body, [id^="post_"] [id^="pid_"]';
 const CLOUDFLARE_TIMEOUT_MS = 180_000;
-const BROWSER_PATHS = [
-  '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-  '/Applications/Chromium.app/Contents/MacOS/Chromium',
-  '/Applications/Brave Browser.app/Contents/MacOS/Brave Browser',
-  '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge',
-  '/Applications/Vivaldi.app/Contents/MacOS/Vivaldi',
-  '/usr/bin/google-chrome',
-  '/usr/bin/chromium',
-  '/usr/bin/chromium-browser',
-];
-
-function findBrowserExecutable(): string | undefined {
-  const configuredPath = process.env.PBE_CHROME_EXECUTABLE;
-  if (configuredPath) return configuredPath;
-
-  const homeApplications = BROWSER_PATHS.filter((browserPath) =>
-    browserPath.startsWith('/Applications/'),
-  ).map((browserPath) =>
-    path.join(os.homedir(), browserPath.replace(/^\//, '')),
-  );
-
-  return [...BROWSER_PATHS, ...homeApplications].find((browserPath) =>
-    fs.existsSync(browserPath),
-  );
-}
 
 export interface ScrapedThreadPage {
   html: string;
@@ -63,25 +36,11 @@ export async function scrapeThreadPages(
   threadId: string,
 ): Promise<ScrapedThreadPage[]> {
   let browser: Browser | undefined;
-  const profileDirectory = path.resolve(__dirname, '../.chrome-profile');
-  const executablePath = findBrowserExecutable();
 
   try {
-    browser = await puppeteer.launch({
-      args: ['--disable-blink-features=AutomationControlled'],
-      defaultViewport: null,
-      executablePath,
-      headless: false,
-      ignoreDefaultArgs: ['--enable-automation'],
-      userDataDir: profileDirectory,
-    });
-    const pages = await browser.pages();
-    const page = pages[0] ?? (await browser.newPage());
-    await page.evaluateOnNewDocument(() => {
-      Object.defineProperty(navigator, 'webdriver', {
-        get: () => undefined,
-      });
-    });
+    const launched = await launchBrowser('forum');
+    browser = launched.browser;
+    const { page } = launched;
     const pendingUrls = [threadUrl];
     const visitedUrls = new Set<string>();
     const threadPages: ScrapedThreadPage[] = [];

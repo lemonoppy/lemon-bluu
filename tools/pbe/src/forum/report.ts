@@ -1,6 +1,8 @@
 import fs from 'fs/promises';
 import path from 'path';
 
+import { dataDirectory } from '../shared/paths';
+
 import { ThreadReport } from './types';
 
 function timestampForFilename(date: Date): string {
@@ -14,7 +16,7 @@ export async function writeReport(
   report: ThreadReport,
   threadId: string,
 ): Promise<{ reportPath: string; usernamesPath: string }> {
-  const outputDirectory = path.resolve(__dirname, '../output');
+  const outputDirectory = dataDirectory('forum');
   const outputBase = `thread-${threadId}-${timestampForFilename(new Date(report.scrapedAt))}`;
   const reportPath = path.join(outputDirectory, `${outputBase}.json`);
   const usernamesPath = path.join(
@@ -22,7 +24,6 @@ export async function writeReport(
     `${outputBase}.usernames.txt`,
   );
 
-  await fs.mkdir(outputDirectory, { recursive: true });
   await Promise.all([
     fs.writeFile(reportPath, `${JSON.stringify(report, null, 2)}\n`),
     fs.writeFile(

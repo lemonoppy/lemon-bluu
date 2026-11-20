@@ -3,6 +3,8 @@ import 'dotenv/config';
 import fs from 'fs/promises';
 import path from 'path';
 
+import { dataDirectory } from '../shared/paths';
+
 import { reviewEligiblePosts } from './ai';
 import { scrapeThreadPages } from './browser';
 import {
@@ -20,9 +22,9 @@ interface CliOptions {
 }
 
 function usage(): never {
-  console.error('Usage: yarn scrape <pbe-forum-thread-url> [--ai]');
+  console.error('Usage: yarn pbe:forum <pbe-forum-thread-url> [--ai]');
   console.error(
-    'Example: yarn scrape "https://forum.pbesim.com/showthread.php?tid=44287" --ai',
+    'Example: yarn pbe:forum "https://forum.pbesim.com/showthread.php?tid=44287" --ai',
   );
   process.exit(1);
 }
@@ -75,12 +77,10 @@ async function main(): Promise<void> {
     parseThreadPage(page.html, page.url),
   );
   if (parsedPosts.length === 0) {
-    const outputDirectory = path.resolve(__dirname, '../output');
     const debugPath = path.join(
-      outputDirectory,
+      dataDirectory('forum'),
       `thread-${options.threadId}-debug.html`,
     );
-    await fs.mkdir(outputDirectory, { recursive: true });
     await fs.writeFile(debugPath, pages[0]?.html ?? '');
 
     throw new Error(

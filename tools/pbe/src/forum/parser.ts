@@ -21,9 +21,7 @@ export function parseThreadPage(html: string, pageUrl: string): ParsedPost[] {
   $('.post_body, [id^="pid_"]').each((_index, element) => {
     const originalBody = $(element);
     const bodyIdMatch = BODY_ID_PATTERN.exec(originalBody.attr('id') ?? '');
-    const post = originalBody
-      .closest('[id^="post_"], .post, table')
-      .first();
+    const post = originalBody.closest('[id^="post_"], .post, table').first();
     const postIdMatch = POST_ID_PREFIX_PATTERN.exec(post.attr('id') ?? '');
     const permalinkHref = post
       .find(
@@ -71,7 +69,8 @@ export function parseThreadPage(html: string, pageUrl: string): ParsedPost[] {
         .text(),
     );
 
-    if (!username || posts.some(existingPost => existingPost.id === id)) return;
+    if (!username || posts.some((existingPost) => existingPost.id === id))
+      return;
 
     const body = originalBody.clone();
     body

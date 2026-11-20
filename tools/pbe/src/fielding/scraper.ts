@@ -1,6 +1,9 @@
 import fs from 'fs/promises';
+import path from 'path';
 
 import * as cheerio from 'cheerio';
+
+import { dataDirectory } from '../shared/paths';
 
 import { PlayerData, PlayerLink } from './types';
 import {
@@ -67,7 +70,7 @@ function shouldRescrapePlayer(
 }
 
 async function loadExistingData(
-  filename = 'all_players_fielding.json',
+  filename = path.join(dataDirectory('fielding'), 'all_players_fielding.json'),
 ): Promise<PlayerData[]> {
   try {
     const data = await fs.readFile(filename, 'utf8');
@@ -212,8 +215,15 @@ async function main() {
     }
 
     const data = await scrapeAllPlayers(existingData, isUpdate);
-    await saveToJson(data, 'all_players_fielding.json');
-    await saveToTsv(data, 'all_players_fielding.tsv');
+    const outputDirectory = dataDirectory('fielding');
+    await saveToJson(
+      data,
+      path.join(outputDirectory, 'all_players_fielding.json'),
+    );
+    await saveToTsv(
+      data,
+      path.join(outputDirectory, 'all_players_fielding.tsv'),
+    );
 
     const elapsed = ((Date.now() - startTime) / 1000 / 60).toFixed(2);
     console.log(`\nCompleted in ${elapsed} minutes`);

@@ -1,21 +1,9 @@
-import fs from 'fs';
-import os from 'os';
-import path from 'path';
+import { Page } from 'puppeteer';
 
-import puppeteer, { Browser, Page } from 'puppeteer';
+import { launchBrowser } from '../shared/browser';
 
 const AUTH_TIMEOUT_MS = 300_000;
 const POLL_INTERVAL_MS = 2_000;
-const BROWSER_PATHS = [
-  '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-  '/Applications/Chromium.app/Contents/MacOS/Chromium',
-  '/Applications/Brave Browser.app/Contents/MacOS/Brave Browser',
-  '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge',
-  '/Applications/Vivaldi.app/Contents/MacOS/Vivaldi',
-  '/usr/bin/google-chrome',
-  '/usr/bin/chromium',
-  '/usr/bin/chromium-browser',
-];
 
 export interface FetchedText {
   status: number;
@@ -26,21 +14,6 @@ export interface FetchedText {
 export interface PortalSession {
   fetchText(url: string): Promise<FetchedText>;
   close(): Promise<void>;
-}
-
-function findBrowserExecutable(): string | undefined {
-  const configuredPath = process.env.PBE_CHROME_EXECUTABLE;
-  if (configuredPath) return configuredPath;
-
-  const homeApplications = BROWSER_PATHS.filter((browserPath) =>
-    browserPath.startsWith('/Applications/'),
-  ).map((browserPath) =>
-    path.join(os.homedir(), browserPath.replace(/^\//, '')),
-  );
-
-  return [...BROWSER_PATHS, ...homeApplications].find((browserPath) =>
-    fs.existsSync(browserPath),
-  );
 }
 
 const sleep = (ms: number): Promise<void> =>
@@ -76,26 +49,9 @@ export async function openPortalSession(
   probeUrl: string,
   isReady: (text: string) => boolean,
 ): Promise<PortalSession> {
-  const profileDirectory = path.resolve(__dirname, '../.chrome-profile');
-  const browser: Browser = await puppeteer.launch({
-    args: ['--disable-blink-features=AutomationControlled'],
-    defaultViewport: null,
-    executablePath: findBrowserExecutable(),
-    headless: false,
-    ignoreDefaultArgs: ['--enable-automation'],
-    userDataDir: profileDirectory,
-  });
+  const { browser, page } = await launchBrowser('portal');
 
   try {
-    const pages = await browser.pages();
-    const page = pages[0] ?? (await browser.newPage());
-
-    await page.evaluateOnNewDocument(() => {
-      Object.defineProperty(navigator, 'webdriver', {
-        get: () => undefined,
-      });
-    });
-
     console.log(`Opening ${entryUrl}`);
     await page
       .goto(entryUrl, { waitUntil: 'domcontentloaded', timeout: 60_000 })

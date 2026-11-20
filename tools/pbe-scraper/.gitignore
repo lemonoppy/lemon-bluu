@@ -1,8 +1,0 @@
-node_modules/
-build/
-*.json
-!package.json
-*.tsv
-*.log
-.DS_Store
-.env

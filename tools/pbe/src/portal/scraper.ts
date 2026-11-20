@@ -1,4 +1,7 @@
 import fs from 'fs';
+import path from 'path';
+
+import { dataDirectory } from '../shared/paths';
 
 import { PortalSession, openPortalSession } from './browser';
 
@@ -87,8 +90,8 @@ function getSeason(): number {
   const seasonArgument = process.argv[2];
 
   if (!seasonArgument || !/^\d+$/.test(seasonArgument)) {
-    console.error('Usage: yarn scrape <season>');
-    console.error('Example: yarn scrape 64');
+    console.error('Usage: yarn pbe:portal <season>');
+    console.error('Example: yarn pbe:portal 64');
     process.exit(1);
   }
 
@@ -184,7 +187,10 @@ async function fetchPage(
 }
 
 async function scrapePlayerData(season: number): Promise<PlayerData[]> {
-  const outputBase = `drafted-players-s${season}`;
+  const outputBase = path.join(
+    dataDirectory('portal'),
+    `drafted-players-s${season}`,
+  );
 
   console.log(`Starting scraper for Season ${season}...`);
 

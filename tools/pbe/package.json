@@ -1,16 +1,21 @@
 {
-  "name": "@lemon-bluu/pbe-forum-checker",
+  "name": "@lemon-bluu/pbe",
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "scrape": "ts-node src/index.ts",
+    "fielding:scrape-all": "ts-node src/fielding/scraper.ts",
+    "fielding:update-all": "ts-node src/fielding/scraper.ts --update",
+    "fielding:snapshot": "ts-node src/fielding/snapshot.ts",
+    "portal:scrape": "ts-node src/portal/scraper.ts",
+    "forum:scrape": "ts-node src/forum/index.ts",
     "build": "tsc",
-    "test": "node --test -r ts-node/register src/parser.test.ts",
+    "test": "node --test -r ts-node/register src/forum/parser.test.ts",
     "lint": "eslint src --ext .ts",
     "format": "prettier --write src"
   },
   "dependencies": {
     "@google/genai": "^0.13.0",
+    "axios": "1.20.0",
     "cheerio": "^1.1.2",
     "dotenv": "^16.4.7",
     "puppeteer": "^24.39.1"

@@ -1,3 +1,7 @@
+import path from 'path';
+
+import { dataDirectory } from '../shared/paths';
+
 import { extractPlayerLinks } from './scraper';
 import { PlayerData } from './types';
 import {
@@ -8,7 +12,7 @@ import {
 } from './utils';
 
 const BASE_URL = 'http://www.pbesim.com';
-const CURRENT_SEASON = 2079; // Last season in the complete store
+const CURRENT_SEASON = 2080; // Last season in the complete store
 
 const LETTERS = 'abcdefghijklmnopqrstuvwxyz'.split('');
 
@@ -17,8 +21,8 @@ function getSeason(): number {
 
   if (seasonArgument) {
     if (!/^\d+$/.test(seasonArgument)) {
-      console.error('Usage: yarn snapshot [season]');
-      console.error('Example: yarn snapshot 2080');
+      console.error('Usage: yarn pbe:snapshot [season]');
+      console.error('Example: yarn pbe:snapshot 2080');
       process.exit(1);
     }
 
@@ -111,7 +115,13 @@ async function main() {
 
   try {
     const players = await scrapeSeasonSnapshot(season);
-    await saveToTsv(players, `current_season_fielding_${season}.tsv`);
+    await saveToTsv(
+      players,
+      path.join(
+        dataDirectory('fielding'),
+        `current_season_fielding_${season}.tsv`,
+      ),
+    );
 
     const elapsed = ((Date.now() - startTime) / 1000 / 60).toFixed(2);
     console.log(`\nCompleted in ${elapsed} minutes`);
