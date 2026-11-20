@@ -5,6 +5,7 @@ import {
   parseEventName,
   parseEventPage,
   parseEventRegistrants,
+  parseEventStoreName,
 } from '../client';
 
 const TOURNAMENT = {
@@ -84,6 +85,7 @@ const makeUpcomingPage = (): string => {
   const flight = `${JSON.stringify([
     ['$', 'h1', null, { className: 'next-error-h1', children: 404 }],
   ])}${JSON.stringify([
+    ['$', 'span', null, { className: 'label', children: 'Test Store' }],
     ['$', 'h1', null, { className: 'title', children: 'Upcoming Skirmish' }],
   ])}${JSON.stringify({
     config: { __typename: 'RiftboundTournamentConfig' },
@@ -163,6 +165,16 @@ describe('parseEventName', () => {
 
   it('returns null when there is no header', () => {
     expect(parseEventName('<html></html>')).toBeNull();
+  });
+});
+
+describe('parseEventStoreName', () => {
+  it('reads the store label above the event header', () => {
+    expect(parseEventStoreName(makeUpcomingPage())).toBe('Test Store');
+  });
+
+  it('returns null when there is no store label', () => {
+    expect(parseEventStoreName('<html></html>')).toBeNull();
   });
 });
 

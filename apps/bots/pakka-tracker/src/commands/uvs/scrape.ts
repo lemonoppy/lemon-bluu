@@ -52,10 +52,11 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
 
   const embed = new EmbedBuilder()
     .setColor(hexColorToInt(UVS_COLOR))
-    .setTitle(result.event.name)
+    .setTitle(
+      [result.event.store.name, result.event.name].filter(Boolean).join(' — '),
+    )
     .setDescription(
       [
-        `**Store:** ${result.event.store.name}`,
         `**Phase:** ${result.phaseName}`,
         `**Round:** ${result.displayRound} of ${result.totalRounds} (${result.roundsRemaining} remaining)`,
         `**Top cut:** ${result.topCutSize > 0 ? `Top ${result.topCutSize}` : 'No cut'}`,

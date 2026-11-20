@@ -53,7 +53,7 @@ The squad (tracked users) is configured in `src/lib/uvs/squad.ts`. The Ottawa se
 
 ## Match history
 
-A 6-hour cron (and `yarn sync`) discovers every PlayRiftbound event within the configured radius of Ottawa and ingests started events into the `rb_*` tables:
+An hourly cron (and `yarn sync`) discovers every PlayRiftbound event within the configured radius of Ottawa and ingests started events into the `rb_*` tables:
 
 - `rb_stores` — organizers/stores
 - `rb_events` — event summaries, status, raw tournament JSON, sync/elo state
@@ -77,7 +77,7 @@ Store Clash seasons live in `store_clash_seasons` / `store_clash_stores`; `store
 
 ## EloShowdown event tracking
 
-The bot builds its own Ottawa community from the stored match history (the site's community tags are unreliable). The elo cron (and `yarn job`) reads completed local events from `rb_events` / `rb_event_participants`, pairs participants to EloShowdown players (new platform UUIDs, falling back to display-name matching for legacy numeric ids), and writes per-participant elo deltas back to Postgres.
+The bot builds its own Ottawa community from the stored match history (the site's community tags are unreliable). The hourly elo cron (and `yarn job`) reads completed local events from `rb_events` / `rb_event_participants`, pairs participants to EloShowdown players (new platform UUIDs, falling back to display-name matching for legacy numeric ids), and writes per-participant elo deltas back to Postgres.
 
 `/squad` and `/ottawa` read from the stored data. Because EloShowdown's anonymous tier is rate-limited (~60 requests/hour), the job processes a bounded number of events per run (see `eloshowdownMaxRequestsPerRun`) and resumes on later runs — backfill by running `yarn job <n>` repeatedly.
 

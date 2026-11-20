@@ -153,7 +153,9 @@ const execute = async (interaction: ChatInputCommandInteraction) => {
 
   const embed = new EmbedBuilder()
     .setColor(hexColorToInt(UVS_COLOR))
-    .setTitle(eventData.name)
+    .setTitle(
+      [eventData.store.name, eventData.name].filter(Boolean).join(' — '),
+    )
     .setDescription(lines.join('\n'))
     .setFooter({ text: footerParts.join(' • ') })
     .setTimestamp();

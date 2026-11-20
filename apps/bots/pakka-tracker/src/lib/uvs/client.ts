@@ -359,8 +359,9 @@ export const parseEventRegistrants = (html: string): RiftboundRegistrant[] => {
   return extractJson<RiftboundRegistrant[]>(flight, start, '[', ']') ?? [];
 };
 
-export const parseEventName = (html: string): string | null => {
-  const flight = extractFlightPayload(html);
+const findEventHeader = (
+  flight: string,
+): { at: number; name: string } | null => {
   const marker = '["$","h1",null,';
   // The flight payload also carries Next.js's 404 template, whose h1 has a
   // numeric child. The event header is the first h1 with a text child.
@@ -376,7 +377,37 @@ export const parseEventName = (html: string): string | null => {
       '}',
     );
     if (typeof header?.children === 'string' && header.children) {
-      return header.children;
+      return { at, name: header.children };
+    }
+  }
+  return null;
+};
+
+export const parseEventName = (html: string): string | null =>
+  findEventHeader(extractFlightPayload(html))?.name ?? null;
+
+// Upcoming events render a reduced page with no organizer data; the store is
+// only the label span directly above the event title.
+export const parseEventStoreName = (html: string): string | null => {
+  const flight = extractFlightPayload(html);
+  const header = findEventHeader(flight);
+  if (!header) return null;
+
+  const marker = '["$","span",null,';
+  const windowStart = header.at - 500;
+  for (
+    let at = flight.lastIndexOf(marker, header.at);
+    at >= windowStart;
+    at = flight.lastIndexOf(marker, at - 1)
+  ) {
+    const span = extractJson<{ children?: unknown }>(
+      flight,
+      flight.indexOf('{', at),
+      '{',
+      '}',
+    );
+    if (typeof span?.children === 'string' && span.children) {
+      return span.children;
     }
   }
   return null;
@@ -619,7 +650,7 @@ export async function fetchEventDetails(
       timer_is_running: false,
       timer_end_datetime: '',
       name: parseEventName(html) ?? `Event ${eventId}`,
-      store: { id: 0, name: '' },
+      store: { id: 0, name: parseEventStoreName(html) ?? '' },
       tournament_phases: [],
     };
   }

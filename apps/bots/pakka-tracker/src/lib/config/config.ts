@@ -25,7 +25,7 @@ export const Config = {
   // PlayRiftbound's event history starts around Oct 1 2026. Discovery always
   // starts here so events missed while the bot was down are backfilled.
   riftboundHistoryStartDate: '2026-10-01T00:00:00.000Z',
-  riftboundSyncCron: '0 */6 * * *',
+  riftboundSyncCron: '0 * * * *',
   // Bounds each sync run; the rest are picked up next run.
   riftboundSyncMaxEventsPerRun: 50,
   riftboundSyncRecheckMinutes: 30,
@@ -70,7 +70,7 @@ export const Config = {
   eloshowdownRefreshCron: '45 */6 * * *',
 
   // Cron schedule for the elo event backfill (production only).
-  eloshowdownEventCron: '15 */6 * * *',
+  eloshowdownEventCron: '15 * * * *',
 
   // Events are only processed once they've been finished this long, giving
   // EloShowdown time to ingest the results.
