@@ -23,7 +23,7 @@
     "pbe:test": "yarn workspace @lemon-bluu/pbe test"
   },
   "devDependencies": {
-    "@types/node": "^26.2.0",
+    "@types/node": "^26.6.6",
     "husky": "^9.1.7",
     "lint-staged": "^16.4.0",
     "prettier": "latest",
